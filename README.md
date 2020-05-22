@@ -53,3 +53,13 @@
   
 
 ## Commands for the bot
+
+	`!define` - returns the definition eg `!define cat`
+	`!related` - searches all definitions for the key word and returns the list eg `!related cat` (for searching multiple consecutive words in a string, use . to separate words eg. `!related star.wars` will return JEDI and JEDIS
+	`!startswith` -returns a list of words that start with the given string eg. `!startswith cat`
+	`!endswith` - same as above but words ending in the string eg `!endswith cat`
+	`!contains` - returns a list of words that contain the given string anywhere in the word eg `!contains cat`
+	`!pattern` - uses regex filtering to find words eg `!pattern [abc]at.*` will return all words starting with aat, cat, or bat
+	`!info` - returns the definition, front hooks, back hooks, middle hooks, probability, alphagram eg `!info cat`
+	`!anagram` - returns a list of words that fit the letters given eg `!anagram ?aeinst`
+	`!random` - returns a single word and definition chosen at random
