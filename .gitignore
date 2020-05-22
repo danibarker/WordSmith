@@ -8,3 +8,4 @@
 #visual studio specific files
 *.sln
 *.pyproj
+/.vs

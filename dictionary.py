@@ -240,16 +240,6 @@ def anagram_1(word, lexicon='csw'):
     return num_results, msg
 
 
-def drop_one(s):
-    # RETURNS LIST OF STRINGS WITH ONE LETTER DROPPED
-    result = []
-    for x in range(0, len(s)):
-        front = s[0:x]
-        back = s[x + 1:]
-        result.append(front + back)
-    return result
-
-
 def anagram(s, db='csw'):
     # RETURNS ANAGRAMS OF S, DB IS LEXICON
     my_result = []
