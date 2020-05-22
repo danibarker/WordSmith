@@ -1,7 +1,7 @@
 # TwitchBot
-A twitch bot for Scrabble stuff
+## A twitch bot for Scrabble stuff
 
-Files you need on your local version:
+## Files you need on your local version:
 
   -csw.dat:
     this is the dictionary file, plain text, each word on one line following this example:
@@ -19,7 +19,7 @@ Files you need on your local version:
       somestreamer, anotherstreamer , athirdstreamer
       
     
-Setting up your own bot (you can run TwitchBot.py, or if you don't have python or just want to run the exe that works too):
+## Setting up your own bot (you can run TwitchBot.py, or if you don't have python or just want to run the exe that works too):
 
   1. Create a new twitch account with the username you want the bot to have
 
