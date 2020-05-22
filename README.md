@@ -16,7 +16,7 @@
       oauth:2cw2mrjef8fd8fdoyd95fbi2ajnwpvy1
       oe08ff8dfds8fdfjd99fda68g6pt
       BotsTwitchAccountName
-      somestreamer, anotherstreamer , athirdstreamer
+      somestreamer,anotherstreamer,athirdstreamer
       
     
 ## Setting up your own bot (you can run TwitchBot.py, or if you don't have python or just want to run the exe that works too):
