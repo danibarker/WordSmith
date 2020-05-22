@@ -1,4 +1,5 @@
-# TwitchBot ### A twitch bot for Scrabble stuff
+# TwitchBot 
+`A twitch bot for Scrabble stuff`
 
 ## Files you need on your local version:
 
