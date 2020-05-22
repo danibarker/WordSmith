@@ -1,5 +1,5 @@
 # TwitchBot
-## A twitch bot for Scrabble stuff
+### A twitch bot for Scrabble stuff
 
 ## Files you need on your local version:
 
@@ -40,14 +40,15 @@
   	9. Copy your Client ID, you will need to put this in config.dat
 
   	10. Open config.dat and replace the lines with your information:
-	  	first line is the oauth
+	  	
+		first line is the oauth
 	  	second line is your client id
 	  	third line is your bot's username
-	  	fourth line is the channels you want it to join separated 	by commas
+	  	fourth line is the channels you want it to join separated by commas
 
   	11. Save this file
 
-  	12. That's it, run TwitchBot.exe and it should connect and show a message saying "it is online"
+  	12. That's it, run TwitchBot.exe or TwitchBot.py and it should connect and show a message saying "it is online"
   
 
 ## Commands for the bot
