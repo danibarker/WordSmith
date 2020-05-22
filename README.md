@@ -1,17 +1,17 @@
 # TwitchBot 
 `A twitch bot for Scrabble stuff`
 
-## Files you need on your local version:
+## Files you need on your local version
 
-  `csw.dat`:
-    this is the dictionary file, plain text, each word on one line following this example:
+  `csw.dat`
+   This is the dictionary file, plain text, each word on one line following this example:
       
       AA	(Hawaiian) a volcanic rock consisting of angular blocks of lava with a very rough surface [n -S]	bcfm	hls	46	AA
       
       word (tab \t) definition (tab \t) front_hooks (tab \t) back_hooks (tab \t) probability (tab \t) alphagram
       
   `config.dat`
-    this is the configuration file to connect the bot to a twitch account and have it join channels, it has the following 4 lines only (made up info) instructions on how to set up your own bot found below:
+   This is the configuration file to connect the bot to a twitch account and have it join channels, it has the following 4 lines only (made up info) instructions on how to set up your own bot found below:
     
       oauth:2cw2mrjef8fd8fdoyd95fbi2ajnwpvy1
       oe08ff8dfds8fdfjd99fda68g6pt
@@ -19,7 +19,8 @@
       somestreamer,anotherstreamer,athirdstreamer
       
     
-## Setting up your own bot (you can run TwitchBot.py, or if you don't have python or just want to run the exe that works too):
+## Setting up your own bot 
+### You can run TwitchBot.py, or if you don't have python or just want to run the exe that works too
 
   	1. Create a new twitch account with the username you want the bot to have
 
