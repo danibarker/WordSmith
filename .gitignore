@@ -1,0 +1,10 @@
+# copyright and secret material
+*.dat
+
+
+# executables not part of project
+*.exe
+
+#visual studio specific files
+*.sln
+*.pyproj
