@@ -13,7 +13,10 @@ def related(word, lexicon='csw'):
             if re.search("[^a-zA-Z]" + word + "[^a-zA-Z]", x) \
                     or re.search("[^a-zA-Z]" + word + "S[^a-zA-Z]", x) \
                     or re.search("[^a-zA-Z]" + word + ",[^a-zA-Z]", x):
-                my_result.append(w)
+                if len(CSW[w]) == 6:
+                    my_result.append(w+'#')
+                else:
+                    my_result.append(w)
     elif lexicon == 'twl':
         for w in TWL:
             x = TWL[w][0].upper()
@@ -40,7 +43,10 @@ def starts_with(word, lexicon='csw'):
     if lexicon == 'csw':
         for w in CSW:
             if re.search("^" + word, w):
-                my_result.append(w)
+                if len(CSW[w]) == 6:
+                    my_result.append(w+'#')
+                else:
+                    my_result.append(w)
     elif lexicon == 'twl':
         for w in TWL:
             if re.search("^" + word, w):
@@ -66,7 +72,10 @@ def contains(word, lexicon='csw'):
     if lexicon == 'csw':
         for w in CSW:
             if re.search(word, w):
-                my_result.append(w)
+                if len(CSW[w]) == 6:
+                    my_result.append(w+'#')
+                else:
+                    my_result.append(w)
     elif lexicon == 'twl':
         for w in TWL:
             if re.search(word, w):
@@ -106,7 +115,10 @@ def pattern(word, lexicon='csw'):
     if lexicon == 'csw':
         for w in CSW:
             if re.search(word, w):
-                my_result.append(w)
+                if len(CSW[w]) == 6:
+                    my_result.append(w+'#')
+                else:
+                    my_result.append(w)
     elif lexicon == 'twl':
         for w in TWL:
             if re.search(word, w):
@@ -132,7 +144,10 @@ def ends_with(word, lexicon='csw'):
     if lexicon == 'csw':
         for w in CSW:
             if re.search(word + "$", w):
-                my_result.append(w)
+                if len(CSW[w]) == 6:
+                    my_result.append(w+'#')
+                else:
+                    my_result.append(w)
     elif lexicon == 'twl':
         for w in TWL:
             if re.search(word + "$", w):
@@ -154,7 +169,10 @@ def define(word, lexicon='csw'):
     num_results = 1
     if lexicon == 'csw':
         try:
-            my_result = CSW[word][0]
+            
+                
+               my_result = CSW[word][0]
+            
         except KeyError:
             my_result = 'not found'
     elif lexicon == 'twl':
@@ -162,8 +180,10 @@ def define(word, lexicon='csw'):
             my_result = TWL[word][0]
         except KeyError:
             my_result = 'not found'
-
-    msg = word.upper() + " - " + my_result
+    if len(CSW[word]) == 6:
+        msg = word.upper() + "# - " + my_result
+    else:
+        msg = word.upper() + " - " + my_result
 
     
     return msg
@@ -213,7 +233,10 @@ def random_word(lexicon='csw'):
     msg = ''
     if lexicon == 'csw':
         my_result = random.choice(list(CSW))
-        msg = my_result + " - " + CSW[my_result][0]
+        if len(CSW[my_result]) == 6:
+            msg = my_result + "# - " + CSW[my_result][0]
+        else:
+            msg = my_result + " - " + CSW[my_result][0]
     elif lexicon == 'twl':
         my_result = random.choice(list(TWL))
         msg = my_result + " - " + TWL[my_result][0]
@@ -258,7 +281,10 @@ def anagram(s, db='csw'):
     if db == 'CSW':
         for x in CSW:
             if re.search(expression, CSW[x][4]) and len(x) == word_length:
-                my_result.append(x)
+                if len(CSW[x]) == 6:
+                    my_result.append(x+'#')
+                else:
+                    my_result.append(x)
     elif db == 'TWL':
         for x in TWL:
             if re.search(expression, TWL[x][4]) and len(x) == word_length:

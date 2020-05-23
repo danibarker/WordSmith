@@ -8,4 +8,13 @@
 #visual studio specific files
 *.sln
 *.pyproj
-/.vs
+.vs
+*.suo
+*.sqlite
+__pycache__
+*.spec 
+TwitchBot.spec
+*.user
+# exe dist
+dist
+build
