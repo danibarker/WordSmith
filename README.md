@@ -50,7 +50,8 @@
   	11. Save this file
 
   	12. That's it, run TwitchBot.exe or TwitchBot.py and it should connect and show a message saying "it is online"
-  
+    
+    13. To run TwitchBot.py you will need to have the twitchio package installed, instructions can be found in the readme at https://github.com/TwitchIO/TwitchIO
 
 ## Commands for the bot
 
