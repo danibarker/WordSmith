@@ -6,6 +6,7 @@ irct = f.readline()
 clienti = f.readline()
 nickn = f.readline().strip().lower()
 initc = f.readline().split(',')
+lexicon = f.readline()
 f.close()
 bot = commands.Bot(
     # set up the bot
@@ -89,5 +90,9 @@ async def anagram(ctx,word):
 async def random(ctx):
     msg = dictionary.random_word()
     await ctx.send(msg)
+
+@bot.command(name='pronounce')
+async def pronounce(ctx, word):
+    await ctx.send(f'https://www.collinsdictionary.com/sounds/hwd_sounds/en_gb_{word}.mp3')
 
 bot.run()

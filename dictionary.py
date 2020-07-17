@@ -1,30 +1,29 @@
 import re
 import random
 
-CSW = {}
+wordlist = {}
+f = open('config.dat','r')
+irct = f.readline()
+clienti = f.readline()
+nickn = f.readline().strip().lower()
+initc = f.readline().split(',')
+lexicon = f.readline()
+f.close()
 
 
-
-def related(word, lexicon='csw'):
+def related(word):
     my_result = []
-    if lexicon == 'csw':
-        for w in CSW:
-            x = CSW[w][0].upper()
-            if re.search("[^a-zA-Z]" + word + "[^a-zA-Z]", x) \
-                    or re.search("[^a-zA-Z]" + word + "S[^a-zA-Z]", x) \
-                    or re.search("[^a-zA-Z]" + word + ",[^a-zA-Z]", x):
-                if len(CSW[w]) == 6:
-                    my_result.append(w+'#')
-                else:
-                    my_result.append(w)
-    elif lexicon == 'twl':
-        for w in TWL:
-            x = TWL[w][0].upper()
-            if re.search("[^a-zA-Z]" + word + "[^a-zA-Z]", x) \
-                    or re.search("[^a-zA-Z]" + word + "S[^a-zA-Z]", x) \
-                    or re.search("^" + word + "[^a-zA-Z]", x):
+ 
+    for w in wordlist:
+        x = wordlist[w][0].upper()
+        if re.search("[^a-zA-Z]" + word + "[^a-zA-Z]", x) \
+                or re.search("[^a-zA-Z]" + word + "S[^a-zA-Z]", x) \
+                or re.search("[^a-zA-Z]" + word + ",[^a-zA-Z]", x):
+            if len(wordlist[w]) == 6:
+                my_result.append(w+'#')
+            else:
                 my_result.append(w)
-
+    
     num_results = len(my_result)
     p = -1
     msg = ''
@@ -38,19 +37,16 @@ def related(word, lexicon='csw'):
     return num_results, msg
 
 
-def starts_with(word, lexicon='csw'):
+def starts_with(word):
     my_result = []
-    if lexicon == 'csw':
-        for w in CSW:
-            if re.search("^" + word, w):
-                if len(CSW[w]) == 6:
-                    my_result.append(w+'#')
-                else:
-                    my_result.append(w)
-    elif lexicon == 'twl':
-        for w in TWL:
-            if re.search("^" + word, w):
+    
+    for w in wordlist:
+        if re.search("^" + word, w):
+            if len(wordlist[w]) == 6:
+                my_result.append(w+'#')
+            else:
                 my_result.append(w)
+   
     num_results = len(my_result)
     p = -1
     msg = ''
@@ -64,22 +60,19 @@ def starts_with(word, lexicon='csw'):
     return num_results, msg
 
 
-def contains(word, lexicon='csw'):
+def contains(word):
     global cache_count
     global cache
     word = word.replace('?', '.').upper()
     my_result = []
-    if lexicon == 'csw':
-        for w in CSW:
-            if re.search(word, w):
-                if len(CSW[w]) == 6:
-                    my_result.append(w+'#')
-                else:
-                    my_result.append(w)
-    elif lexicon == 'twl':
-        for w in TWL:
-            if re.search(word, w):
+    
+    for w in wordlist:
+        if re.search(word, w):
+            if len(wordlist[w]) == 6:
+                my_result.append(w+'#')
+            else:
                 my_result.append(w)
+
     num_results = len(my_result)
     p = -1
     msg = ''
@@ -93,36 +86,29 @@ def contains(word, lexicon='csw'):
     return num_results, msg
 
 
-def hidden(word, length, lexicon='csw'):
+def hidden(word, length):
     phrase = word.replace(" ", "")
     msg = 'No hidden words'
-    if lexicon == 'twl':
-        for x in range(0, len(phrase) - length + 1):
-            if phrase[x:x + length] in TWL:
-                msg = msg + phrase[x:x + length] + " "
-    if lexicon == 'csw':
-        for x in range(0, len(phrase) - length + 1):
-            if phrase[x:x + length] in CSW:
-                msg = msg + phrase[x:x + length] + " "
+    
+    for x in range(0, len(phrase) - length + 1):
+        if phrase[x:x + length] in wordlist:
+            msg = msg + phrase[x:x + length] + " "
     return msg
 
 
-def pattern(word, lexicon='csw'):
+def pattern(word):
     global cache_count
     global cache
     word = ('^' + word + '$').upper()
     my_result = []
-    if lexicon == 'csw':
-        for w in CSW:
-            if re.search(word, w):
-                if len(CSW[w]) == 6:
-                    my_result.append(w+'#')
-                else:
-                    my_result.append(w)
-    elif lexicon == 'twl':
-        for w in TWL:
-            if re.search(word, w):
+    
+    for w in wordlist:
+        if re.search(word, w):
+            if len(wordlist[w]) == 6:
+                my_result.append(w+'#')
+            else:
                 my_result.append(w)
+   
     num_results = len(my_result)
     p = -1
     msg = ''
@@ -136,22 +122,19 @@ def pattern(word, lexicon='csw'):
     return num_results, msg
 
 
-def ends_with(word, lexicon='csw'):
+def ends_with(word):
     global cache_count
     global cache
     word = word.replace('?', '.').upper()
     my_result = []
-    if lexicon == 'csw':
-        for w in CSW:
-            if re.search(word + "$", w):
-                if len(CSW[w]) == 6:
-                    my_result.append(w+'#')
-                else:
-                    my_result.append(w)
-    elif lexicon == 'twl':
-        for w in TWL:
-            if re.search(word + "$", w):
+    
+    for w in wordlist:
+        if re.search(word + "$", w):
+            if len(wordlist[w]) == 6:
+                my_result.append(w+'#')
+            else:
                 my_result.append(w)
+  
     num_results = len(my_result)
     p = -1
     msg = ''
@@ -164,44 +147,37 @@ def ends_with(word, lexicon='csw'):
             break
     return num_results, msg
 
-def define(word, lexicon='csw'):
+def define(word):
     my_result = ''
     num_results = 1
-    if lexicon == 'csw':
-        try:
+    
+    try:
             
-                
-               my_result = CSW[word][0]
+        my_result = wordlist[word][0]
             
-        except KeyError:
-            my_result = 'not found'
-    elif lexicon == 'twl':
-        try:
-            my_result = TWL[word][0]
-        except KeyError:
-            my_result = 'not found'
-    if len(CSW[word]) == 6:
-        msg = word.upper() + "# - " + my_result
-    else:
+    except KeyError:
+        my_result = 'not found'
+    try:
+        if len(wordlist[word]) == 6:
+            msg = word.upper() + "# - " + my_result
+        else:
+            msg = word.upper() + " - " + my_result
+    except KeyError:
         msg = word.upper() + " - " + my_result
-
+   
     
     return msg
 
 
-def info(word, lexicon='csw'):
+def info(word):
     my_result = ''
     msg = ""
-    if lexicon == 'csw':
-        try:
-            my_result = CSW[word]
-        except KeyError:
-            msg = "No such word"
-    elif lexicon == 'twl':
-        try:
-            my_result = TWL[word]
-        except KeyError:
-            msg = "No such word"
+    
+    try:
+        my_result = wordlist[word]
+    except KeyError:
+        msg = "No such word"
+    
     counter = -1
     for x in my_result:
         counter = counter + 1
@@ -220,36 +196,30 @@ def info(word, lexicon='csw'):
             msg = msg + "Alphagram: " + x
     msg = msg + "\nMiddle Hooks: "
 
-    if lexicon == 'twl':
-        for x in middle_hooks(word, 'twl'):
-            msg = msg + x + " "
-    if lexicon == 'csw':
-        for x in middle_hooks(word, 'csw'):
-            msg = msg + x + " "
+
+    for x in middle_hooks(word, 'wordlist'):
+        msg = msg + x + " "
     return msg
 
 
-def random_word(lexicon='csw'):
+def random_word():
     msg = ''
-    if lexicon == 'csw':
-        my_result = random.choice(list(CSW))
-        if len(CSW[my_result]) == 6:
-            msg = my_result + "# - " + CSW[my_result][0]
-        else:
-            msg = my_result + " - " + CSW[my_result][0]
-    elif lexicon == 'twl':
-        my_result = random.choice(list(TWL))
-        msg = my_result + " - " + TWL[my_result][0]
+    
+    my_result = random.choice(list(wordlist))
+    if len(wordlist[my_result]) == 6:
+        msg = my_result + "# - " + wordlist[my_result][0]
+    else:
+        msg = my_result + " - " + wordlist[my_result][0]
+
     return msg
 
 
-def anagram_1(word, lexicon='csw'):
+def anagram_1(word):
     global cache_count
     my_result = ''
-    if lexicon == 'csw':
-        my_result = anagram(word, 'CSW')
-    elif lexicon == 'twl':
-        my_result = anagram(word, 'TWL')
+    
+    my_result = anagram(word, 'wordlist')
+    
     num_results = len(my_result)
     p = -1
     msg = ''
@@ -263,7 +233,7 @@ def anagram_1(word, lexicon='csw'):
     return num_results, msg
 
 
-def anagram(s, db='csw'):
+def anagram(s):
     # RETURNS ANAGRAMS OF S, DB IS LEXICON
     my_result = []
     word_length = len(s)
@@ -278,33 +248,26 @@ def anagram(s, db='csw'):
         for y in range(num_blanks):
             word3 = word3 + '.?'
     expression = '^' + ''.join(word3) + '$'
-    if db == 'CSW':
-        for x in CSW:
-            if re.search(expression, CSW[x][4]) and len(x) == word_length:
-                if len(CSW[x]) == 6:
-                    my_result.append(x+'#')
-                else:
-                    my_result.append(x)
-    elif db == 'TWL':
-        for x in TWL:
-            if re.search(expression, TWL[x][4]) and len(x) == word_length:
+    
+    for x in wordlist:
+        if re.search(expression, wordlist[x][4]) and len(x) == word_length:
+            if len(wordlist[x]) == 6:
+                my_result.append(x+'#')
+            else:
                 my_result.append(x)
+   
     return my_result
 
 
-def middle_hooks(s, dic='csw'):
+def middle_hooks(s):
     # FINDS LETTERS THAT CAN BE ADDED TO THE MIDDLE OF A WORD
     result = []
     for x in range(1, len(s)):
         word1 = s[0:x] + '.' + s[x:]
-        if dic == 'csw':
-            for w in CSW:
-                if re.search('^' + word1.upper() + '$', w):
-                    result.append(w)
-        elif dic == 'twl':
-            for w in TWL:
-                if re.search('^' + word1.upper() + '$', w):
-                    result.append(w)
+        
+        for w in wordlist:
+            if re.search('^' + word1.upper() + '$', w):
+                result.append(w)
     return result
 
 
@@ -313,11 +276,11 @@ def middle_hooks(s, dic='csw'):
 def open_files():
    
 
-    # CSW DICTIONARY
-    f = open("csw.dat", "r")
+    # wordlist DICTIONARY
+    f = open(f"{lexicon}.dat", "r")
     line = f.readline().strip("\n").split('	')
     while line != ['']:
-        CSW[line[0]] = line[1:]
+        wordlist[line[0]] = line[1:]
         line = f.readline().strip("\n").split('	')
     f.close()
 
