@@ -17,6 +17,7 @@
       oe08ff8dfds8fdfjd99fda68g6pt
       BotsTwitchAccountName
       somestreamer,anotherstreamer,athirdstreamer
+      csw
       
     
 ## Setting up your own bot 
