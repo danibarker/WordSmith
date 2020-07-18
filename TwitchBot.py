@@ -71,6 +71,14 @@ async def pattern(ctx,word):
     print(len(msg))
     await ctx.send(f'{num} results found:\n{msg}')
 
+@bot.command(name='regex')
+async def regex(ctx,word):
+    msg = dictionary.regex(word.upper())
+    num = msg[0]
+    msg = msg[1]
+    print(len(msg))
+    await ctx.send(f'{num} results found:\n{msg}')
+
 @bot.command(name='info')
 async def info(ctx,word):
     msg = dictionary.info(word.upper())
