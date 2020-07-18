@@ -46,6 +46,7 @@
 	  	second line is your client id
 	  	third line is your bot's username
 	  	fourth line is the channels you want it to join separated by commas
+		fifth line is the name of the lexicon (for csw.dat it would just be "csw")
 
   	11. Save this file
 
@@ -62,7 +63,8 @@ Some commands will return a list of results, if there are more than 30, it will 
 	!startswith -returns a list of words that start with the given string eg. !startswith cat
 	!endswith - same as above but words ending in the string eg !endswith cat
 	!contains - returns a list of words that contain the given string anywhere in the word eg !contains cat
-	!pattern - uses regex filtering to find words eg !pattern [abc]at.* will return all words starting with aat, cat, or bat
+	!pattern - ? for single blank, * for multiple
+	!regex - !regex ^[abc]at$ will return BAT and CAT.
 	!info - returns the definition, front hooks, back hooks, middle hooks, probability, alphagram eg !info cat
 	!anagram - returns a list of words that fit the letters given eg !anagram ?aeinst
 	!random - returns a single word and definition chosen at random
