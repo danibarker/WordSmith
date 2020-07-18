@@ -100,8 +100,32 @@ def pattern(word):
     global cache_count
     global cache
     word = ('^' + word + '$').upper()
+    word = word.replace('?','.')
+    word = word.replace('*','.*')
     my_result = []
-    
+    for w in wordlist:
+        if re.search(word, w):
+            if len(wordlist[w]) == 6:
+                my_result.append(w+'#')
+            else:
+                my_result.append(w)
+   
+    num_results = len(my_result)
+    p = -1
+    msg = ''
+    for x in my_result:
+        p += 1
+        if p < 30:
+            msg += my_result[p] + "   "
+        else:
+            msg += '\nLimited to first 30 results'
+            break
+    return num_results, msg
+
+def regex(word):
+    global cache_count
+    global cache
+    my_result = []
     for w in wordlist:
         if re.search(word, w):
             if len(wordlist[w]) == 6:
@@ -286,3 +310,6 @@ def open_files():
 
 
 open_files()
+
+if __name__ == '__main__':
+    print(regex('^F.N$'))
