@@ -9,6 +9,9 @@
       AA	(Hawaiian) a volcanic rock consisting of angular blocks of lava with a very rough surface [n -S]	bcfm	hls	46	AA
       
       word (tab \t) definition (tab \t) front_hooks (tab \t) back_hooks (tab \t) probability (tab \t) alphagram
+
+      also if you add another tab and a # at the end of the line for collins only words, the bot will display the # at the end of the word, this is optional though
+      
       
   `config.dat`
    This is the configuration file to connect the bot to a twitch account and have it join channels, it has the following 4 lines only (made up info) instructions on how to set up your own bot found below:
