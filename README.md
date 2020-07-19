@@ -14,7 +14,7 @@
       
       
   `config.dat`
-   This is the configuration file to connect the bot to a twitch account and have it join channels, it has the following 4 lines only (made up info) instructions on how to set up your own bot found below:
+   This is the configuration file to connect the bot to a twitch account and have it join channels, it has the following 5 lines only (made up info) instructions on how to set up your own bot found below:
     
       oauth:2cw2mrjef8fd8fdoyd95fbi2ajnwpvy1
       oe08ff8dfds8fdfjd99fda68g6pt
