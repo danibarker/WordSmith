@@ -102,7 +102,7 @@ async def random(ctx):
 @bot.command(name='pronounce')
 async def pronounce(ctx, word):
     if word.upper() in dictionary.wordlist:
-        await ctx.send(f'https://www.collinsdictionary.com/sounds/hwd_sounds/en_gb_{word}.mp3')
+        await ctx.send(f'https://www.collinsdictionary.com/sounds/hwd_sounds/en_gb_{word.lower()}.mp3')
     else:
         await ctx.send(f'{word} is not a valid word')
 bot.run()
