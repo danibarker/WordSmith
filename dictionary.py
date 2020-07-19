@@ -221,7 +221,7 @@ def info(word):
     msg = msg + "\nMiddle Hooks: "
 
 
-    for x in middle_hooks(word, 'wordlist'):
+    for x in middle_hooks(word):
         msg = msg + x + " "
     return msg
 
@@ -242,7 +242,7 @@ def anagram_1(word):
     global cache_count
     my_result = ''
     
-    my_result = anagram(word, 'wordlist')
+    my_result = anagram(word)
     
     num_results = len(my_result)
     p = -1
@@ -312,4 +312,4 @@ def open_files():
 open_files()
 
 if __name__ == '__main__':
-    print(regex('^F.N$'))
+    print(info('APPLE'))
