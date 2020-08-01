@@ -25,15 +25,14 @@ def related(word):
                 my_result.append(w)
     
     num_results = len(my_result)
-    p = -1
     msg = ''
-    for x in my_result:
-        p += 1
-        if p < 30:
-            msg += my_result[p] + "   "
-        else:
-            msg += '\nLimited to first 30 results'
+    for n,x in enumerate(my_result):
+        if len(msg) > 450 - len(my_result[n]):
+            msg += f'Limited to first {n} results'
             break
+        else:
+            msg += my_result[n] + " "
+    
     return num_results, msg
 
 
@@ -48,15 +47,14 @@ def starts_with(word):
                 my_result.append(w)
    
     num_results = len(my_result)
-    p = -1
+    
     msg = ''
-    for x in range(0, len(my_result)):
-        p += 1
-        if p < 30:
-            msg += my_result[p] + "   "
-        else:
-            msg += '\nLimited to first 30 results'
+    for n,x in enumerate(my_result):
+        if len(msg) > 450 - len(my_result[n]):
+            msg += f'Limited to first {n} results'
             break
+        else:
+            msg += my_result[n] + " "
     return num_results, msg
 
 
@@ -74,15 +72,13 @@ def contains(word):
                 my_result.append(w)
 
     num_results = len(my_result)
-    p = -1
     msg = ''
-    for x in my_result:
-        p += 1
-        if p < 30:
-            msg += my_result[p] + "   "
-        else:
-            msg += '\nLimited to first 30 results'
+    for n,x in enumerate(my_result):
+        if len(msg) > 450 - len(my_result[n]):
+            msg += f'Limited to first {n} results'
             break
+        else:
+            msg += my_result[n] + " "
     return num_results, msg
 
 
@@ -111,15 +107,13 @@ def pattern(word):
                 my_result.append(w)
    
     num_results = len(my_result)
-    p = -1
     msg = ''
-    for x in my_result:
-        p += 1
-        if p < 30:
-            msg += my_result[p] + "   "
-        else:
-            msg += '\nLimited to first 30 results'
+    for n,x in enumerate(my_result):
+        if len(msg) > 450 - len(my_result[n]):
+            msg += f'Limited to first {n} results'
             break
+        else:
+            msg += my_result[n] + " "
     return num_results, msg
 
 def regex(word):
@@ -134,15 +128,13 @@ def regex(word):
                 my_result.append(w)
    
     num_results = len(my_result)
-    p = -1
     msg = ''
-    for x in my_result:
-        p += 1
-        if p < 30:
-            msg += my_result[p] + "   "
-        else:
-            msg += '\nLimited to first 30 results'
+    for n,x in enumerate(my_result):
+        if len(msg) > 450 - len(my_result[n]):
+            msg += f'Limited to first {n} results'
             break
+        else:
+            msg += my_result[n] + " "
     return num_results, msg
 
 
@@ -160,15 +152,13 @@ def ends_with(word):
                 my_result.append(w)
   
     num_results = len(my_result)
-    p = -1
     msg = ''
-    for x in my_result:
-        p += 1
-        if p < 30:
-            msg += my_result[p] + "   "
-        else:
-            msg += '\nLimited to first 30 results'
+    for n,x in enumerate(my_result):
+        if len(msg) > 450 - len(my_result[n]):
+            msg += f'Limited to first {n} results'
             break
+        else:
+            msg += my_result[n] + " "
     return num_results, msg
 
 def define(word):
@@ -209,16 +199,16 @@ def info(word):
             msg = word + " - "
             counter += 1
         if counter == 1:
-            msg = msg + x + "\n"
+            msg = msg + x 
         if counter == 2:
-            msg = msg + "Front Hooks: " + x + "\n"
+            msg = msg + "Front Hooks: " + x 
         if counter == 3:
-            msg = msg + "Back Hooks: " + x + "\n"
+            msg = msg + "Back Hooks: " + x 
         if counter == 4:
-            msg = msg + "Probability: " + str(x) + "\n"
+            msg = msg + "Probability: " + str(x) 
         if counter == 5:
             msg = msg + "Alphagram: " + x
-    msg = msg + "\nMiddle Hooks: "
+    msg = msg + "Middle Hooks: "
 
 
     for x in middle_hooks(word):
@@ -245,15 +235,13 @@ def anagram_1(word):
     my_result = anagram(word)
     
     num_results = len(my_result)
-    p = -1
     msg = ''
-    for x in my_result:
-        p += 1
-        if p < 30:
-            msg += my_result[p] + "   "
-        else:
-            msg += '\nLimited to first 30 results'
+    for n,x in enumerate(my_result):
+        if len(msg) > 450 - len(my_result[n]):
+            msg += f'Limited to first {n} results'
             break
+        else:
+            msg += my_result[n] + " "
     return num_results, msg
 
 
