@@ -282,6 +282,22 @@ def middle_hooks(s):
                 result.append(w)
     return result
 
+def crypto(word):
+    newword = []
+    groups = []
+    dropped = 0
+    for n,letter in enumerate(word):
+        if letter in groups:
+
+            newword.append(r'\ '[0]+f'{groups.index(letter)+1}')
+        else:
+            add = r'\ '[0]+r'|\ '[:-1].join(f'{n+1}' for n in range(len(groups)))
+            if len(newword)>0:
+                newword.append(f'(?!{add})')
+            newword.append(f'(.)')
+            
+            groups.append(letter)
+    return regex(f'^{"".join(newword)}$')
 
 
 
@@ -300,4 +316,4 @@ def open_files():
 open_files()
 
 if __name__ == '__main__':
-    print(info('APPLE'))
+    print(crypto('XCCXBB'))

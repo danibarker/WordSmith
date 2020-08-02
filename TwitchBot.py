@@ -105,4 +105,10 @@ async def pronounce(ctx, word):
         await ctx.send(f'https://www.collinsdictionary.com/sounds/hwd_sounds/en_gb_{word.lower()}.mp3')
     else:
         await ctx.send(f'{word} is not a valid word')
+@bot.command(name='crypto')
+async def crypto(ctx, word):
+    msg = dictionary.crypto(word.upper())
+    num = msg[0]
+    msg = msg[1]
+    await ctx.send(f'{num} results found:\n{msg}')
 bot.run()
