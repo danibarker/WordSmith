@@ -285,7 +285,6 @@ def middle_hooks(s):
 def crypto(word):
     newword = []
     groups = []
-    dropped = 0
     for n,letter in enumerate(word):
         if letter in groups:
 
