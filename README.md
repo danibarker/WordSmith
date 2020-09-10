@@ -3,24 +3,35 @@
 
 ## Files you need on your local version
 
-  `csw.dat`
-   This is the dictionary file, plain text, each word on one line following this example:
+  `csw.dat` `twl.dat` `mw.dat`
+   These are the dictionary files, plain text, each word on one line following this example (will work with only one or two of these files, a warning will just be shown for the missing files):
       
       AA	(Hawaiian) a volcanic rock consisting of angular blocks of lava with a very rough surface [n -S]	bcfm	hls	46	AA
       
       word (tab \t) definition (tab \t) front_hooks (tab \t) back_hooks (tab \t) probability (tab \t) alphagram
 
-      also if you add another tab and a # at the end of the line for collins only words, the bot will display the # at the end of the word, this is optional though
+      also for csw.dat if you add another tab and a # at the end of the line for collins only words, the bot will display the # at the end of the word, this is optional though
       
       
-  `config.dat`
+  `config.json`
    This is the configuration file to connect the bot to a twitch account and have it join channels, it has the following 5 lines only (made up info) instructions on how to set up your own bot found below:
     
-      oauth:2cw2mrjef8fd8fdoyd95fbi2ajnwpvy1
-      oe08ff8dfds8fdfjd99fda68g6pt
-      BotsTwitchAccountName
-      somestreamer,anotherstreamer,athirdstreamer
-      csw
+      {
+        "irc_token": "oauth:2cw2mrjef8fd8fdoyd95fbi2ajnwpvy1",
+        "client_id": "oe08ff8dfds8fdfjd99fda68g6pt",
+        "nick": "BotsTwitchAccountName",
+        "channels": {
+            "somestreamer": {
+                "lexicon": "twl",
+                "command_blacklist": []
+            },
+            "anotherstreamer": {
+                "lexicon": "csw",
+                "command_blacklist": []
+            }
+      }
+
+}
       
     
 ## Setting up your own bot 
@@ -34,7 +45,7 @@
 
   	4. Register a new application, Name is not important, it isn't shown anywhere except in your applications list
 
-  	5. Paste the oauth you got earlier, you'll also need to put this into config.dat (just open in notepad or similar)
+  	5. Paste the oauth you got earlier, you'll also need to put this into config.json (just open in notepad or similar)
 
   	6. Choose Chat Bot for Category
 
@@ -42,15 +53,14 @@
 
   	8. You will be brough to a page called Console, where you will see your App, click on Manage
 
-  	9. Copy your Client ID, you will need to put this in config.dat
+  	9. Copy your Client ID, you will need to put this in config.json
 
-  	10. Open config.dat and replace the lines with your information:
+  	10. Open config.json and replace the lines with your information, be sure to leave the variables in quotes:
 	  	
-		first line is the oauth
-	  	second line is your client id
-	  	third line is your bot's username
-	  	fourth line is the channels you want it to join separated by commas
-		fifth line is the name of the lexicon (for csw.dat it would just be "csw")
+		irc_token is the oauth, make sure it includes the text "oauth:" and not just the rest of the string
+	  	client_id is your client id
+	  	nick is your bot's username
+	  	channels is the channels you want it to join and their initial lexicon
 
   	11. Save this file
 
@@ -72,3 +82,4 @@ Some commands will return a list of results, if there are more than 30, it will 
 	!info - returns the definition, front hooks, back hooks, middle hooks, probability, alphagram eg !info cat
 	!anagram - returns a list of words that fit the letters given eg !anagram ?aeinst
 	!random - returns a single word and definition chosen at random
+    !lexicon - only usable by the stream owner, changes to one of the other lexicons eg !lexicon csw, csw# is for csw with octothorps.
