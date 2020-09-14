@@ -6,7 +6,7 @@ config.json
 *.txt
 
 # executables not part of project
-*.exe
+# *.exe
 
 #visual studio specific files
 *.sln
