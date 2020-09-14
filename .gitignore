@@ -1,5 +1,6 @@
 # copyright and secret material
-*.dat
+config.dat
+config.json
 
 
 # executables not part of project
@@ -18,3 +19,7 @@ TwitchBot.spec
 # exe dist
 dist
 build
+/config.json
+/module1.py
+/1csw.dat
+/test.json
