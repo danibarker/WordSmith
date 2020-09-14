@@ -1,6 +1,8 @@
 # copyright and secret material
-*.dat
+config.json
 
+#custom text files
+*.txt
 
 # executables not part of project
 *.exe
