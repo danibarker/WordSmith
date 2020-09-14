@@ -25,4 +25,9 @@ def save(config):
     f = open(f'config.json', 'w')
     f.write(jfile)
     f.close()
-
+def custom_commands():
+    f = open('custom_commands.json', 'r')
+    commands = json.loads(f.read())
+    f.close()
+    return commands
+    

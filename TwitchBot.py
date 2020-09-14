@@ -3,7 +3,7 @@ from twitchio.ext import commands
 import twitchio as tw
 import dictionary
 import config as cf
-import json
+import random as rd
 config = cf.config()
 initc = config.channels.keys()
 bot = commands.Bot(
@@ -14,6 +14,7 @@ bot = commands.Bot(
     prefix='!',
     initial_channels=initc
 )
+custom_commands = cf.custom_commands()
 
 @bot.event
 async def event_ready():
@@ -21,8 +22,16 @@ async def event_ready():
     print('Online')
 @bot.event
 async def event_message(ctx):
-    if ctx.content.starts_with('!')
-    await bot.handle_commands(ctx)
+    if ctx.content in custom_commands.keys():
+        f = open(custom_commands[ctx.content], 'r')
+        messages = f.read().split('\n')
+        message = rd.choice(messages)
+        print("message",message)
+        await ctx.channel.send(rd.choice(messages))
+        
+
+    else:
+        await bot.handle_commands(ctx)
     
 
 @bot.command(name='define')

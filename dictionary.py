@@ -45,7 +45,7 @@ def starts_with(word,lexicon):
     num_results = len(my_result)
     
     msg = ''
-    for n,x in enumerate(my_result):
+    for n,_ in enumerate(my_result):
         if len(msg) > 450 - len(my_result[n]):
             msg += f'Limited to first {n} results'
             break
@@ -55,8 +55,6 @@ def starts_with(word,lexicon):
 
 
 def contains(word,lexicon):
-    global cache_count
-    global cache
     word = word.replace('?', '.').upper()
     my_result = []
     
@@ -69,7 +67,7 @@ def contains(word,lexicon):
 
     num_results = len(my_result)
     msg = ''
-    for n,x in enumerate(my_result):
+    for n,_ in enumerate(my_result):
         if len(msg) > 450 - len(my_result[n]):
             msg += f'Limited to first {n} results'
             break
@@ -89,8 +87,6 @@ def hidden(word, length,lexicon):
 
 
 def pattern(word,lexicon):
-    global cache_count
-    global cache
     word = ('^' + word + '$').upper()
     word = word.replace('?','.')
     word = word.replace('*','.*')
@@ -104,7 +100,7 @@ def pattern(word,lexicon):
    
     num_results = len(my_result)
     msg = ''
-    for n,x in enumerate(my_result):
+    for n,_ in enumerate(my_result):
         if len(msg) > 450 - len(my_result[n]):
             msg += f'Limited to first {n} results'
             break
@@ -113,8 +109,6 @@ def pattern(word,lexicon):
     return num_results, msg
 
 def regex(word,lexicon):
-    global cache_count
-    global cache
     my_result = []
     for w in wordlist[lexicon]:
         if re.search(word, w):
@@ -125,7 +119,7 @@ def regex(word,lexicon):
    
     num_results = len(my_result)
     msg = ''
-    for n,x in enumerate(my_result):
+    for n,_ in enumerate(my_result):
         if len(msg) > 450 - len(my_result[n]):
             msg += f'Limited to first {n} results'
             break
@@ -135,8 +129,7 @@ def regex(word,lexicon):
 
 
 def ends_with(word,lexicon):
-    global cache_count
-    global cache
+    
     word = word.replace('?', '.').upper()
     my_result = []
     
@@ -149,7 +142,7 @@ def ends_with(word,lexicon):
   
     num_results = len(my_result)
     msg = ''
-    for n,x in enumerate(my_result):
+    for n,_ in enumerate(my_result):
         if len(msg) > 450 - len(my_result[n]):
             msg += f'Limited to first {n} results'
             break
@@ -159,7 +152,6 @@ def ends_with(word,lexicon):
 
 def define(word, lexicon):
     my_result = ''
-    num_results = 1
     
     try:
             
@@ -207,7 +199,7 @@ def info(word,lexicon):
     msg = msg + "Middle Hooks: "
 
 
-    for x in middle_hooks(word):
+    for x in middle_hooks(word,lexicon):
         msg = msg + x + " "
     return msg
 
@@ -225,14 +217,14 @@ def random_word(lexicon):
 
 
 def anagram_1(word,lexicon):
-    global cache_count
+    
     my_result = ''
     
     my_result = anagram(word,lexicon)
     
     num_results = len(my_result)
     msg = ''
-    for n,x in enumerate(my_result):
+    for n,_ in enumerate(my_result):
         if len(msg) > 450 - len(my_result[n]):
             msg += f'Limited to first {n} results'
             break
@@ -249,11 +241,11 @@ def anagram(s,lexicon):
     s = s.replace('?', '').upper()
     word2 = sorted(s.replace('?', ''))
     word3 = ''
-    for y in range(num_blanks):
+    for _ in range(num_blanks):
         word3 = word3 + '.?'
     for x in word2:
         word3 = word3 + x
-        for y in range(num_blanks):
+        for _ in range(num_blanks):
             word3 = word3 + '.?'
     expression = '^' + ''.join(word3) + '$'
     
@@ -281,7 +273,7 @@ def middle_hooks(s,lexicon):
 def crypto(word,lexicon):
     newword = []
     groups = []
-    for n,letter in enumerate(word):
+    for letter in word:
         if letter in groups:
 
             newword.append(r'\ '[0]+f'{groups.index(letter)+1}')
@@ -292,7 +284,7 @@ def crypto(word,lexicon):
             newword.append(f'(.)')
             
             groups.append(letter)
-    return regex(f'^{"".join(newword)}$')
+    return regex(f'^{"".join(newword)}$',lexicon)
 
 
 
@@ -331,4 +323,4 @@ def open_files():
 open_files()
 
 if __name__ == '__main__':
-    print(crypto('XCCXBB'))
+    print(crypto('XCCXBB','csw'))
