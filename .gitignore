@@ -1,4 +1,5 @@
 # copyright and secret material
+config.dat
 config.json
 
 #custom text files
@@ -20,3 +21,7 @@ TwitchBot.spec
 # exe dist
 dist
 build
+/config.json
+/module1.py
+/1csw.dat
+/test.json
