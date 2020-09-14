@@ -3,7 +3,7 @@ from twitchio.ext import commands
 import twitchio as tw
 import dictionary
 import config as cf
-
+import json
 config = cf.config()
 initc = config.channels.keys()
 bot = commands.Bot(
@@ -21,6 +21,7 @@ async def event_ready():
     print('Online')
 @bot.event
 async def event_message(ctx):
+    if ctx.content.starts_with('!')
     await bot.handle_commands(ctx)
     
 
