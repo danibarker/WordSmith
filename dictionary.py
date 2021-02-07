@@ -251,7 +251,7 @@ def anagram(s,lexicon):
     expression = '^' + ''.join(word3) + '$'
     
     for x in wordlist[lexicon]:
-        if re.search(expression, wordlist[lexicon][x][4]) and len(x) == word_length:
+        if len(x) == word_length and re.search(expression, wordlist[lexicon][x][4]):
             if len(wordlist[lexicon][x]) == 6 and lexicon == 'csw#':
                 my_result.append(x+'#')
             else:
