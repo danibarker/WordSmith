@@ -207,11 +207,12 @@ def info(word,lexicon):
 def random_word(lexicon):
     msg = ''
     
-    my_result = random.choice(list(wordlist[lexicon]))
-    if len(wordlist[lexicon][my_result]) == 6 and lexicon == 'csw#':
-        msg = my_result + "# - " + wordlist[lexicon][my_result][0]
-    else:
-        msg = my_result + " - " + wordlist[lexicon][my_result][0]
+    if wordlist[lexicon]:
+        my_result = random.choice(list(wordlist[lexicon]))
+        if len(wordlist[lexicon][my_result]) == 6 and lexicon == 'csw#':
+            msg = my_result + "# - " + wordlist[lexicon][my_result][0]
+        else:
+            msg = my_result + " - " + wordlist[lexicon][my_result][0]
 
     return msg
 
@@ -289,8 +290,6 @@ def crypto(word,lexicon):
 
 
 def open_files():
-   
-
     # wordlist DICTIONARY
     try:
         f = open("csw.dat", "r")
@@ -319,8 +318,6 @@ def open_files():
         f.close()
     except FileNotFoundError:
         print("mw.dat not found")
-
-open_files()
 
 if __name__ == '__main__':
     print(crypto('XCCXBB','csw'))

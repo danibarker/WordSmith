@@ -4,7 +4,9 @@ import twitchio as tw
 import dictionary
 import config as cf
 import random as rd
+
 config = cf.config()
+dictionary.open_files()
 initc = config.channels.keys()
 bot = commands.Bot(
     # set up the bot
