@@ -1,5 +1,5 @@
-# TwitchBot 
-`A twitch bot for Scrabble stuff`
+# Wordsmith
+`A Twitch bot for OMGWords`
 
 ## Files you need on your local version
 
@@ -35,7 +35,7 @@
       
     
 ## Setting up your own bot 
-### You can run TwitchBot.py, or if you don't have python or just want to run the exe that works too
+### You can run wordsmith.py, or if you don't have python or just want to run the exe that works too
 
   	1. Create a new twitch account with the username you want the bot to have
 
@@ -64,9 +64,9 @@
 
   	11. Save this file
 
-  	12. That's it, run TwitchBot.exe or TwitchBot.py and it should connect and show a message saying "it is online"
+  	12. That's it, run wordsmith.py and it should connect and show a message saying "it is online"
     
-    13. To run TwitchBot.py you will need to have the twitchio package installed, instructions can be found in the readme at https://github.com/TwitchIO/TwitchIO
+    13. To run wordsmith.py you will need to have the twitchio package installed, instructions can be found in the readme at https://github.com/TwitchIO/TwitchIO
 
 ## Commands for the bot
 
