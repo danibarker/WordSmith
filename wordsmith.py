@@ -43,12 +43,20 @@ async def define(ctx,word):
 
 @bot.command(name='lexicon')
 async def lexicon(ctx,word):
-    if ctx.author.name == ctx.channel.name:
+    if ctx.author.name == ctx.channel.name or ctx.author.is_mod:
         config.channels[ctx.channel.name]["lexicon"]=word.lower()
         cf.save(config)
         msg = f'Lexicon changed to {word.lower()}'
     else:
-        msg = f'Command can only be used by {ctx.channel.name}'
+        msg = f'Command can only be used by {ctx.channel.name} or moderators'
+    await ctx.send(msg)
+
+@bot.command(name='so')
+async def shoutout(ctx,word):
+    if ctx.author.name == ctx.channel.name or ctx.author.is_mod:
+        msg = f'Welcome http://twitch.tv/{word.lower()} !'
+    else:
+        msg = f'Command can only be used by {ctx.channel.name} or moderators'
     await ctx.send(msg)
 
 @bot.command(name='related')
