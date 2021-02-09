@@ -21,7 +21,8 @@ custom_commands = cf.custom_commands()
 @bot.event
 async def event_ready():
     'Called once when the bot goes online.'
-    print('Online')
+    print('Wordsmith 0.1 by Danielle Barker')
+
 @bot.event
 async def event_message(ctx):
     if ctx.content in custom_commands.keys():
@@ -139,4 +140,5 @@ async def crypto(ctx, word):
     num = msg[0]
     msg = msg[1]
     await ctx.send(f'{num} results found:\n{msg}')
+
 bot.run()
