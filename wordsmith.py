@@ -20,13 +20,13 @@ class Bot(commands.Bot):
         print(f'Wordsmith 0.1 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
-        print(ctx.content)
-        if ctx.content in custom_commands.keys():
-            f = open(custom_commands[ctx.content], 'r')
+        if len(ctx.content) > 1 and ctx.content[0] == '!' and ctx.content[1:] in custom_commands.keys():
+            print(ctx.content)
+            f = open(custom_commands[ctx.content[1:]], 'r')
             messages = f.read().split('\n')
             message = rd.choice(messages)
             print("message",message)
-            await ctx.channel.send(rd.choice(messages))
+            await ctx.channel.send(message)
         else:
             await self.handle_commands(ctx)
 
