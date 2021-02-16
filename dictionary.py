@@ -8,6 +8,7 @@ wordlist = {"csw":csw,"twl":twl, "mw":mw, "csw#":csw}
 
 
 def related(word,lexicon):
+    word = word.replace('?', '.').upper()
     my_result = []
  
     for w in wordlist[lexicon]:
@@ -33,10 +34,12 @@ def related(word,lexicon):
 
 
 def starts_with(word,lexicon):
+    word = word.replace('?', '.').upper()
+    word_length = len(word)
     my_result = []
     
     for w in wordlist[lexicon]:
-        if re.search("^" + word, w):
+        if len(w) >= word_length and re.search("^" + word, w):
             if len(wordlist[lexicon][w]) == 6 and lexicon == 'csw#':
                 my_result.append(w+'#')
             else:
@@ -56,10 +59,11 @@ def starts_with(word,lexicon):
 
 def contains(word,lexicon):
     word = word.replace('?', '.').upper()
+    word_length = len(word)
     my_result = []
     
     for w in wordlist[lexicon]:
-        if re.search(word, w):
+        if len(w) >= word_length and re.search(word, w):
             if len(wordlist[lexicon][w]) == 6 and lexicon == 'csw#':
                 my_result.append(w+'#')
             else:
@@ -129,12 +133,12 @@ def regex(word,lexicon):
 
 
 def ends_with(word,lexicon):
-    
     word = word.replace('?', '.').upper()
+    word_length = len(word)
     my_result = []
     
     for w in wordlist[lexicon]:
-        if re.search(word + "$", w):
+        if len(w) >= word_length and re.search(word + "$", w):
             if len(wordlist[lexicon][w]) == 6 and lexicon == 'csw#':
                 my_result.append(w+'#')
             else:
@@ -263,11 +267,12 @@ def anagram(s,lexicon):
 def middle_hooks(s,lexicon):
     # FINDS LETTERS THAT CAN BE ADDED TO THE MIDDLE OF A WORD
     result = []
+    word_length = len(s)
     for x in range(1, len(s)):
         word1 = s[0:x] + '.' + s[x:]
         
         for w in wordlist[lexicon]:
-            if re.search('^' + word1.upper() + '$', w):
+            if len(w) > word_length and re.search('^' + word1.upper() + '$', w):
                 result.append(w)
     return result
 
