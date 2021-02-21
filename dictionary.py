@@ -229,10 +229,7 @@ def random_word(lexicon):
 
 def anagram_1(word,lexicon):
     
-    my_result = ''
-    
     my_result = anagram(word,lexicon)
-    
     num_results = len(my_result)
     msg = ''
     for n,_ in enumerate(my_result):
@@ -249,14 +246,22 @@ def anagram(s,lexicon):
     my_result = []
     word_length = len(s)
     num_blanks = list(s).count('?')
-    letters = sorted(s.replace('?', ''))
+    letters = sorted(s.replace('?', '').upper())
     mask = ''
-    for _ in range(num_blanks):
-        mask = mask + '.?'
+    alpha = 'A'
     for letter in letters:
+        if num_blanks > 0 and letter != alpha:
+            if num_blanks == 1:
+                mask = mask + ('[%c-%c]?' % (alpha, chr(ord(letter)-1)))
+            else:
+                mask = mask + ('[%c-%c]{0,%d}' % (alpha, chr(ord(letter)-1), num_blanks))
+            alpha = letter
         mask = mask + letter
-        for _ in range(num_blanks):
-            mask = mask + '.?'
+    if num_blanks > 0:
+        if num_blanks == 1:
+            mask = mask + ('[%c-Z]?' % (alpha))
+        else:
+            mask = mask + ('[%c-Z]{0,%d}' % (alpha, num_blanks))
     pattern = re.compile('^%s$' % ''.join(mask), re.IGNORECASE)
     
     for word in wordlist[lexicon]:
