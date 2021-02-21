@@ -196,20 +196,21 @@ def info(word,lexicon):
             msg = word + " - "
             counter += 1
         if counter == 1:
-            msg = msg + x 
-        if counter == 2:
-            msg = msg + "Front Hooks: " + x 
-        if counter == 3:
-            msg = msg + "Back Hooks: " + x 
+            msg = msg + x + " "
+        if counter == 2 and x:
+            msg = msg + "Front Hooks: " + x + " "
+        if counter == 3 and x:
+            msg = msg + "Back Hooks: " + x + " "
         if counter == 4:
-            msg = msg + "Probability: " + str(x) 
+            msg = msg + "Probability: " + str(x) + " "
         if counter == 5:
-            msg = msg + "Alphagram: " + x
-    msg = msg + "Middle Hooks: "
+            msg = msg + "Alphagram: " + x + " "
 
-
-    for x in middle_hooks(word,lexicon):
-        msg = msg + x + " "
+    hooks = middle_hooks(word,lexicon)
+    if hooks:
+        msg = msg + "Middle Hooks: "
+        for x in hooks:
+            msg = msg + x + " "
     return msg
 
 
