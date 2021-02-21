@@ -187,7 +187,7 @@ def info(word,lexicon,alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
     try:
         my_result = wordlist[lexicon][word]
     except KeyError:
-        msg = "No such word"
+        return "No such word"
     
     counter = -1
     for x in my_result:
