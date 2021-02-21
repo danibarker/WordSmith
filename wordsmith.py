@@ -115,8 +115,9 @@ class Bot(commands.Bot):
         await ctx.send(f'{num} results found:\n{msg}')
 
     @commands.command(name='random')
-    async def random(ctx):
+    async def random(self, ctx):
         msg = dictionary.random_word(config.channels[ctx.channel.name]["lexicon"])
+        print(len(msg))
         await ctx.send(msg)
 
     @commands.command(name='pronounce')
