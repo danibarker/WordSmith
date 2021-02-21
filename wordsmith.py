@@ -17,7 +17,7 @@ class Bot(commands.Bot):
                          initial_channels=initc)
 
     async def event_ready(self):
-        print(f'Wordsmith 0.1 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.2 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!' and ctx.content[1:] in custom_commands.keys():

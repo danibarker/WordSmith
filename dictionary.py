@@ -8,14 +8,13 @@ wordlist = {"csw":csw,"twl":twl, "mw":mw, "csw#":csw}
 
 
 def related(word,lexicon):
-    word = word.replace('?', '.').upper()
+    word = word.replace('?', '.')
+    pattern = re.compile(rf'(?<![A-Za-z])(?:{re.escape(word)})S?(?![A-Za-z])', re.IGNORECASE)
     my_result = []
  
     for w in wordlist[lexicon]:
-        x = wordlist[lexicon][w][0].upper()
-        if re.search("[^a-zA-Z]" + word + "[^a-zA-Z]", x) \
-                or re.search("[^a-zA-Z]" + word + "S[^a-zA-Z]", x) \
-                or re.search("[^a-zA-Z]" + word + ",[^a-zA-Z]", x):
+        x = wordlist[lexicon][w][0]
+        if pattern.search(x):
             if len(wordlist[lexicon][w]) == 6 and lexicon == 'csw#':
                 my_result.append(w+'#')
             else:
@@ -34,12 +33,13 @@ def related(word,lexicon):
 
 
 def starts_with(word,lexicon):
-    word = word.replace('?', '.').upper()
+    word = word.replace('?', '.')
     word_length = len(word)
+    pattern = re.compile(rf'^(?:{word})', re.IGNORECASE)
     my_result = []
     
     for w in wordlist[lexicon]:
-        if len(w) >= word_length and re.search("^" + word, w):
+        if len(w) >= word_length and pattern.match(w):
             if len(wordlist[lexicon][w]) == 6 and lexicon == 'csw#':
                 my_result.append(w+'#')
             else:
@@ -58,12 +58,13 @@ def starts_with(word,lexicon):
 
 
 def contains(word,lexicon):
-    word = word.replace('?', '.').upper()
+    word = word.replace('?', '.')
     word_length = len(word)
+    pattern = re.compile(word, re.IGNORECASE)
     my_result = []
     
     for w in wordlist[lexicon]:
-        if len(w) >= word_length and re.search(word, w):
+        if len(w) >= word_length and pattern.search(w):
             if len(wordlist[lexicon][w]) == 6 and lexicon == 'csw#':
                 my_result.append(w+'#')
             else:
@@ -91,12 +92,13 @@ def hidden(word, length,lexicon):
 
 
 def pattern(word,lexicon):
-    word = ('^' + word + '$').upper()
     word = word.replace('?','.')
     word = word.replace('*','.*')
+    pattern = re.compile(rf'^(?:{word})$', re.IGNORECASE)
     my_result = []
+
     for w in wordlist[lexicon]:
-        if re.search(word, w):
+        if pattern.match(w):
             if len(wordlist[lexicon][w]) == 6 and lexicon == 'csw#':
                 my_result.append(w+'#')
             else:
@@ -113,9 +115,11 @@ def pattern(word,lexicon):
     return num_results, msg
 
 def regex(word,lexicon):
+    pattern = re.compile(word, re.IGNORECASE)
     my_result = []
+
     for w in wordlist[lexicon]:
-        if re.search(word, w):
+        if pattern.search(w):
             if len(wordlist[lexicon][w]) == 6 and lexicon == 'csw#':
                 my_result.append(w+'#')
             else:
@@ -133,12 +137,13 @@ def regex(word,lexicon):
 
 
 def ends_with(word,lexicon):
-    word = word.replace('?', '.').upper()
+    word = word.replace('?', '.')
     word_length = len(word)
+    pattern = re.compile(rf'(?:{word})$', re.IGNORECASE)
     my_result = []
     
     for w in wordlist[lexicon]:
-        if len(w) >= word_length and re.search(word + "$", w):
+        if len(w) >= word_length and pattern.search(w):
             if len(wordlist[lexicon][w]) == 6 and lexicon == 'csw#':
                 my_result.append(w+'#')
             else:
@@ -243,36 +248,36 @@ def anagram(s,lexicon):
     my_result = []
     word_length = len(s)
     num_blanks = list(s).count('?')
-    s = s.replace('?', '').upper()
-    word2 = sorted(s.replace('?', ''))
-    word3 = ''
+    letters = sorted(s.replace('?', ''))
+    mask = ''
     for _ in range(num_blanks):
-        word3 = word3 + '.?'
-    for x in word2:
-        word3 = word3 + x
+        mask = mask + '.?'
+    for letter in letters:
+        mask = mask + letter
         for _ in range(num_blanks):
-            word3 = word3 + '.?'
-    expression = '^' + ''.join(word3) + '$'
+            mask = mask + '.?'
+    pattern = re.compile('^%s$' % ''.join(mask), re.IGNORECASE)
     
-    for x in wordlist[lexicon]:
-        if len(x) == word_length and re.search(expression, wordlist[lexicon][x][4]):
-            if len(wordlist[lexicon][x]) == 6 and lexicon == 'csw#':
-                my_result.append(x+'#')
+    for word in wordlist[lexicon]:
+        if len(word) == word_length and pattern.match(wordlist[lexicon][word][4]):
+            if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
+                my_result.append(word+'#')
             else:
-                my_result.append(x)
+                my_result.append(word)
    
     return my_result
 
 
-def middle_hooks(s,lexicon):
+def middle_hooks(word,lexicon):
     # FINDS LETTERS THAT CAN BE ADDED TO THE MIDDLE OF A WORD
+    word = word.replace('?', '.')
+    word_length = len(word)
     result = []
-    word_length = len(s)
-    for x in range(1, len(s)):
-        word1 = s[0:x] + '.' + s[x:]
-        
+
+    for x in range(1, len(word)):
+        pattern = re.compile(rf'^(?:{word[0:x]}.{word[x:]})$', re.IGNORECASE)
         for w in wordlist[lexicon]:
-            if len(w) > word_length and re.search('^' + word1.upper() + '$', w):
+            if len(w) > word_length and pattern.match(w):
                 result.append(w)
     return result
 
