@@ -25,7 +25,7 @@ class Bot(commands.Bot):
             f = open(custom_commands[ctx.content[1:]], 'r')
             messages = f.read().split('\n')
             message = rd.choice(messages)
-            print("message",message)
+            print(len(message))
             await ctx.channel.send(message)
         else:
             await self.handle_commands(ctx)
