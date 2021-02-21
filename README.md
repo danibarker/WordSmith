@@ -72,14 +72,14 @@
 
 Some commands will return a list of results, if there are more than 30, it will be concatenated in order to fit Twitch's 500 character message limit
 
-	!define - returns the definition eg !define cat
-	!related - searches all definitions for the key word and returns the list eg !related cat (for searching multiple consecutive words in a string, use . to separate words eg. !related star.wars will return JEDI and JEDIS
-	!startswith -returns a list of words that start with the given string eg. !startswith cat
-	!endswith - same as above but words ending in the string eg !endswith cat
-	!contains - returns a list of words that contain the given string anywhere in the word eg !contains cat
+	!define - returns the definition, e.g. !define cat
+	!related - searches all definitions for the key word and returns the list, e.g. !related cat (for searching multiple consecutive words in a string, use . to separate words, e.g. !related star.wars will return JEDI and JEDIS
+	!startswith -returns a list of words that start with the given string, e.g. !startswith cat
+	!endswith - same as above but words ending in the string, e.g. !endswith cat
+	!contains - returns a list of words that contain the given string anywhere in the word, e.g. !contains cat
 	!pattern - ? for single blank, * for multiple
 	!regex - !regex ^[abc]at$ will return BAT and CAT.
-	!info - returns the definition, front hooks, back hooks, middle hooks, probability, alphagram eg !info cat
-	!anagram - returns a list of words that fit the letters given eg !anagram ?aeinst
+	!info - returns the definition, front hooks, back hooks, middle hooks, probability, alphagram, e.g. !info cat
+	!anagram - returns a list of words that fit the letters given, e.g. !anagram ?aeinst
 	!random - returns a single word and definition chosen at random
-    !lexicon - only usable by the stream owner, changes to one of the other lexicons eg !lexicon csw, csw# is for csw with octothorps.
+    !lexicon - only usable by the stream owner, changes to one of the other lexicons, e.g. !lexicon csw, csw# is for csw with octothorps.
