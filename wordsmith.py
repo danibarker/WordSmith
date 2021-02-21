@@ -103,7 +103,7 @@ class Bot(commands.Bot):
 
     @commands.command(name='info')
     async def info(self, ctx, word):
-        msg = dictionary.info(word.upper(),config.channels[ctx.channel.name]["lexicon"])
+        msg = dictionary.info(word.upper(),config.channels[ctx.channel.name]["lexicon"],config.channels[ctx.channel.name]["alphabet"])
         await ctx.send(msg)
 
     @commands.command(name='anagram')

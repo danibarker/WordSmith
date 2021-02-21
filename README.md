@@ -22,10 +22,12 @@
         "nick": "BotsTwitchAccountName",
         "channels": {
             "somestreamer": {
+                "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                 "lexicon": "twl",
                 "command_blacklist": []
             },
             "anotherstreamer": {
+                "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                 "lexicon": "csw",
                 "command_blacklist": []
             }
@@ -79,7 +81,7 @@ Some commands will return a list of results, if there are more than 30, it will 
 	!contains - returns a list of words that contain the given string anywhere in the word, e.g. !contains cat
 	!pattern - ? for single blank, * for multiple
 	!regex - !regex ^[abc]at$ will return BAT and CAT.
-	!info - returns the definition, front hooks, back hooks, middle hooks, probability, alphagram, e.g. !info cat
+	!info - returns the definition, front hooks, back hooks, middle hooks, probability, alphagram sorted by alphabet, e.g. !info cat
 	!anagram - returns a list of words that fit the letters given, e.g. !anagram ?aeinst
 	!random - returns a single word and definition chosen at random
     !lexicon - only usable by the stream owner, changes to one of the other lexicons, e.g. !lexicon csw, csw# is for csw with octothorps.

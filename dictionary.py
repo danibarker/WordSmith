@@ -180,7 +180,7 @@ def define(word, lexicon):
     return msg
 
 
-def info(word,lexicon):
+def info(word,lexicon,alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
     my_result = ''
     msg = ""
     
@@ -204,7 +204,8 @@ def info(word,lexicon):
         if counter == 4:
             msg = msg + "Probability: " + str(x) + " "
         if counter == 5:
-            msg = msg + "Alphagram: " + x + " "
+            order = dict(zip(alphabet, range(len(alphabet))))
+            msg = msg + "Alphagram: " + ''.join(sorted(x, key=lambda c:order[c])) + " "
 
     hooks = middle_hooks(word,lexicon)
     if hooks:
