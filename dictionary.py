@@ -239,13 +239,16 @@ def anagram_1(word,lexicon):
     
     my_result = anagram(word,lexicon)
     num_results = len(my_result)
-    msg = ''
-    for n,_ in enumerate(my_result):
-        if len(msg) > 450 - len(my_result[n]):
-            msg += f'Limited to first {n} results'
-            break
-        else:
-            msg += my_result[n] + " "
+    if num_results == 0:
+        msg = 'No anagrams found'
+    else:
+        msg = ''
+        for n,_ in enumerate(my_result):
+            if len(msg) > 450 - len(my_result[n]):
+                msg += f'Limited to first {n} results'
+                break
+            else:
+                msg += my_result[n] + " "
     return num_results, msg
 
 
