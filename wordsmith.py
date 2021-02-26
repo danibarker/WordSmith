@@ -30,6 +30,11 @@ class Bot(commands.Bot):
         else:
             await self.handle_commands(ctx)
 
+    @commands.command(name='check')
+    async def check(self, ctx, word):
+        msg = dictionary.check(word.upper(),config.channels[ctx.channel.name]["lexicon"])
+        await ctx.send(msg)
+
     @commands.command(name='define')
     async def define(self, ctx, word):
         msg = dictionary.define(word.upper(),config.channels[ctx.channel.name]["lexicon"])

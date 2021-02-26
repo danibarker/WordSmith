@@ -159,13 +159,20 @@ def ends_with(word,lexicon):
             msg += my_result[n] + " "
     return num_results, msg
 
+
+def check(word, lexicon):
+    my_result = ''
+    try:
+        my_result = wordlist[lexicon][word][0]
+        return word.upper() + ' is valid VoteYea'
+    except KeyError:
+        return word.upper() + ' not found VoteNay'
+
+
 def define(word, lexicon):
     my_result = ''
-    
     try:
-            
         my_result = wordlist[lexicon][word][0]
-            
     except KeyError:
         my_result = 'not found'
     try:
