@@ -117,7 +117,7 @@ class Bot(commands.Bot):
         num = msg[0]
         msg = msg[1]
         print(len(msg))
-        await ctx.send(f'{num} results found:\n{msg}')
+        await ctx.send(f'{num} results:\n{msg}')
 
     @commands.command(name='random')
     async def random(self, ctx):
