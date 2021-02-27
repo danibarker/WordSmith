@@ -22,9 +22,9 @@ class Bot(commands.Bot):
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!' and ctx.content[1:] in custom_commands.keys():
             print(ctx.content)
-            f = open(custom_commands[ctx.content[1:]], 'r')
-            messages = f.read().split('\n')
-            message = rd.choice(messages)
+            with open(custom_commands[ctx.content[1:]], 'r') as f:
+                messages = list(f)
+            message = rd.choice(messages).strip()
             print(len(message))
             await ctx.channel.send(message)
         else:
