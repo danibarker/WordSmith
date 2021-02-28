@@ -17,7 +17,7 @@ class Bot(commands.Bot):
                          initial_channels=initc)
 
     async def event_ready(self):
-        print(f'Wordsmith 0.2 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.3 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!' and ctx.content[1:] in custom_commands.keys():
@@ -105,6 +105,11 @@ class Bot(commands.Bot):
         msg = msg[1]
         print(len(msg))
         await ctx.send(f'{num} results found:\n{msg}')
+
+    @commands.command(name='hook')
+    async def hook(self, ctx, word):
+        msg = dictionary.hook(word.upper(),config.channels[ctx.channel.name]["lexicon"])
+        await ctx.send(msg)
 
     @commands.command(name='info')
     async def info(self, ctx, word):

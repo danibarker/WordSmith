@@ -77,6 +77,7 @@ Some commands will return a list of results, if there are more than 30, it will 
 	!check - checks if a word is valid, e.g. !check cat
 	!define - returns the definition, e.g. !define cat
 	!related - searches all definitions for the key word and returns the list, e.g. !related cat (for searching multiple consecutive words in a string, use . to separate words, e.g. !related star.wars will return JEDI and JEDIS
+	!hook - returns front hooks, back hooks, and middle hooks, e.g. !hook cat
 	!startswith -returns a list of words that start with the given string, e.g. !startswith cat
 	!endswith - same as above but words ending in the string, e.g. !endswith cat
 	!contains - returns a list of words that contain the given string anywhere in the word, e.g. !contains cat

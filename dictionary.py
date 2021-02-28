@@ -188,38 +188,65 @@ def define(word, lexicon):
 
 
 def info(word,lexicon,alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
-    my_result = ''
     msg = ""
     
     try:
-        my_result = wordlist[lexicon][word]
+        if word in wordlist[lexicon]:
+            my_result = wordlist[lexicon][word]
+            counter = -1
+            for x in my_result:
+                counter = counter + 1
+                if counter == 0:
+                    msg = word
+                    counter += 1
+                if counter == 1:
+                    msg = msg + " - " + x
+                if counter == 2 and x:
+                    msg = msg + " Front Hooks: " + x
+                if counter == 3 and x:
+                    msg = msg + " Back Hooks: " + x
+                if counter == 4:
+                    msg = msg + " Probability: " + str(x)
+                if counter == 5:
+                    order = dict(zip(alphabet, range(len(alphabet))))
+                    msg = msg + " Alphagram: " + ''.join(sorted(x, key=lambda c:order[c]))
+        else:
+            return "No such word"
     except KeyError:
-        return "No such word"
-    
-    counter = -1
-    for x in my_result:
-        counter = counter + 1
-        if counter == 0:
-            msg = word + " - "
-            counter += 1
-        if counter == 1:
-            msg = msg + x + " "
-        if counter == 2 and x:
-            msg = msg + "Front Hooks: " + x + " "
-        if counter == 3 and x:
-            msg = msg + "Back Hooks: " + x + " "
-        if counter == 4:
-            msg = msg + "Probability: " + str(x) + " "
-        if counter == 5:
-            order = dict(zip(alphabet, range(len(alphabet))))
-            msg = msg + "Alphagram: " + ''.join(sorted(x, key=lambda c:order[c])) + " "
+        return "No such lexicon"
 
     hooks = middle_hooks(word,lexicon)
     if hooks:
-        msg = msg + "Middle Hooks: "
+        msg = msg + " Middle Hooks:"
         for x in hooks:
-            msg = msg + x + " "
+            msg = msg + " " + x
     return msg
+
+
+def hook(word,lexicon):
+    msg = word
+    
+    try:
+        if word in wordlist[lexicon]:
+            my_result = wordlist[lexicon][word]
+            counter = -1
+            for x in my_result:
+                counter = counter + 1
+                if counter == 2 and x:
+                    msg = msg + " Front Hooks: " + x
+                if counter == 3 and x:
+                    msg = msg + " Back Hooks: " + x
+        else:
+            msg = msg + "*"
+    except KeyError:
+        return "No such lexicon"
+
+    hooks = middle_hooks(word,lexicon)
+    if hooks:
+        msg = msg + " Middle Hooks:"
+        for x in hooks:
+            msg = msg + " " + x
+    return msg.lstrip()
 
 
 def random_word(lexicon):
