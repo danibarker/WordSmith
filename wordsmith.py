@@ -3,12 +3,14 @@ from twitchio.ext import commands
 import twitchio as tw
 import dictionary
 import config as cf
+import inflect
 import random as rd
 
 config = cf.config()
 dictionary.open_files()
 initc = config.channels.keys()
 custom_commands = cf.custom_commands()
+engine = inflect.engine()
 
 class Bot(commands.Bot):
 
@@ -64,7 +66,7 @@ class Bot(commands.Bot):
         num = msg[0]
         msg = msg[1]
         print(len(msg))
-        await ctx.send(f'{num} results found:\n{msg}')
+        await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='startswith')
     async def startswith(self, ctx, word):
@@ -72,7 +74,7 @@ class Bot(commands.Bot):
         num = msg[0]
         msg = msg[1]
         print(len(msg))
-        await ctx.send(f'{num} results found:\n{msg}')
+        await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='endswith')
     async def endswith(self, ctx, word):
@@ -80,7 +82,7 @@ class Bot(commands.Bot):
         num = msg[0]
         msg = msg[1]
         print(len(msg))
-        await ctx.send(f'{num} results found:\n{msg}')
+        await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='contains')
     async def contains(self, ctx, word):
@@ -88,7 +90,7 @@ class Bot(commands.Bot):
         num = msg[0]
         msg = msg[1]
         print(len(msg))
-        await ctx.send(f'{num} results found:\n{msg}')
+        await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='pattern')
     async def pattern(self, ctx, word):
@@ -96,7 +98,7 @@ class Bot(commands.Bot):
         num = msg[0]
         msg = msg[1]
         print(len(msg))
-        await ctx.send(f'{num} results found:\n{msg}')
+        await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='regex')
     async def regex(self, ctx, word):
@@ -104,7 +106,7 @@ class Bot(commands.Bot):
         num = msg[0]
         msg = msg[1]
         print(len(msg))
-        await ctx.send(f'{num} results found:\n{msg}')
+        await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='hook')
     async def hook(self, ctx, word):
@@ -122,7 +124,7 @@ class Bot(commands.Bot):
         num = msg[0]
         msg = msg[1]
         print(len(msg))
-        await ctx.send(f'{num} results:\n{msg}')
+        await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='random')
     async def random(self, ctx):
@@ -142,7 +144,7 @@ class Bot(commands.Bot):
         msg = dictionary.crypto(word.upper(),config.channels[ctx.channel.name]["lexicon"])
         num = msg[0]
         msg = msg[1]
-        await ctx.send(f'{num} results found:\n{msg}')
+        await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
 bot = Bot()
 bot.run()

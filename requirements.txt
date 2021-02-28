@@ -1,1 +1,2 @@
+inflect==5.2.0
 twitchio==1.2.1

@@ -1,3 +1,4 @@
+import inflect
 import re
 import random
 
@@ -5,6 +6,7 @@ csw = {}
 twl = {}
 mw = {}
 wordlist = {"csw":csw,"twl":twl, "mw":mw, "csw#":csw}
+engine = inflect.engine()
 
 
 def related(word,lexicon):
@@ -28,7 +30,6 @@ def related(word,lexicon):
             break
         else:
             msg += my_result[n] + " "
-    
     return num_results, msg
 
 
@@ -46,7 +47,6 @@ def starts_with(word,lexicon):
                 my_result.append(w)
    
     num_results = len(my_result)
-    
     msg = ''
     for n,_ in enumerate(my_result):
         if len(msg) > 450 - len(my_result[n]):
@@ -113,6 +113,7 @@ def pattern(word,lexicon):
         else:
             msg += my_result[n] + " "
     return num_results, msg
+
 
 def regex(word,lexicon):
     pattern = re.compile(word, re.IGNORECASE)
