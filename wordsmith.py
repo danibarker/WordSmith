@@ -42,8 +42,13 @@ class Bot(commands.Bot):
         if words and len(words) > 0:
             definitions = []
             msg = None
+            length = -2
             for word in words:
-                definitions.append(dictionary.define(word.upper(),config.channels[ctx.channel.name]["lexicon"]))
+                definition = dictionary.define(word.upper(),config.channels[ctx.channel.name]["lexicon"])
+                length += len(definition) + 2
+                if length >= 500:
+                    break
+                definitions.append(definition)
             msg = '; '.join(definitions)
             await ctx.send(msg)
 
