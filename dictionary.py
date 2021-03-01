@@ -250,17 +250,25 @@ def hook(word,lexicon):
     return msg.lstrip()
 
 
-def random_word(lexicon):
+def random_word(word_length,lexicon):
+    if word_length <= 1 or word_length > 15:
+        word_length = None
     msg = ''
-    
     if wordlist[lexicon]:
-        my_result = random.choice(list(wordlist[lexicon]))
+        words = list(wordlist[lexicon])
+        my_result = select_random_word(word_length, words)
         if len(wordlist[lexicon][my_result]) == 6 and lexicon == 'csw#':
             msg = my_result + "# - " + wordlist[lexicon][my_result][0]
         else:
             msg = my_result + " - " + wordlist[lexicon][my_result][0]
-
     return msg
+
+
+def select_random_word(word_length,words):
+    my_result = random.choice(words)
+    while word_length is not None and len(my_result) != word_length:
+        my_result = random.choice(words)
+    return my_result
 
 
 def anagram_1(word,lexicon):

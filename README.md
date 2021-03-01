@@ -85,5 +85,5 @@ Some commands will return a list of results, if there are more than 30, it will 
 	!regex - !regex ^[abc]at$ will return BAT and CAT.
 	!info - returns the definition, front hooks, back hooks, middle hooks, probability, alphagram sorted by alphabet, e.g. !info cat
 	!anagram - returns a list of words that fit the letters given, e.g. !anagram ?aeinst
-	!random - returns a single word and definition chosen at random
+	!random [length] - returns a single word and definition chosen at random, e.g. !random 7
     !lexicon - only usable by the stream owner, changes to one of the other lexicons, e.g. !lexicon csw, csw# is for csw with octothorps.
