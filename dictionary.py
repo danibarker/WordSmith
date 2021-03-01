@@ -167,25 +167,19 @@ def check(word, lexicon):
         my_result = wordlist[lexicon][word][0]
         return word.upper() + ' is valid VoteYea'
     except KeyError:
-        return word.upper() + ' not found VoteNay'
+        return word.upper() + '* not found VoteNay'
 
 
 def define(word, lexicon):
-    my_result = ''
-    try:
+    if word in wordlist[lexicon]:
         my_result = wordlist[lexicon][word][0]
-    except KeyError:
-        my_result = 'not found'
-    try:
         if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
             msg = word.upper() + "# - " + my_result
         else:
             msg = word.upper() + " - " + my_result
-    except KeyError:
-        msg = word.upper() + " - " + my_result
-   
-    
-    return msg
+        return msg
+    else:
+        return word + '* - not found'
 
 
 def info(word,lexicon,alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
