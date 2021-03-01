@@ -126,6 +126,12 @@ class Bot(commands.Bot):
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
+    @commands.command(name='bingo')
+    async def bingo(self, ctx, length='7'):
+        msg = dictionary.random_word(int(length), config.channels[ctx.channel.name]["lexicon"])
+        print(len(msg))
+        await ctx.send(msg)
+
     @commands.command(name='random')
     async def random(self, ctx, length='0'):
         msg = dictionary.random_word(int(length), config.channels[ctx.channel.name]["lexicon"])
