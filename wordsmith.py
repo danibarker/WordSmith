@@ -38,9 +38,14 @@ class Bot(commands.Bot):
         await ctx.send(msg)
 
     @commands.command(name='define')
-    async def define(self, ctx, word):
-        msg = dictionary.define(word.upper(),config.channels[ctx.channel.name]["lexicon"])
-        await ctx.send(msg)
+    async def define(self, ctx, *words):
+        if words and len(words) > 0:
+            definitions = []
+            msg = None
+            for word in words:
+                definitions.append(dictionary.define(word.upper(),config.channels[ctx.channel.name]["lexicon"]))
+            msg = '; '.join(definitions)
+            await ctx.send(msg)
 
     @commands.command(name='lexicon')
     async def lexicon(self, ctx, word):
