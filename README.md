@@ -75,7 +75,7 @@
 Some commands will return a list of results, if there are more than 30, it will be concatenated in order to fit Twitch's 500 character message limit
 
 	!check - checks if a word is valid, e.g. !check cat
-	!define - returns the definition, e.g. !define cat
+	!define - returns definitions of words, e.g. !define cat dog
 	!related - searches all definitions for the key word and returns the list, e.g. !related cat (for searching multiple consecutive words in a string, use . to separate words, e.g. !related star.wars will return JEDI and JEDIS
 	!hook - returns front hooks, back hooks, and middle hooks, e.g. !hook cat
 	!startswith -returns a list of words that start with the given string, e.g. !startswith cat
