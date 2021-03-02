@@ -129,12 +129,22 @@ class Bot(commands.Bot):
         await ctx.send(msg)
 
     @commands.command(name='anagram')
-    async def anagram(self, ctx, word):
-        msg = dictionary.anagram_1(word.upper(),config.channels[ctx.channel.name]["lexicon"])
-        num = msg[0]
-        msg = msg[1]
-        print(len(msg))
-        await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
+    async def anagram(self, ctx, *words):
+        if words and len(words) > 0:
+            results = []
+            msg = None
+            length = -2
+            for word in words:
+                result = dictionary.anagram_1(word.upper(),config.channels[ctx.channel.name]["lexicon"])
+                count, words = result
+                msg = f'{count} %s:\n{words}' % engine.plural('result', count)
+                print(len(msg))
+                length += len(msg) + 2
+                if length >= 500:
+                    break
+                results.append(msg)
+            msg = '; '.join(results)
+            await ctx.send(msg)
 
     @commands.command(name='bingo')
     async def bingo(self, ctx, length='7'):

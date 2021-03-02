@@ -279,7 +279,7 @@ def anagram_1(word,lexicon):
                 break
             else:
                 msg += my_result[n] + " "
-    return num_results, msg
+    return num_results, msg.rstrip()
 
 
 def anagram(s,lexicon):
