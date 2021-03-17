@@ -62,9 +62,9 @@ class TwitchBot(commands.Bot):
         await ctx.send(msg)
 
     @commands.command(name='so')
-    async def shoutout(self, ctx, word):
+    async def shoutout(self, ctx, name):
         if ctx.author.name == ctx.channel.name or ctx.author.is_mod:
-            msg = f'Welcome http://twitch.tv/{word.lower()} !'
+            msg = f'Check {name} out at http://twitch.tv/{name.lower()} !'
         else:
             msg = f'Command can only be used by {ctx.channel.name} or moderators'
         await ctx.send(msg)
