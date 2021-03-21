@@ -1,5 +1,5 @@
-# TwitchBot 
-`A twitch bot for Scrabble stuff`
+# Wordsmith
+`A Twitch bot for OMGWords`
 
 ## Files you need on your local version
 
@@ -22,10 +22,12 @@
         "nick": "BotsTwitchAccountName",
         "channels": {
             "somestreamer": {
+                "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                 "lexicon": "twl",
                 "command_blacklist": []
             },
             "anotherstreamer": {
+                "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                 "lexicon": "csw",
                 "command_blacklist": []
             }
@@ -35,7 +37,7 @@
       
     
 ## Setting up your own bot 
-### You can run TwitchBot.py, or if you don't have python or just want to run the exe that works too
+### You can run wordsmith.py, or if you don't have python or just want to run the exe that works too
 
   	1. Create a new twitch account with the username you want the bot to have
 
@@ -64,22 +66,24 @@
 
   	11. Save this file
 
-  	12. That's it, run TwitchBot.exe or TwitchBot.py and it should connect and show a message saying "it is online"
+  	12. That's it, run wordsmith.py and it should connect and show a message saying "it is online"
     
-    13. To run TwitchBot.py you will need to have the twitchio package installed, instructions can be found in the readme at https://github.com/TwitchIO/TwitchIO
+    13. To run wordsmith.py you will need to have the twitchio package installed, instructions can be found in the readme at https://github.com/TwitchIO/TwitchIO
 
 ## Commands for the bot
 
 Some commands will return a list of results, if there are more than 30, it will be concatenated in order to fit Twitch's 500 character message limit
 
-	!define - returns the definition eg !define cat
-	!related - searches all definitions for the key word and returns the list eg !related cat (for searching multiple consecutive words in a string, use . to separate words eg. !related star.wars will return JEDI and JEDIS
-	!startswith -returns a list of words that start with the given string eg. !startswith cat
-	!endswith - same as above but words ending in the string eg !endswith cat
-	!contains - returns a list of words that contain the given string anywhere in the word eg !contains cat
+	!check - checks if a word is valid, e.g. !check cat
+	!define - returns definitions of words, e.g. !define cat dog
+	!related - searches all definitions for the key word and returns the list, e.g. !related cat (for searching multiple consecutive words in a string, use . to separate words, e.g. !related star.wars will return JEDI and JEDIS
+	!hook - returns front hooks, back hooks, and middle hooks, e.g. !hook cat
+	!startswith -returns a list of words that start with the given string, e.g. !startswith cat
+	!endswith - same as above but words ending in the string, e.g. !endswith cat
+	!contains - returns a list of words that contain the given string anywhere in the word, e.g. !contains cat
 	!pattern - ? for single blank, * for multiple
 	!regex - !regex ^[abc]at$ will return BAT and CAT.
-	!info - returns the definition, front hooks, back hooks, middle hooks, probability, alphagram eg !info cat
-	!anagram - returns a list of words that fit the letters given eg !anagram ?aeinst
-	!random - returns a single word and definition chosen at random
-    !lexicon - only usable by the stream owner, changes to one of the other lexicons eg !lexicon csw, csw# is for csw with octothorps.
+	!info - returns the definition, front hooks, back hooks, middle hooks, probability, alphagram sorted by alphabet, e.g. !info cat
+	!anagram - returns a list of words that fit the letters given, e.g. !anagram ?aeinst
+	!random [length] - returns a single word and definition chosen at random, e.g. !random 7
+    !lexicon - only usable by the stream owner, changes to one of the other lexicons, e.g. !lexicon csw, csw# is for csw with octothorps.
