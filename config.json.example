@@ -1,0 +1,12 @@
+{
+    "irc_token": "oauth:MYTOKEN",
+    "client_id": "MYCLIENTID",
+    "nick": "WordSmith",
+    "channels": {
+        "cocoscrabble": {
+            "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            "lexicon": "csw",
+            "command_blacklist": []
+        }
+    }
+}
