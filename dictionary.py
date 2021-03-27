@@ -227,9 +227,9 @@ def hook(word,lexicon):
             counter = -1
             for x in my_result:
                 counter = counter + 1
-                if counter == 2 and x:
+                if counter == 1 and x:
                     msg = msg + " Front Hooks: " + x
-                if counter == 3 and x:
+                if counter == 2 and x:
                     msg = msg + " Back Hooks: " + x
         else:
             msg = msg + "*"
