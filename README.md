@@ -23,21 +23,14 @@
         "channels": {
             "somestreamer": {
                 "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                "lexicon": "twl",
-                "command_blacklist": []
-            },
-            "anotherstreamer": {
-                "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                 "lexicon": "csw",
                 "command_blacklist": []
             }
+        }
       }
-
-}
       
     
 ## Setting up your own bot 
-### You can run wordsmith.py, or if you don't have python or just want to run the exe that works too
 
   	1. Create a new twitch account with the username you want the bot to have
 
