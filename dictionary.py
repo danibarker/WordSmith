@@ -94,6 +94,7 @@ def hidden(word, length,lexicon):
 def pattern(word,lexicon):
     word = word.replace('?','.')
     word = word.replace('*','.*')
+    word = re.sub('(\d+)','.{\\1}', word)
     pattern = re.compile(rf'^(?:{word})$', re.IGNORECASE)
     my_result = []
 
