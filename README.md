@@ -74,7 +74,7 @@ Some commands will return a list of results, if there are more than 30, it will 
 	!startswith -returns a list of words that start with the given string, e.g. !startswith cat
 	!endswith - same as above but words ending in the string, e.g. !endswith cat
 	!contains - returns a list of words that contain the given string anywhere in the word, e.g. !contains cat
-	!pattern - ? for single blank, * for multiple
+	!pattern - ? for single blank, 1-9 or * for multiple, e.g. !pattern fat7
 	!regex - !regex ^[abc]at$ will return BAT and CAT.
 	!info - returns the definition, front hooks, back hooks, middle hooks, probability, alphagram sorted by alphabet, e.g. !info cat
 	!anagram - returns a list of words that fit the letters given, e.g. !anagram ?aeinst
