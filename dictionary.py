@@ -12,11 +12,12 @@ engine = inflect.engine()
 def related(word,lexicon):
     word = word.replace('?', '.')
     pattern = re.compile(rf'(?<![A-Za-z])(?:{re.escape(word)})S?(?![A-Za-z])', re.IGNORECASE)
+    offensive = re.compile('offensive', re.IGNORECASE)
     my_result = []
  
     for w in wordlist[lexicon]:
         x = wordlist[lexicon][w][0]
-        if pattern.search(x):
+        if pattern.search(x) and not offensive.search(x):
             if len(wordlist[lexicon][w]) == 6 and lexicon == 'csw#':
                 my_result.append(w+'#')
             else:
