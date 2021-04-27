@@ -11,8 +11,8 @@ engine = inflect.engine()
 
 def related(word,lexicon):
     word = word.replace('?', '.')
-    pattern = re.compile(rf'(?<![A-Za-z])(?:{re.escape(word)})S?(?![A-Za-z])', re.IGNORECASE)
-    offensive = re.compile(rf'\(.*offensive.*\)|offensive(?:,| term| word)', re.IGNORECASE)
+    pattern = re.compile(rf'(?<![a-z])(?:{re.escape(word)})s?(?![a-z])', re.IGNORECASE)
+    offensive = re.compile(rf'\([a-z ]*\boffensive\b[a-z ]*\)|\boffensive\b(?:,| term| word)', re.IGNORECASE)
     my_result = []
  
     for w in wordlist[lexicon]:
