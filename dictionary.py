@@ -12,7 +12,7 @@ engine = inflect.engine()
 def related(word,lexicon):
     word = word.replace('?', '.')
     pattern = re.compile(rf'(?<![A-Za-z])(?:{re.escape(word)})S?(?![A-Za-z])', re.IGNORECASE)
-    offensive = re.compile('offensive', re.IGNORECASE)
+    offensive = re.compile(rf'\(.*offensive.*\)|offensive(?:,| term| word)', re.IGNORECASE)
     my_result = []
  
     for w in wordlist[lexicon]:
@@ -95,7 +95,7 @@ def hidden(word, length,lexicon):
 def pattern(word,lexicon):
     word = word.replace('?','.')
     word = word.replace('*','.*')
-    word = re.sub('(\d+)','.{\\1}', word)
+    word = re.sub('(\\d+)','.{\\1}', word)
     pattern = re.compile(rf'^(?:{word})$', re.IGNORECASE)
     my_result = []
 
