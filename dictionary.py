@@ -164,11 +164,9 @@ def ends_with(word,lexicon):
 
 
 def check(word, lexicon):
-    my_result = ''
-    try:
-        my_result = wordlist[lexicon][word][0]
+    if word in wordlist[lexicon]:
         return word.upper() + ' is valid VoteYea'
-    except KeyError:
+    else:
         return word.upper() + '* not found VoteNay'
 
 
