@@ -4,6 +4,7 @@ import twitchio as tw
 import config as cf
 import inflect
 import random as rd
+from api import equity
 
 config = cf.config()
 initc = config.channels.keys()
@@ -18,7 +19,7 @@ class TwitchBot(commands.Bot):
         self.dictionary = dictionary
 
     async def event_ready(self):
-        print(f'Wordsmith 0.4 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.5 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!' and ctx.content[1:] in custom_commands.keys():
@@ -34,6 +35,11 @@ class TwitchBot(commands.Bot):
     @commands.command(name='check')
     async def check(self, ctx, word):
         msg = self.dictionary.check(word.upper(),config.channels[ctx.channel.name]["lexicon"])
+        await ctx.send(msg)
+
+    @commands.command(name='equity')
+    async def equity(self, ctx, rack):
+        msg = equity(rack,config.channels[ctx.channel.name]["lexicon"])
         await ctx.send(msg)
 
     @commands.command(name='define')
