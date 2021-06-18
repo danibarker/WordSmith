@@ -193,11 +193,11 @@ def define(stem, lexicon):
     if offensive:
         return None
     elif valid:
-        word = wordlist[lexicon][stem][0]
+        definition = wordlist[lexicon][stem][0]
         if len(wordlist[lexicon][stem]) == 6 and lexicon == 'csw#':
-            msg = word.upper() + '# - ' + word
+            msg = stem.upper() + '# - ' + definition
         else:
-            msg = word.upper() + ' - ' + word
+            msg = stem.upper() + ' - ' + definition
         return msg
     else:
         return stem + '* - not found'
