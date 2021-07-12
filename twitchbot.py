@@ -34,6 +34,8 @@ class TwitchBot(commands.Bot):
 
     @commands.command(name='check')
     async def check(self, ctx, word):
+        if re.search('[/!]',word):
+            return await ctx.send('Words must not contain / or !')
         msg = self.dictionary.check(word.upper(),config.channels[ctx.channel.name]["lexicon"])
         await ctx.send(msg)
 
@@ -49,6 +51,8 @@ class TwitchBot(commands.Bot):
             msg = None
             length = -2
             for word in words:
+                if re.search('[/!]',word):
+                    return await ctx.send('Words must not contain / or !')
                 definition = self.dictionary.define(word.upper(),config.channels[ctx.channel.name]["lexicon"])
                 length += len(definition) + 2
                 if length >= 500:
