@@ -4,6 +4,7 @@ import twitchio as tw
 import config as cf
 import inflect
 import random as rd
+import re
 from api import equity
 
 config = cf.config()
