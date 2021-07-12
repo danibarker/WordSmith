@@ -76,7 +76,7 @@ class TwitchBot(commands.Bot):
         await ctx.send(msg)
 
     @commands.command(name='timeout')
-    async def shoutout(self, ctx, user):
+    async def timeout(self, ctx, user):
         if ctx.author.name == ctx.channel.name or ctx.author.is_mod:
             await ctx.timeout(user)
         else:
