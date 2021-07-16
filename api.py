@@ -13,7 +13,8 @@ def equity(rack, lexicon):
 
 def predict(config, name, opponent):
     authorization = {'Authorization': 'Bearer ' + config.api_token, 'Client-Id': config.client_id}
-    response = requests.get('https://api.twitch.tv/helix/users?login='+name, headers=authorization)
+    parameters = {'login': name}
+    response = requests.get('https://api.twitch.tv/helix/users', headers=authorization, params=parameters)
     values = response.json()
     try:
         broadcasterID = values['id']

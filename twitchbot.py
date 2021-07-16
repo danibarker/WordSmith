@@ -21,7 +21,7 @@ class TwitchBot(commands.Bot):
         self.dictionary = dictionary
 
     async def event_ready(self):
-        print(f'Wordsmith 0.5 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.6 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!' and ctx.content[1:] in custom_commands.keys():
@@ -37,7 +37,7 @@ class TwitchBot(commands.Bot):
     @commands.command(name='predict')
     async def predict(self, ctx, opponent):
         if ctx.author.name == ctx.channel.name or ctx.author.is_mod:
-            msg = predict(config, 'toadofsky', opponent)
+            msg = predict(config, ctx.channel.name, opponent)
         else:
             msg = f'Command can only be used by {ctx.channel.name} or moderators'
         await ctx.send(msg)
