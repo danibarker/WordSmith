@@ -5,7 +5,7 @@ import config as cf
 import inflect
 import random as rd
 import re
-from api import equity
+from api import equity, predict
 
 config = cf.config()
 initc = config.channels.keys()
@@ -15,7 +15,8 @@ engine = inflect.engine()
 class TwitchBot(commands.Bot):
 
     def __init__(self, dictionary):
-        super().__init__(irc_token=config.irc_token, client_id=config.client_id, nick=config.nick, prefix='!',
+        super().__init__(api_token=config.api_token, irc_token=config.irc_token,
+                         client_id=config.client_id, nick=config.nick, prefix='!',
                          initial_channels=initc)
         self.dictionary = dictionary
 
@@ -32,6 +33,14 @@ class TwitchBot(commands.Bot):
             await ctx.channel.send(message)
         else:
             await self.handle_commands(ctx)
+
+    @commands.command(name='predict')
+    async def predict(self, ctx, opponent):
+        if ctx.author.name == ctx.channel.name or ctx.author.is_mod:
+            msg = predict(config, 'toadofsky', opponent)
+        else:
+            msg = f'Command can only be used by {ctx.channel.name} or moderators'
+        await ctx.send(msg)
 
     @commands.command(name='check')
     async def check(self, ctx, stem):

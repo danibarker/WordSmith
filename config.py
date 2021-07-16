@@ -1,8 +1,9 @@
 import json
 def json_decoder(obj):
     try:
-        return Config(obj['irc_token'], 
-                    obj['client_id'], 
+        return Config(obj['api_token'],
+                    obj['irc_token'],
+                    obj['client_id'],
                     obj['nick'],
                     obj['channels'],
                     )
@@ -10,7 +11,8 @@ def json_decoder(obj):
         return obj
       
 class Config:
-    def __init__(self,irc_token,client_id,nick,channels):
+    def __init__(self,api_token,irc_token,client_id,nick,channels):
+       self.api_token = api_token
        self.irc_token = irc_token
        self.client_id = client_id
        self.nick = nick

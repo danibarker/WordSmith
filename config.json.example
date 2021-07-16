@@ -1,5 +1,6 @@
 {
-    "irc_token": "oauth:MYTOKEN",
+    "api_token": "oauth:MYAPITOKEN",
+    "irc_token": "oauth:MYIRCTOKEN",
     "client_id": "MYCLIENTID",
     "nick": "WordSmith",
     "channels": {
