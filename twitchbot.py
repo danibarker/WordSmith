@@ -65,7 +65,7 @@ class TwitchBot(commands.Bot):
             length = -2
             for rack in racks:
                 if len(rack) >= 2 and len(rack) <= 5:
-                    msg = equity(rack, lexicon)[len(rack):]
+                    msg = equity(rack, lexicon)
                     length += len(msg) + 2
                     if length >= 500:
                         break
