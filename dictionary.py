@@ -33,7 +33,7 @@ def related(stem, lexicon):
     return num_results, msg
 
 
-def starts_with(hook, lexicon):
+def begins_with(hook, lexicon):
     hook = hook.replace('?', '.')
     hook_length = len(hook)
     pattern = re.compile(rf'^(?:{hook})', re.IGNORECASE)

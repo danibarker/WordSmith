@@ -127,9 +127,17 @@ class TwitchBot(commands.Bot):
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
+    @commands.command(name='beginswith')
+    async def beginswith(self, ctx, hook):
+        msg = self.dictionary.begins_with(hook.upper(),config.channels[ctx.channel.name]["lexicon"])
+        num = msg[0]
+        msg = msg[1]
+        print(len(msg))
+        await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
+
     @commands.command(name='startswith')
     async def startswith(self, ctx, hook):
-        msg = self.dictionary.starts_with(hook.upper(),config.channels[ctx.channel.name]["lexicon"])
+        msg = self.dictionary.begins_with(hook.upper(),config.channels[ctx.channel.name]["lexicon"])
         num = msg[0]
         msg = msg[1]
         print(len(msg))
@@ -137,6 +145,14 @@ class TwitchBot(commands.Bot):
 
     @commands.command(name='endswith')
     async def endswith(self, ctx, hook):
+        msg = self.dictionary.ends_with(hook.upper(),config.channels[ctx.channel.name]["lexicon"])
+        num = msg[0]
+        msg = msg[1]
+        print(len(msg))
+        await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
+
+    @commands.command(name='finisheswith')
+    async def finisheswith(self, ctx, hook):
         msg = self.dictionary.ends_with(hook.upper(),config.channels[ctx.channel.name]["lexicon"])
         num = msg[0]
         msg = msg[1]
