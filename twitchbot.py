@@ -66,10 +66,12 @@ class TwitchBot(commands.Bot):
             for rack in racks:
                 if len(rack) >= 2 and len(rack) <= 5:
                     msg = equity(rack, lexicon)
-                    length += len(msg) + 2
-                    if length >= 500:
-                        break
-                    results.append(msg)
+                else:
+                    msg = rack.upper() + ': ?'
+                length += len(msg) + 2
+                if length >= 500:
+                    break
+                results.append(msg)
             msg = '; '.join(results)
             print(len(msg))
             await ctx.send(msg)
