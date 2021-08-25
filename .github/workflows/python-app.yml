@@ -34,3 +34,13 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+
+    - name: Package Application
+      uses: JackMcKew/pyinstaller-action-windows@main
+      with:
+        path: .
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: WordSmith
+        path: dist/windows
