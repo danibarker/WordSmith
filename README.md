@@ -14,7 +14,7 @@
       
       
   `config.json`
-   This is the configuration file to connect the bot to a twitch account and have it join channels, it has the following 5 lines only (made up info) instructions on how to set up your own bot found below:
+   This is the configuration file to connect the bot to a twitch account and have it join channels, it has the following lines only (made up info) instructions on how to set up your own bot found below:
     
       {
         "irc_token": "oauth:REDACTED",

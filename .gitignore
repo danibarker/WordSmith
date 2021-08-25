@@ -2,8 +2,6 @@
 config.dat
 config.json
 *.dat
-#custom text files
-*.txt
 
 # executables not part of project
 # *.exe
