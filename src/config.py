@@ -28,8 +28,12 @@ def save(config):
     f.write(jfile)
     f.close()
 def custom_commands():
-    f = open('custom_commands.json', 'r')
-    commands = json.loads(f.read())
-    f.close()
+    try:
+        f = open('custom_commands.json', 'r')
+    except FileNotFoundError:
+        commands = {}
+    else:
+        commands = json.loads(f.read())
+        f.close()
     return commands
     
