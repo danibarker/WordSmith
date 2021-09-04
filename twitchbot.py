@@ -230,8 +230,8 @@ class TwitchBot(commands.Bot):
         await ctx.send(msg)
 
     @commands.command(name='random')
-    async def random(self, ctx, length='0'):
-        msg = self.dictionary.random_word(int(length), config.channels[ctx.channel.name]["lexicon"])
+    async def random(self, ctx, tag=''):
+        msg = self.dictionary.random_word(0, config.channels[ctx.channel.name]["lexicon"], tag)
         print(len(msg))
         await ctx.send(msg)
 

@@ -134,6 +134,12 @@ def offensive(definition):
     return pattern.search(definition)
 
 
+def tagged(definition, tag):
+    regex = '^\(%s\)' % tag
+    pattern = re.compile(regex, re.IGNORECASE)
+    return pattern.search(definition)
+
+
 def define(stem, lexicon):
     offensive, valid = check(stem, lexicon)
     if offensive:
@@ -211,7 +217,7 @@ def hook(stem, lexicon):
     return msg.lstrip()
 
 
-def random_word(word_length, lexicon):
+def random_word(word_length, lexicon, tag):
     if word_length <= 1 or word_length > 15:
         word_length = None
     msg = ''
@@ -219,9 +225,13 @@ def random_word(word_length, lexicon):
         words = list(wordlist[lexicon])
         word = select_random_word(word_length, words)
         definition = wordlist[lexicon][word][0]
-        while offensive(definition):
+        n = 1
+        while offensive(definition) or (tag and not tagged(definition, tag)):
             word = select_random_word(word_length, words)
             definition = wordlist[lexicon][word][0]
+            n = n + 1
+            if n >= 1000000:
+                tag = ''
         if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
             msg = word + '# - ' + wordlist[lexicon][word][0]
         else:
