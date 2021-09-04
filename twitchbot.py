@@ -34,15 +34,15 @@ class TwitchBot(commands.Bot):
         else:
             await self.handle_commands(ctx)
 
-    def paginate(self, my_result):
+    def paginate(self, my_result, delimiter=' ', limit=450):
         num_results = len(my_result)
         msg = ''
         for n,x in enumerate(my_result):
-            if len(msg) > 450 - len(my_result[n]):
+            if len(msg) > limit - len(my_result[n]):
                 msg += f'Limited to first {n} results'
                 break
             else:
-                msg += my_result[n] + " "
+                msg += my_result[n] + delimiter
         return num_results, msg
 
     @commands.command(name='predict')
@@ -72,18 +72,13 @@ class TwitchBot(commands.Bot):
             lexicon = config.channels[ctx.channel.name]["lexicon"]
             alphabet = config.channels[ctx.channel.name]["alphabet"]
             results = []
-            msg = None
-            length = -2
             for rack in racks:
                 if len(rack) >= 2 and len(rack) <= 5:
                     msg = equity(rack, lexicon)
                 else:
                     msg = rack.upper() + ': ?'
-                length += len(msg) + 2
-                if length >= 500:
-                    break
                 results.append(msg)
-            msg = '; '.join(results)
+            num, msg = self.paginate(results, '; ', 500)
             print(len(msg))
             await ctx.send(msg)
 
@@ -91,17 +86,13 @@ class TwitchBot(commands.Bot):
     async def define(self, ctx, *stems):
         if stems and len(stems) > 0:
             definitions = []
-            msg = None
-            length = -2
             for stem in stems:
                 if re.search('[/!]',stem):
                     return await ctx.send('Words must not contain / or !')
                 definition = self.dictionary.define(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
-                length += len(definition) + 2
-                if length >= 500:
-                    break
                 definitions.append(definition)
-            msg = '; '.join(definitions)
+            num, msg = self.paginate(definitions, '; ', 500)
+            print(len(msg))
             await ctx.send(msg)
 
     @commands.command(name='lexicon')
@@ -199,17 +190,12 @@ class TwitchBot(commands.Bot):
             lexicon = config.channels[ctx.channel.name]["lexicon"]
             alphabet = config.channels[ctx.channel.name]["alphabet"]
             results = []
-            msg = None
-            length = -2
             for stem in stems:
                 msg = self.dictionary.info(stem.upper(), lexicon, alphabet)
                 if len(stem) >= 2 and len(stem) <= 5:
                     msg += equity(stem, lexicon)[len(stem):]
-                length += len(msg) + 2
-                if length >= 500:
-                    break
                 results.append(msg)
-            msg = '; '.join(results)
+            num, msg = self.paginate(results, '; ', 500)
             print(len(msg))
             await ctx.send(msg)
 
