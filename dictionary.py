@@ -8,6 +8,15 @@ mw = {}
 wordlist = {"csw":csw,"twl":twl, "mw":mw, "csw#":csw}
 engine = inflect.engine()
 
+def related_command(stem, lexicon):
+    words = related(stem,lexicon)
+    my_result = []
+    for word in words:
+        if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
+                my_result.append(word+'#')
+        else:
+            my_result.append(word)
+    return my_result
 
 def related(stem, lexicon):
     stem = stem.replace('?', '.')
@@ -17,10 +26,8 @@ def related(stem, lexicon):
     for word in wordlist[lexicon]:
         definition = wordlist[lexicon][word][0]
         if pattern.search(definition) and not offensive(definition):
-            if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
-                my_result.append(word+'#')
-            else:
-                my_result.append(word)
+            
+            my_result.append(word)
     return my_result
 
 
@@ -211,12 +218,12 @@ def hook(stem, lexicon):
     return msg.lstrip()
 
 
-def random_word(word_length, lexicon):
+def random_word(word_length, lexicon, related_word):
     if word_length <= 1 or word_length > 15:
         word_length = None
     msg = ''
     if wordlist[lexicon]:
-        words = list(wordlist[lexicon])
+        words = list(wordlist[lexicon]) if related == "" else related(related_word,lexicon)
         word = select_random_word(word_length, words)
         definition = wordlist[lexicon][word][0]
         while offensive(definition):

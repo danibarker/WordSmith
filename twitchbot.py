@@ -8,6 +8,7 @@ import re
 from api import equity, predict
 
 config = cf.config()
+print(config)
 initc = config.channels.keys()
 custom_commands = cf.custom_commands()
 engine = inflect.engine()
@@ -97,7 +98,7 @@ class TwitchBot(commands.Bot):
                     return await ctx.send('Words must not contain / or !')
                 definition = self.dictionary.define(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
                 definitions.append(definition)
-            msg = '; '.join(results)
+            msg = '; '.join(definitions)
             print(len(msg))
             await ctx.send(msg[0:500])
 
@@ -131,7 +132,7 @@ class TwitchBot(commands.Bot):
 
     @commands.command(name='related')
     async def related(self, ctx, stem, page='1'):
-        result = self.dictionary.related(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
+        result = self.dictionary.related_command(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
         num, msg = self.paginate(result, page)
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
@@ -225,13 +226,16 @@ class TwitchBot(commands.Bot):
 
     @commands.command(name='bingo')
     async def bingo(self, ctx, length='7'):
-        msg = self.dictionary.random_word(int(length), config.channels[ctx.channel.name]["lexicon"])
+        msg = self.dictionary.random_word(int(length), config.channels[ctx.channel.name]["lexicon"],"")
         print(len(msg))
         await ctx.send(msg)
 
     @commands.command(name='random')
-    async def random(self, ctx, length='0'):
-        msg = self.dictionary.random_word(int(length), config.channels[ctx.channel.name]["lexicon"])
+    async def random(self, ctx, option='0'):
+        if option.isnumeric():
+            msg = self.dictionary.random_word(int(option), config.channels[ctx.channel.name]["lexicon"], "")
+        else:
+            msg = self.dictionary.random_word(0,config.channels[ctx.channel.name]["lexicon"],option)
         print(len(msg))
         await ctx.send(msg)
 
