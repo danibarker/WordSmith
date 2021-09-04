@@ -67,15 +67,17 @@ def contains(stem, lexicon):
 
 def hidden(length, phrase, lexicon):
     phrase = phrase.replace(' ', '')
-    msg = 'No hidden words'
-    
+    my_result = []
     for x in range(0, len(phrase) - length + 1):
         word = phrase[x:x + length]
         if word in wordlist[lexicon]:
             definition = wordlist[lexicon][word][0]
             if not offensive(definition):
-                msg = msg + word + ' '
-    return msg
+                if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
+                    my_result.append(word+'#')
+                else:
+                    my_result.append(word)
+    return my_result
 
 
 def pattern(stem, lexicon):

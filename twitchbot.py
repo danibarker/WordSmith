@@ -69,7 +69,7 @@ class TwitchBot(commands.Bot):
             else:
                 msg = stem.upper() + '* not found VoteNay'
             print(len(msg))
-            await ctx.send(msg)
+            await ctx.send(msg[0:500])
 
     @commands.command(name='equity')
     async def equity(self, ctx, *racks):
@@ -241,6 +241,8 @@ class TwitchBot(commands.Bot):
 
     @commands.command(name='pronounce')
     async def pronounce(self, ctx, stem):
+        if re.search('[/!]', stem):
+            return await ctx.send('Words must not contain / or !')
         offensive, valid = self.dictionary.check(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
         if not offensive:
             if valid:
@@ -255,8 +257,9 @@ class TwitchBot(commands.Bot):
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='hidden')
-    async def hidden(self, ctx, length, phrase):
-        msg = self.dictionary.hidden(length,phrase.upper(),config.channels[ctx.channel.name]["lexicon"])
+    async def hidden(self, ctx, length, phrase='', page='1'):
+        result = self.dictionary.hidden(int(length),phrase.upper(),config.channels[ctx.channel.name]["lexicon"])
+        num, msg = self.paginate(result, page)
         print(len(msg))
-        await ctx.send(msg)
+        await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
