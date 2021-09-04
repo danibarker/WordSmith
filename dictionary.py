@@ -21,16 +21,7 @@ def related(stem, lexicon):
                 my_result.append(word+'#')
             else:
                 my_result.append(word)
-    
-    num_results = len(my_result)
-    msg = ''
-    for n,x in enumerate(my_result):
-        if len(msg) > 450 - len(my_result[n]):
-            msg += f'Limited to first {n} results'
-            break
-        else:
-            msg += my_result[n] + " "
-    return num_results, msg
+    return my_result
 
 
 def begins_with(hook, lexicon):
@@ -47,16 +38,7 @@ def begins_with(hook, lexicon):
                     my_result.append(word+'#')
                 else:
                     my_result.append(word)
-   
-    num_results = len(my_result)
-    msg = ''
-    for n,_ in enumerate(my_result):
-        if len(msg) > 450 - len(my_result[n]):
-            msg += f'Limited to first {n} results'
-            break
-        else:
-            msg += my_result[n] + " "
-    return num_results, msg
+    return my_result
 
 
 def contains(stem, lexicon):
@@ -73,16 +55,7 @@ def contains(stem, lexicon):
                     my_result.append(word+'#')
                 else:
                     my_result.append(word)
-
-    num_results = len(my_result)
-    msg = ''
-    for n,_ in enumerate(my_result):
-        if len(msg) > 450 - len(my_result[n]):
-            msg += f'Limited to first {n} results'
-            break
-        else:
-            msg += my_result[n] + " "
-    return num_results, msg
+    return my_result
 
 
 def hidden(length, phrase, lexicon):
@@ -113,16 +86,7 @@ def pattern(stem, lexicon):
                     my_result.append(word+'#')
                 else:
                     my_result.append(word)
-   
-    num_results = len(my_result)
-    msg = ''
-    for n,_ in enumerate(my_result):
-        if len(msg) > 450 - len(my_result[n]):
-            msg += f'Limited to first {n} results'
-            break
-        else:
-            msg += my_result[n] + " "
-    return num_results, msg
+    return my_result
 
 
 def regex(stem, lexicon):
@@ -137,16 +101,7 @@ def regex(stem, lexicon):
                     my_result.append(word+'#')
                 else:
                     my_result.append(word)
-   
-    num_results = len(my_result)
-    msg = ''
-    for n,_ in enumerate(my_result):
-        if len(msg) > 450 - len(my_result[n]):
-            msg += f'Limited to first {n} results'
-            break
-        else:
-            msg += my_result[n] + " "
-    return num_results, msg
+    return my_result
 
 
 def ends_with(hook, lexicon):
@@ -163,16 +118,7 @@ def ends_with(hook, lexicon):
                     my_result.append(word+'#')
                 else:
                     my_result.append(word)
-  
-    num_results = len(my_result)
-    msg = ''
-    for n,_ in enumerate(my_result):
-        if len(msg) > 450 - len(my_result[n]):
-            msg += f'Limited to first {n} results'
-            break
-        else:
-            msg += my_result[n] + " "
-    return num_results, msg
+    return my_result
 
 
 def check(stem, lexicon):
