@@ -78,13 +78,14 @@ class TwitchBot(commands.Bot):
             alphabet = config.channels[ctx.channel.name]["alphabet"]
             results = []
             for rack in racks:
-                if re.search('[/!]', rack):
-                    return await ctx.send('Racks must not contain / or !')
-                if len(rack) >= 2 and len(rack) <= 5:
-                    msg = equity(rack, lexicon)
-                else:
-                    msg = rack.upper() + ': ?'
-                results.append(msg)
+                if rack:
+                    if re.search('[/!]', rack):
+                        return await ctx.send('Racks must not contain / or !')
+                    if len(rack) >= 2 and len(rack) <= 5:
+                        msg = equity(rack, lexicon)
+                    else:
+                        msg = rack.upper() + ': ?'
+                    results.append(msg)
             msg = '; '.join(results)
             print(len(msg))
             await ctx.send(msg[0:500])
@@ -94,10 +95,11 @@ class TwitchBot(commands.Bot):
         if stems and len(stems) > 0:
             definitions = []
             for stem in stems:
-                if re.search('[/!]', stem):
-                    return await ctx.send('Words must not contain / or !')
-                definition = self.dictionary.define(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
-                definitions.append(definition)
+                if stem:
+                    if re.search('[/!]', stem):
+                        return await ctx.send('Words must not contain / or !')
+                    definition = self.dictionary.define(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
+                    definitions.append(definition)
             msg = '; '.join(definitions)
             print(len(msg))
             await ctx.send(msg[0:500])
@@ -198,10 +200,11 @@ class TwitchBot(commands.Bot):
             alphabet = config.channels[ctx.channel.name]["alphabet"]
             results = []
             for stem in stems:
-                msg = self.dictionary.info(stem.upper(), lexicon, alphabet)
-                if len(stem) >= 2 and len(stem) <= 5:
-                    msg += equity(stem, lexicon)[len(stem):]
-                results.append(msg)
+                if stem:
+                    msg = self.dictionary.info(stem.upper(), lexicon, alphabet)
+                    if len(stem) >= 2 and len(stem) <= 5:
+                        msg += equity(stem, lexicon)[len(stem):]
+                    results.append(msg)
             msg = '; '.join(results)
             print(len(msg))
             await ctx.send(msg[0:500])
@@ -213,13 +216,14 @@ class TwitchBot(commands.Bot):
             msg = None
             length = -2
             for rack in racks:
-                result = self.dictionary.anagram_1(rack.upper(),config.channels[ctx.channel.name]["lexicon"])
-                count, words = result
-                msg = f'{count} %s:\n{words}' % engine.plural('result', count)
-                length += len(msg) + 2
-                if length >= 500:
-                    break
-                results.append(msg)
+                if rack:
+                    result = self.dictionary.anagram_1(rack.upper(),config.channels[ctx.channel.name]["lexicon"])
+                    count, words = result
+                    msg = f'{count} %s:\n{words}' % engine.plural('result', count)
+                    length += len(msg) + 2
+                    if length >= 500:
+                        break
+                    results.append(msg)
             msg = '; '.join(results)
             print(len(msg))
             await ctx.send(msg[0:500])
