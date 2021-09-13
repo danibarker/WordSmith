@@ -1,13 +1,12 @@
-import inflect
-import re
+from alphagram import alphagram
 import random
+import re
 
 cel = []
 csw = {}
 twl = {}
 mw = {}
 wordlist = {"csw":csw, "twl":twl, "mw":mw, "csw#":csw}
-engine = inflect.engine()
 
 def related_command(stem, lexicon):
     words = related(stem,lexicon)
@@ -189,8 +188,7 @@ def info(stem, lexicon, alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
                 if counter == 4:
                     msg = msg + " Probability: " + str(x)
                 if counter == 5:
-                    order = dict(zip(alphabet, range(len(alphabet))))
-                    msg = msg + " Alphagram: " + ''.join(sorted(x, key=lambda c:order[c]))
+                    msg = msg + " Alphagram: " + alphagram(x, alphabet)
         else:
             return "No such word"
     except KeyError:

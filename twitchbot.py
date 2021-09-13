@@ -1,11 +1,12 @@
-
 from twitchio.ext import commands
 import twitchio as tw
 import config as cf
 import inflect
 import random as rd
 import re
-from api import equity, predict
+from alphagram import alphagram
+from api import predict
+from calculator import equity, evaluate
 
 config = cf.config()
 print(config)
@@ -97,7 +98,22 @@ class TwitchBot(commands.Bot):
                     if len(rack) >= 2 and len(rack) <= 5:
                         msg = equity(rack, lexicon)
                     else:
-                        msg = rack.upper() + ': ?'
+                        msg = alphagram(rack.upper(), alphabet) + ': ?'
+                    results.append(msg)
+            msg = '; '.join(results)
+            print(len(msg))
+            await ctx.send(msg[0:500])
+
+    @commands.command(name='sum')
+    async def sum(self, ctx, *racks):
+        if racks and len(racks) > 0:
+            alphabet = config.channels[ctx.channel.name]["alphabet"]
+            results = []
+            for rack in racks:
+                if rack:
+                    if re.search('[/!]', rack):
+                        return await ctx.send('Racks must not contain / or !')
+                    msg = '%s: %d' % (alphagram(rack.upper(), alphabet), evaluate(rack.upper()))
                     results.append(msg)
             msg = '; '.join(results)
             print(len(msg))

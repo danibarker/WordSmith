@@ -5,7 +5,7 @@
     "nick": "WordSmith",
     "channels": {
         "cocoscrabble": {
-            "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ?",
             "lexicon": "csw",
             "command_blacklist": []
         }
