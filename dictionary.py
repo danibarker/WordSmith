@@ -2,10 +2,11 @@ import inflect
 import re
 import random
 
+cel = []
 csw = {}
 twl = {}
 mw = {}
-wordlist = {"csw":csw,"twl":twl, "mw":mw, "csw#":csw}
+wordlist = {"csw":csw, "twl":twl, "mw":mw, "csw#":csw}
 engine = inflect.engine()
 
 def related_command(stem, lexicon):
@@ -132,6 +133,15 @@ def ends_with(hook, lexicon):
 
 def check(stem, lexicon):
     if stem in wordlist[lexicon]:
+        definition = wordlist[lexicon][stem][0]
+        return offensive(definition), True
+    else:
+        return False, False
+
+
+def common(stem, lexicon):
+    #print(cel)
+    if (stem in cel) and (stem in wordlist[lexicon]):
         definition = wordlist[lexicon][stem][0]
         return offensive(definition), True
     else:
@@ -328,9 +338,13 @@ def crypto(cipher, lexicon):
     return regex(f'^{"".join(words)}$', lexicon)
 
 
-
 def open_files():
     # wordlist DICTIONARY
+    try:
+        with open("CEL/cel.txt", "r") as f:
+            cel.extend(f.read().upper().splitlines())
+    except FileNotFoundError:
+        print("CEL/cel.txt not found")
     try:
         f = open("csw.dat", "r")
         line = f.readline().strip("\n").split('	')
@@ -358,7 +372,3 @@ def open_files():
         f.close()
     except FileNotFoundError:
         print("mw.dat not found")
-
-if __name__ == '__main__':
-    print(crypto('XCCXBB','csw'))
-

@@ -71,6 +71,19 @@ class TwitchBot(commands.Bot):
             print(len(msg))
             await ctx.send(msg[0:500])
 
+    @commands.command(name='common')
+    async def common(self, ctx, stem):
+        if re.search('[/!]', stem):
+            return await ctx.send('Words must not contain / or !')
+        offensive, common = self.dictionary.common(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
+        if not offensive:
+            if common:
+                msg = stem.upper() + ' is common VoteYea'
+            else:
+                msg = stem.upper() + '* not found VoteNay'
+            print(len(msg))
+            await ctx.send(msg[0:500])
+
     @commands.command(name='equity')
     async def equity(self, ctx, *racks):
         if racks and len(racks) > 0:
