@@ -23,7 +23,7 @@ class TwitchBot(commands.Bot):
         self.dictionary = dictionary
 
     async def event_ready(self):
-        print(f'Wordsmith 0.7 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.8 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!' and ctx.content[1:] in custom_commands.keys():
@@ -96,7 +96,8 @@ class TwitchBot(commands.Bot):
                     if re.search('[/!]', rack):
                         return await ctx.send('Racks must not contain / or !')
                     if len(rack) >= 2 and len(rack) <= 5:
-                        msg = equity(rack, lexicon)
+                        result = equity(rack, lexicon)
+                        msg = '%s: %0.3f' % (alphagram(result[0], alphabet), result[1])
                     else:
                         msg = alphagram(rack.upper(), alphabet) + ': ?'
                     results.append(msg)

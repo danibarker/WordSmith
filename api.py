@@ -6,7 +6,7 @@ def equity(rack, lexicon):
     response = requests.get('https://cross-tables.com/leaves_values.php', headers={'User-Agent': 'wordsmith-bot'}, params=parameters)
     values = response.json()
     try:
-        return values['rack'] + ': ' + str(values['rack-value'])
+        return (values['rack'], values['rack-value'])
     except KeyError:
         return response.text
 
