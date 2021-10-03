@@ -144,15 +144,6 @@ class TwitchBot(commands.Bot):
             msg = f'Command can only be used by {ctx.channel.name} or moderators'
         await ctx.send(msg)
 
-    @commands.command(name='so')
-    async def shoutout(self, ctx, name):
-        if ctx.author.name == ctx.channel.name or ctx.author.is_mod:
-            msg = f'Check {name} out at http://twitch.tv/{name.lower()} !'
-        else:
-            msg = f'Command can only be used by {ctx.channel.name} or moderators'
-        print(len(msg))
-        await ctx.send(msg)
-
     @commands.command(name='timeout')
     async def timeout(self, ctx, user):
         if ctx.author.name == ctx.channel.name or ctx.author.is_mod:
