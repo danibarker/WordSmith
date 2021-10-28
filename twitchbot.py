@@ -17,13 +17,13 @@ engine = inflect.engine()
 class TwitchBot(commands.Bot):
 
     def __init__(self, dictionary):
-        super().__init__(api_token=config.api_token, irc_token=config.irc_token,
+        super().__init__(api_token=config.api_token, token=config.irc_token,
                          client_id=config.client_id, nick=config.nick, prefix='!',
                          initial_channels=initc)
         self.dictionary = dictionary
 
     async def event_ready(self):
-        print(f'Wordsmith 0.8 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.9 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!' and ctx.content[1:] in custom_commands.keys():
