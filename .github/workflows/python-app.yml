@@ -39,6 +39,7 @@ jobs:
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
         path: .
+        spec: WordSmith.spec
 
     - uses: actions/upload-artifact@v2
       with:
