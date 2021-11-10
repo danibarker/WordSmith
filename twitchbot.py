@@ -26,15 +26,16 @@ class TwitchBot(commands.Bot):
         print(f'Wordsmith 0.9 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
-        if len(ctx.content) > 1 and ctx.content[0] == '!' and ctx.content[1:] in custom_commands.keys():
+        if len(ctx.content) > 1 and ctx.content[0] == '!':
             print(ctx.content)
-            with open(custom_commands[ctx.content[1:]], 'r') as f:
-                messages = list(f)
-            message = rd.choice(messages).strip()
-            print(len(message))
-            await ctx.channel.send(message)
-        else:
-            await self.handle_commands(ctx)
+            if ctx.content[1:] in custom_commands.keys():
+                with open(custom_commands[ctx.content[1:]], 'r') as f:
+                    messages = list(f)
+                message = rd.choice(messages).strip()
+                print(len(message))
+                await ctx.channel.send(message)
+            else:
+                await self.handle_commands(ctx)
 
     def paginate(self, my_result, page='1'):
         num_results = len(my_result)
