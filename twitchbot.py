@@ -98,7 +98,10 @@ class TwitchBot(commands.Bot):
                         return await ctx.send('Racks must not contain / or !')
                     if len(rack) >= 2 and len(rack) <= 5:
                         result = equity(rack, lexicon)
-                        msg = '%s: %0.3f' % (alphagram(result[0], alphabet), result[1])
+                        if result[0] == '{':
+                            msg = '%s: %s' % (alphagram(rack.upper(), alphabet), result)
+                        else:
+                            msg = '%s: %0.3f' % (alphagram(result[0], alphabet), result[1])
                     else:
                         msg = alphagram(rack.upper(), alphabet) + ': ?'
                     results.append(msg)
