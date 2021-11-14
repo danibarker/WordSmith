@@ -26,7 +26,6 @@ def related(stem, lexicon):
     for word in wordlist[lexicon]:
         definition = wordlist[lexicon][word][0]
         if pattern.search(definition) and not offensive(definition):
-            
             my_result.append(word)
     return my_result
 
@@ -167,9 +166,8 @@ def define(stem, lexicon):
         return stem + '* - not found'
 
 
-def info(stem, lexicon, alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
-    msg = ""
-    
+def info(stem, lexicon, alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+    msg = ''
     try:
         if stem in wordlist[lexicon]:
             entry = wordlist[lexicon][stem]
@@ -180,31 +178,30 @@ def info(stem, lexicon, alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
                     msg = stem
                     counter += 1
                 if counter == 1:
-                    msg = msg + " - " + x
+                    msg = msg + ' - ' + x
                 if counter == 2 and x:
-                    msg = msg + " Front Hooks: " + x
+                    msg = msg + ' Front Hooks: ' + x
                 if counter == 3 and x:
-                    msg = msg + " Back Hooks: " + x
+                    msg = msg + ' Back Hooks: ' + x
                 if counter == 4:
-                    msg = msg + " Probability: " + str(x)
+                    msg = msg + ' Probability: ' + str(x)
                 if counter == 5:
-                    msg = msg + " Alphagram: " + alphagram(x, alphabet)
-        else:
-            return "No such word"
-    except KeyError:
-        return "No such lexicon"
+                    msg = msg + ' Alphagram: ' + alphagram(x, alphabet)
 
-    hooks = middle_hooks(stem, lexicon)
-    if hooks:
-        msg = msg + " Middle Hooks:"
-        for x in hooks:
-            msg = msg + " " + x
-    return msg
+            hooks = middle_hooks(stem, lexicon)
+            if hooks:
+                msg = msg + ' Middle Hooks:'
+                for x in hooks:
+                    msg = msg + ' ' + x
+            return msg
+        else:
+            return 'No such word'
+    except KeyError:
+        return 'No such lexicon'
 
 
 def hook(stem, lexicon):
-    msg = stem
-    
+    msg = ''
     try:
         if stem in wordlist[lexicon]:
             entry = wordlist[lexicon][stem]
@@ -212,20 +209,29 @@ def hook(stem, lexicon):
             for x in entry:
                 counter = counter + 1
                 if counter == 1 and x:
-                    msg = msg + " Front Hooks: " + x
+                    msg = msg + ' Front: ' + x
                 if counter == 2 and x:
-                    msg = msg + " Back Hooks: " + x
+                    msg = msg + ' Back: ' + x
         else:
-            msg = msg + "*"
-    except KeyError:
-        return "No such lexicon"
+            hooks = front_hooks(stem, lexicon)
+            if hooks:
+                msg = msg + ' Front:'
+                for x in hooks:
+                    msg = msg + ' ' + x
+            hooks = back_hooks(stem, lexicon)
+            if hooks:
+                msg = msg + ' Back:'
+                for x in hooks:
+                    msg = msg + ' ' + x
 
-    hooks = middle_hooks(stem, lexicon)
-    if hooks:
-        msg = msg + " Middle Hooks:"
-        for x in hooks:
-            msg = msg + " " + x
-    return msg.lstrip()
+        hooks = middle_hooks(stem, lexicon)
+        if hooks:
+            msg = msg + ' Middle:'
+            for x in hooks:
+                msg = msg + ' ' + x
+        return msg.lstrip()
+    except KeyError:
+        return 'No such lexicon'
 
 
 def random_word(word_length, lexicon, related_word):
@@ -233,7 +239,7 @@ def random_word(word_length, lexicon, related_word):
         word_length = None
     msg = ''
     if wordlist[lexicon]:
-        words = list(wordlist[lexicon]) if related == "" else related(related_word,lexicon)
+        words = list(wordlist[lexicon]) if related == '' else related(related_word,lexicon)
         word = select_random_word(word_length, words)
         definition = wordlist[lexicon][word][0]
         while offensive(definition):
@@ -304,8 +310,35 @@ def anagram(rack, lexicon):
     return words
 
 
+def back_hooks(stem, lexicon):
+    stem = stem.replace('?', '.')
+    stem_length = len(stem)
+    result = []
+
+    pattern = re.compile(rf'^{stem}.$', re.IGNORECASE)
+    for word in wordlist[lexicon]:
+        if len(word) > stem_length and pattern.match(word):
+            definition = wordlist[lexicon][word][0]
+            if not offensive(definition):
+                result.append(word)
+    return result
+
+
+def front_hooks(stem, lexicon):
+    stem = stem.replace('?', '.')
+    stem_length = len(stem)
+    result = []
+
+    pattern = re.compile(rf'^.{stem}$', re.IGNORECASE)
+    for word in wordlist[lexicon]:
+        if len(word) > stem_length and pattern.match(word):
+            definition = wordlist[lexicon][word][0]
+            if not offensive(definition):
+                result.append(word)
+    return result
+
+
 def middle_hooks(stem, lexicon):
-    # FINDS LETTERS THAT CAN BE ADDED TO THE MIDDLE OF A WORD
     stem = stem.replace('?', '.')
     stem_length = len(stem)
     result = []
