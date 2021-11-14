@@ -229,7 +229,7 @@ def hook(stem, lexicon):
             msg = msg + ' Middle:'
             for x in hooks:
                 msg = msg + ' ' + x
-        return msg.lstrip()
+        return 'No hooks found' if msg == '' else msg.lstrip()
     except KeyError:
         return 'No such lexicon'
 
