@@ -8,6 +8,7 @@ twl = {}
 mw = {}
 wordlist = {"csw":csw, "twl":twl, "mw":mw, "csw#":csw}
 
+
 def related_command(stem, lexicon):
     words = related(stem,lexicon)
     my_result = []
@@ -18,9 +19,10 @@ def related_command(stem, lexicon):
             my_result.append(word)
     return my_result
 
+
 def related(stem, lexicon):
     stem = stem.replace('?', '.')
-    pattern = re.compile(rf'(?<![a-z])(?:{re.escape(stem)})s?(?![a-z])', re.IGNORECASE)
+    pattern = re.compile(rf'(?<![a-z]){re.escape(stem)}s?(?![a-z])', re.IGNORECASE)
     my_result = []
  
     for word in wordlist[lexicon]:
@@ -33,7 +35,7 @@ def related(stem, lexicon):
 def begins_with(hook, lexicon):
     hook = hook.replace('?', '.')
     hook_length = len(hook)
-    pattern = re.compile(rf'^(?:{hook})', re.IGNORECASE)
+    pattern = re.compile(rf'^{hook}', re.IGNORECASE)
     my_result = []
     
     for word in wordlist[lexicon]:
@@ -83,7 +85,7 @@ def pattern(stem, lexicon):
     stem = stem.replace('?','.')
     stem = stem.replace('*','.*')
     stem = re.sub('(\\d+)','.{\\1}', stem)
-    pattern = re.compile(rf'^(?:{stem})$', re.IGNORECASE)
+    pattern = re.compile(rf'^{stem}$', re.IGNORECASE)
     my_result = []
 
     for word in wordlist[lexicon]:
@@ -115,7 +117,7 @@ def regex(stem, lexicon):
 def ends_with(hook, lexicon):
     hook = hook.replace('?', '.')
     hook_length = len(hook)
-    pattern = re.compile(rf'(?:{hook})$', re.IGNORECASE)
+    pattern = re.compile(rf'{hook}$', re.IGNORECASE)
     my_result = []
     
     for word in wordlist[lexicon]:
@@ -344,13 +346,31 @@ def middle_hooks(stem, lexicon):
     result = []
 
     for x in range(1, stem_length):
-        pattern = re.compile(rf'^(?:{stem[0:x]}.{stem[x:]})$', re.IGNORECASE)
+        pattern = re.compile(rf'^{stem[:x]}.{stem[x:]}$', re.IGNORECASE)
         for word in wordlist[lexicon]:
             if len(word) > stem_length and pattern.match(word):
                 definition = wordlist[lexicon][word][0]
                 if not offensive(definition):
                     result.append(word)
     return result
+
+
+def stem(rack, lexicon):
+    rack = rack.replace('?', '.')
+    word_length = len(rack)-1
+    result = []
+
+    try:
+        for x in range(0, word_length+1):
+            pattern = re.compile(rf'^{rack[:x]}{rack[x+1:]}$', re.IGNORECASE)
+            for word in wordlist[lexicon]:
+                if len(word) == word_length and pattern.match(word):
+                    definition = wordlist[lexicon][word][0]
+                    if not offensive(definition):
+                        result.append(word)
+        return 'No stems found' if result == [] else ', '.join(result)
+    except KeyError:
+        return 'No such lexicon'
 
 
 def crypto(cipher, lexicon):

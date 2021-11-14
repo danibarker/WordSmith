@@ -23,7 +23,7 @@ class TwitchBot(commands.Bot):
         self.dictionary = dictionary
 
     async def event_ready(self):
-        print(f'Wordsmith 0.9 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.10 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!':
@@ -216,6 +216,11 @@ class TwitchBot(commands.Bot):
     @commands.command(name='hook')
     async def hook(self, ctx, stem):
         msg = self.dictionary.hook(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
+        await ctx.send(msg)
+
+    @commands.command(name='stem')
+    async def hook(self, ctx, rack):
+        msg = self.dictionary.stem(rack.upper(),config.channels[ctx.channel.name]["lexicon"])
         await ctx.send(msg)
 
     @commands.command(name='info')
