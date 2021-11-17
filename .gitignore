@@ -4,7 +4,7 @@ config.json
 *.dat
 #custom text files
 *.txt
-
+_venv
 # executables not part of project
 # *.exe
 
