@@ -34,3 +34,14 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+
+    - name: Package Application
+      uses: Alcance-Innovation-Consulting/pyinstaller-action-windows@main
+      with:
+        path: .
+        spec: WordSmith.spec
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: WordSmith
+        path: dist/windows

@@ -15,8 +15,6 @@ _venv
 *.suo
 *.sqlite
 __pycache__
-*.spec 
-TwitchBot.spec
 *.user
 # exe dist
 dist

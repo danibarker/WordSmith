@@ -1,0 +1,3 @@
+[submodule "CEL"]
+	path = CEL
+	url = https://github.com/Fj00/CEL.git
