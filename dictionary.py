@@ -269,8 +269,8 @@ def anagram_1(rack, lexicon):
         msg = 'No anagrams found'
     else:
         msg = ''
-        for n,_ in enumerate(my_result):
-            if len(msg) > 450 - len(my_result[n]):
+        for n, word in enumerate(my_result):
+            if len(msg) + len(word) > 470:
                 msg += f'Limited to first {n} results'
                 break
             else:
