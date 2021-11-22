@@ -270,7 +270,7 @@ def anagram_1(rack, lexicon):
     else:
         msg = ''
         for n, word in enumerate(my_result):
-            if len(msg) + len(word) > 470:
+            if len(msg) + len(word) > 465:
                 msg += f'Limited to first {n} results'
                 break
             else:

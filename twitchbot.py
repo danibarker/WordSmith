@@ -42,7 +42,7 @@ class TwitchBot(commands.Bot):
         msg = ''
         p = int(page)
         for n, word in enumerate(my_result):
-            if len(msg) + len(word) > 470:
+            if len(msg) + len(word) > 465:
                 if p > 1:
                     msg = ''
                     p = p - 1
