@@ -219,7 +219,7 @@ class TwitchBot(commands.Bot):
         await ctx.send(msg)
 
     @commands.command(name='stem')
-    async def hook(self, ctx, rack):
+    async def stem(self, ctx, rack):
         msg = self.dictionary.stem(rack.upper(),config.channels[ctx.channel.name]["lexicon"])
         await ctx.send(msg)
 
