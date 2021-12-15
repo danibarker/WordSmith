@@ -13,10 +13,7 @@ def related_command(stem, lexicon):
     words = related(stem,lexicon)
     my_result = []
     for word in words:
-        if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
-                my_result.append(word+'#')
-        else:
-            my_result.append(word)
+        my_result.append(decorate(word, lexicon))
     return my_result
 
 
@@ -42,10 +39,7 @@ def begins_with(hook, lexicon):
         if len(word) >= hook_length and pattern.match(word):
             definition = wordlist[lexicon][word][0]
             if not offensive(definition):
-                if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
-                    my_result.append(word+'#')
-                else:
-                    my_result.append(word)
+                my_result.append(decorate(word, lexicon))
     return my_result
 
 
@@ -59,10 +53,7 @@ def contains(stem, lexicon):
         if len(word) >= stem_length and pattern.search(word):
             definition = wordlist[lexicon][word][0]
             if not offensive(definition):
-                if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
-                    my_result.append(word+'#')
-                else:
-                    my_result.append(word)
+                my_result.append(decorate(word, lexicon))
     return my_result
 
 
@@ -74,10 +65,7 @@ def hidden(length, phrase, lexicon):
         if word in wordlist[lexicon]:
             definition = wordlist[lexicon][word][0]
             if not offensive(definition):
-                if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
-                    my_result.append(word+'#')
-                else:
-                    my_result.append(word)
+                my_result.append(decorate(word, lexicon))
     return my_result
 
 
@@ -92,10 +80,7 @@ def pattern(stem, lexicon):
         if pattern.match(word):
             definition = wordlist[lexicon][word][0]
             if not offensive(definition):
-                if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
-                    my_result.append(word+'#')
-                else:
-                    my_result.append(word)
+                my_result.append(decorate(word, lexicon))
     return my_result
 
 
@@ -107,10 +92,7 @@ def regex(stem, lexicon):
         if pattern.search(word):
             definition = wordlist[lexicon][word][0]
             if not offensive(definition):
-                if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
-                    my_result.append(word+'#')
-                else:
-                    my_result.append(word)
+                my_result.append(decorate(word, lexicon))
     return my_result
 
 
@@ -124,10 +106,7 @@ def ends_with(hook, lexicon):
         if len(word) >= hook_length and pattern.search(word):
             definition = wordlist[lexicon][word][0]
             if not offensive(definition):
-                if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
-                    my_result.append(word+'#')
-                else:
-                    my_result.append(word)
+                my_result.append(decorate(word, lexicon))
     return my_result
 
 
@@ -140,12 +119,18 @@ def check(stem, lexicon):
 
 
 def common(stem, lexicon):
-    #print(cel)
     if (stem in cel) and (stem in wordlist[lexicon]):
         definition = wordlist[lexicon][stem][0]
         return offensive(definition), True
     else:
         return False, False
+
+
+def decorate(word, lexicon):
+    if lexicon == 'csw#' and len(wordlist[lexicon][word]) == 6:
+       return word + wordlist[lexicon][word][5]
+    else:
+       return word
 
 
 def offensive(definition):
@@ -158,12 +143,7 @@ def define(stem, lexicon):
     if offensive:
         return None
     elif valid:
-        definition = wordlist[lexicon][stem][0]
-        if len(wordlist[lexicon][stem]) == 6 and lexicon == 'csw#':
-            msg = stem.upper() + '# - ' + definition
-        else:
-            msg = stem.upper() + ' - ' + definition
-        return msg
+        return decorate(stem, lexicon) + ' - ' + wordlist[lexicon][stem][0]
     else:
         return stem + '* - not found'
 
@@ -241,16 +221,13 @@ def random_word(word_length, lexicon, related_word):
         word_length = None
     msg = ''
     if wordlist[lexicon]:
-        words = list(wordlist[lexicon]) if related == '' else related(related_word,lexicon)
+        words = list(wordlist[lexicon]) if related_word == '' else related(related_word, lexicon)
         word = select_random_word(word_length, words)
         definition = wordlist[lexicon][word][0]
         while offensive(definition):
             word = select_random_word(word_length, words)
             definition = wordlist[lexicon][word][0]
-        if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
-            msg = word + '# - ' + wordlist[lexicon][word][0]
-        else:
-            msg = word + ' - ' + wordlist[lexicon][word][0]
+        msg = decorate(word, lexicon) + ' - ' + definition
     return msg
 
 
@@ -305,10 +282,7 @@ def anagram(rack, lexicon):
         if len(word) == word_length and pattern.match(wordlist[lexicon][word][4]):
             definition = wordlist[lexicon][word][0]
             if not offensive(definition):
-                if len(wordlist[lexicon][word]) == 6 and lexicon == 'csw#':
-                    words.append(word+'#')
-                else:
-                    words.append(word)
+                words.append(decorate(word, lexicon))
     return words
 
 
@@ -322,7 +296,7 @@ def back_hooks(stem, lexicon):
         if len(word) > stem_length and pattern.match(word):
             definition = wordlist[lexicon][word][0]
             if not offensive(definition):
-                result.append(word)
+                result.append(decorate(word, lexicon))
     return result
 
 
@@ -336,7 +310,7 @@ def front_hooks(stem, lexicon):
         if len(word) > stem_length and pattern.match(word):
             definition = wordlist[lexicon][word][0]
             if not offensive(definition):
-                result.append(word)
+                result.append(decorate(word, lexicon))
     return result
 
 
@@ -351,7 +325,7 @@ def middle_hooks(stem, lexicon):
             if len(word) > stem_length and pattern.match(word):
                 definition = wordlist[lexicon][word][0]
                 if not offensive(definition):
-                    result.append(word)
+                    result.append(decorate(word, lexicon))
     return result
 
 

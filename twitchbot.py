@@ -42,7 +42,7 @@ class TwitchBot(commands.Bot):
         msg = ''
         p = int(page)
         for n, word in enumerate(my_result):
-            if len(msg) + len(word) > 465:
+            if len(msg) + len(word) > 455:
                 if p > 1:
                     msg = ''
                     p = p - 1
@@ -50,6 +50,7 @@ class TwitchBot(commands.Bot):
                     msg += f'Limited to first {n} results'
                     break
             msg += word + ' '
+        print(len(msg))
         return num_results, msg
 
     @commands.command(name='predict')
@@ -216,11 +217,13 @@ class TwitchBot(commands.Bot):
     @commands.command(name='hook')
     async def hook(self, ctx, stem):
         msg = self.dictionary.hook(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
+        print(len(msg))
         await ctx.send(msg)
 
     @commands.command(name='stem')
     async def stem(self, ctx, rack):
         msg = self.dictionary.stem(rack.upper(),config.channels[ctx.channel.name]["lexicon"])
+        print(len(msg))
         await ctx.send(msg)
 
     @commands.command(name='info')
@@ -267,9 +270,9 @@ class TwitchBot(commands.Bot):
     @commands.command(name='random')
     async def random(self, ctx, option='0'):
         if option.isnumeric():
-            msg = self.dictionary.random_word(int(option), config.channels[ctx.channel.name]["lexicon"], "")
+            msg = self.dictionary.random_word(int(option), config.channels[ctx.channel.name]["lexicon"], '')
         else:
-            msg = self.dictionary.random_word(0,config.channels[ctx.channel.name]["lexicon"],option)
+            msg = self.dictionary.random_word(0, config.channels[ctx.channel.name]["lexicon"], option)
         print(len(msg))
         await ctx.send(msg)
 
