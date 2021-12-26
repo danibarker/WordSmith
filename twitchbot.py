@@ -23,7 +23,7 @@ class TwitchBot(commands.Bot):
         self.dictionary = dictionary
 
     async def event_ready(self):
-        print(f'Wordsmith 0.10 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.11 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!':
@@ -82,6 +82,19 @@ class TwitchBot(commands.Bot):
         if not offensive:
             if common:
                 msg = stem.upper() + ' is common VoteYea'
+            else:
+                msg = stem.upper() + '* not found VoteNay'
+            print(len(msg))
+            await ctx.send(msg[0:500])
+
+    @commands.command(name='wordnik')
+    async def wordnik(self, ctx, stem):
+        if re.search('[/!]', stem):
+            return await ctx.send('Words must not contain / or !')
+        offensive, common = self.dictionary.common(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
+        if not offensive:
+            if common:
+                msg = stem.upper() + ' is open-source VoteYea'
             else:
                 msg = stem.upper() + '* not found VoteNay'
             print(len(msg))

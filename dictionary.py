@@ -2,7 +2,6 @@ from alphagram import alphagram
 import random
 import re
 
-cel = []
 csw = {}
 twl = {}
 mw = {}
@@ -119,7 +118,29 @@ def check(stem, lexicon):
 
 
 def common(stem, lexicon):
+    cel = []
+    try:
+        with open("CEL/cel.txt", "r") as f:
+            cel = f.read().upper().splitlines()
+    except FileNotFoundError:
+        print("CEL/cel.txt not found")
+
     if (stem in cel) and (stem in wordlist[lexicon]):
+        definition = wordlist[lexicon][stem][0]
+        return offensive(definition), True
+    else:
+        return False, False
+
+
+def wordnik(stem, lexicon):
+    wordnik = []
+    try:
+        with open("wordlist/wordlist-20210729.txt", "r") as f:
+            wordnik = f.read().replace('"', '').upper().splitlines()
+    except FileNotFoundError:
+        print("wordlist/wordlist-20210729.txt not found")
+
+    if (stem in wordnik) and (stem in wordlist[lexicon]):
         definition = wordlist[lexicon][stem][0]
         return offensive(definition), True
     else:
@@ -365,11 +386,6 @@ def crypto(cipher, lexicon):
 
 def open_files():
     # wordlist DICTIONARY
-    try:
-        with open("CEL/cel.txt", "r") as f:
-            cel.extend(f.read().upper().splitlines())
-    except FileNotFoundError:
-        print("CEL/cel.txt not found")
     try:
         f = open("csw.dat", "r")
         line = f.readline().strip("\n").split('	')

@@ -1,3 +1,6 @@
 [submodule "CEL"]
 	path = CEL
 	url = https://github.com/Fj00/CEL.git
+[submodule "wordlist"]
+	path = wordlist
+	url = https://github.com/wordnik/wordlist.git
