@@ -17,6 +17,7 @@
    This is the configuration file to connect the bot to a twitch account and have it join channels, it has the following 5 lines only (made up info) instructions on how to set up your own bot found below:
     
       {
+        "api_token": "oauth:REDACTED",
         "irc_token": "oauth:REDACTED",
         "client_id": "oe08ff8dfds8fdfjd99fda68g6pt",
         "nick": "BotsTwitchAccountName",
