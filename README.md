@@ -51,16 +51,19 @@
 
   	9. Copy your Client ID, you will need to put this in config.json
 
-  	10. Open config.json and replace the lines with your information, be sure to leave the variables in quotes:
+  	10. Go to https://twitchapps.com/tokengen/ and follow directions to obtain an API token
+
+  	11. Open config.json and replace the lines with your information, be sure to leave the variables in quotes:
 	  	
-		irc_token is the oauth, make sure it includes the text "oauth:" and not just the rest of the string
+		api_token is the API oauth token, make sure it includes the text "oauth:" and not just the rest of the string
+		irc_token is the IRC oauth token, make sure it includes the text "oauth:" and not just the rest of the string
 	  	client_id is your client id
 	  	nick is your bot's username
 	  	channels is the channels you want it to join and their initial lexicon
 
-  	11. Save this file
+  	12. Save this file
 
-  	12. That's it, run wordsmith.py and it should connect and show a message saying "it is online"
+  	13. That's it, run wordsmith.py and it should connect and show a message saying "it is online"
     
     13. To run wordsmith.py you will need to have the twitchio package installed, instructions can be found in the readme at https://github.com/TwitchIO/TwitchIO
 
