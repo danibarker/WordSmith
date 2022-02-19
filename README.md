@@ -17,8 +17,8 @@
    This is the configuration file to connect the bot to a twitch account and have it join channels, it has the following 5 lines only (made up info) instructions on how to set up your own bot found below:
     
       {
-        "api_token": "oauth:REDACTED",
-        "irc_token": "oauth:REDACTED",
+        "api_token": "REDACTED",
+        "irc_token": "REDACTED",
         "client_id": "oe08ff8dfds8fdfjd99fda68g6pt",
         "nick": "BotsTwitchAccountName",
         "channels": {
@@ -35,37 +35,33 @@
 
   	1. Create a new twitch account with the username you want the bot to have
 
-  	2. Go to https://twitchapps.com/tmi/ and click Connect, copy what is in the text box including "oauth:"
+  	2. Sign in as that account and go here: https://dev.twitch.tv/console/apps/create
 
-  	3. Sign in as that account and go here: https://dev.twitch.tv/console/apps/create
+  	3. Register a new Chat Bot application. Name is not important, it isn't shown anywhere except in your applications list
 
-  	4. Register a new application, Name is not important, it isn't shown anywhere except in your applications list
+ 	4. During registration set the callback URL to token generator https://twitchapps.com/tokengen/
 
-  	5. Paste the oauth you got earlier, you'll also need to put this into config.json (just open in notepad or similar)
+ 	5. Copy your client ID from your new Twitch application into config.json
 
-  	6. Choose Chat Bot for Category
+  	6. Using https://twitchapps.com/tokengen/ generate a token with scope chat:edit chat:read
 
-  	7. Click Create
+  	6. Copy this chat token into config.json as the IRC token
 
-  	8. You will be brough to a page called Console, where you will see your App, click on Manage
+  	7. Go to https://twitchapps.com/tokengen/ and obtain an API Access Token (no scope?)
 
-  	9. Copy your Client ID, you will need to put this in config.json
-
-  	10. Go to https://twitchapps.com/tokengen/ and follow directions to obtain an API token
-
-  	11. Open config.json and replace the lines with your information, be sure to leave the variables in quotes:
+  	8. Open config.json and replace the lines with your information, be sure to leave the variables in quotes:
 	  	
-		api_token is the API oauth token, make sure it includes the text "oauth:" and not just the rest of the string
-		irc_token is the IRC oauth token, make sure it includes the text "oauth:" and not just the rest of the string
+		api_token is the API oauth token (TwitchIO automatically supplies the oauth: prefix?)
+		irc_token is the IRC oauth token
 	  	client_id is your client id
 	  	nick is your bot's username
 	  	channels is the channels you want it to join and their initial lexicon
 
-  	12. Save this file
+  	9. Save this file
 
-  	13. That's it, run wordsmith.py and it should connect and show a message saying "it is online"
+  	10. That's it, run wordsmith.py and it should connect and show a message saying "it is online"
     
-    13. To run wordsmith.py you will need to have the twitchio package installed, instructions can be found in the readme at https://github.com/TwitchIO/TwitchIO
+ 	11. To run wordsmith.py you will need to have the twitchio package installed, instructions can be found in the readme at https://github.com/TwitchIO/TwitchIO or try your luck with installing Python and `pip install -r requirements.txt` or if you are feeling lucky, skip this step and hope that `WordSmith.exe` already contains this package.
 
 ## Commands for the bot
 
@@ -83,4 +79,4 @@ Some commands will return a list of results, if there are more than 30, it will 
 	!info - returns the definition, front hooks, back hooks, middle hooks, probability, alphagram sorted by alphabet, e.g. !info cat
 	!anagram - returns a list of words that fit the letters given, e.g. !anagram ?aeinst
 	!random [length] - returns a single word and definition chosen at random, e.g. !random 7
-    !lexicon - only usable by the stream owner, changes to one of the other lexicons, e.g. !lexicon csw, csw# is for csw with octothorps.
+	!lexicon - only usable by the stream owner, changes to one of the other lexicons, e.g. !lexicon csw, csw# is for csw with octothorps.
