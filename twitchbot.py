@@ -23,7 +23,7 @@ class TwitchBot(commands.Bot):
         self.dictionary = dictionary
 
     async def event_ready(self):
-        print(f'Wordsmith 0.11 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.12 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!':
@@ -40,6 +40,7 @@ class TwitchBot(commands.Bot):
     def paginate(self, my_result, page='1'):
         num_results = len(my_result)
         msg = ''
+        lastword = ''
         p = int(page)
         for n, word in enumerate(my_result):
             if len(msg) + len(word) > 455:
@@ -49,7 +50,11 @@ class TwitchBot(commands.Bot):
                 else:
                     msg += f'Limited to first {n} results'
                     break
-            msg += word + ' '
+            if lastword and word == lastword + 'S':
+                msg = msg[:-1] + '[S] '
+            else:
+                msg += word + ' '
+                lastword = word
         print(len(msg))
         return num_results, msg
 
