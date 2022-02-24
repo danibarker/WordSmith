@@ -174,9 +174,9 @@ def inflect(word, lexicon):
     if offensive:
         return None
     elif valid:
-        stem = re.match('([A-Z]+), .*', wordlist[lexicon][word][0])
-        if stem:
-            word = stem.group(1)
+        if not re.match('\[.*[A-Z]+\]', wordlist[lexicon][word][1]):
+            if stem := re.match('([A-Z]+), .*', wordlist[lexicon][word][0]):
+                word = stem.group(1)
         return ('%s%s' % decorate(word, lexicon, '')) + ' ' + wordlist[lexicon][word][1]
     else:
         return word + '* - not found'
