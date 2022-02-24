@@ -402,7 +402,7 @@ def open_files():
         while line != ['']:
             word, definition = line[0], line[1]
             line[0] = definition
-            line[1] = re.search("(\[.*\])|$", definition).group()
+            line[1] = ' '.join(re.findall("\[.*?\]", definition))
             csw[word] = line
             line = f.readline().strip("\n").split('	')
         f.close()
@@ -414,7 +414,7 @@ def open_files():
         while line != ['']:
             word, definition = line[0], line[1]
             line[0] = definition
-            line[1] = re.search("(\[.*\])|$", definition).group()
+            line[1] = ' '.join(re.findall("\[.*?\]", definition))
             twl[word] = line
             line = f.readline().strip("\n").split('	')
         f.close()
@@ -426,7 +426,7 @@ def open_files():
         while line != ['']:
             word, definition = line[0], line[1]
             line[0] = definition
-            line[1] = re.search("(\[.*\])|$", definition).group()
+            line[1] = ' '.join(re.findall("\[.*?\]", definition))
             mw[word] = line
             line = f.readline().strip("\n").split('	')
         f.close()
