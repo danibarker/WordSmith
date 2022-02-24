@@ -159,12 +159,23 @@ def offensive(definition):
     return pattern.search(definition)
 
 
-def define(word, lexicon):
+def uninflect(word, lexicon):
+    if not re.match('\\[.*[A-Z]+\\]', wordlist[lexicon][word][1]):
+        if stem := re.match('([A-Z]+), .*', wordlist[lexicon][word][0]):
+            return stem.group(1)
+    return word
+
+
+def define(word, lexicon, normalize=False):
     offensive, valid = check(word, lexicon)
     if offensive:
         return None
     elif valid:
-        return ('%s%s' % decorate(word, lexicon, '')) + ' - ' + wordlist[lexicon][word][0]
+        if normalize:
+            root = uninflect(word, lexicon)
+            return ('%s%s' % decorate(root, lexicon, '')) + ' - ' + wordlist[lexicon][root][0]
+        else:
+            return ('%s%s' % decorate(word, lexicon, '')) + ' - ' + wordlist[lexicon][word][0]
     else:
         return word + '* - not found'
 
@@ -174,10 +185,8 @@ def inflect(word, lexicon):
     if offensive:
         return None
     elif valid:
-        if not re.match('\[.*[A-Z]+\]', wordlist[lexicon][word][1]):
-            if stem := re.match('([A-Z]+), .*', wordlist[lexicon][word][0]):
-                word = stem.group(1)
-        return ('%s%s' % decorate(word, lexicon, '')) + ' ' + wordlist[lexicon][word][1]
+        root = uninflect(word, lexicon)
+        return ('%s%s' % decorate(root, lexicon, '')) + ' ' + wordlist[lexicon][root][1]
     else:
         return word + '* - not found'
 
@@ -405,7 +414,7 @@ def open_files():
         while line != ['']:
             word, definition = line[0], line[1]
             line[0] = definition
-            line[1] = ' '.join(re.findall("\[.*?\]", definition))
+            line[1] = ' '.join(re.findall("\\[.*?\\]", definition))
             csw[word] = line
             line = f.readline().strip("\n").split('	')
         f.close()
@@ -417,7 +426,7 @@ def open_files():
         while line != ['']:
             word, definition = line[0], line[1]
             line[0] = definition
-            line[1] = ' '.join(re.findall("\[.*?\]", definition))
+            line[1] = ' '.join(re.findall("\\[.*?\\]", definition))
             twl[word] = line
             line = f.readline().strip("\n").split('	')
         f.close()
@@ -429,7 +438,7 @@ def open_files():
         while line != ['']:
             word, definition = line[0], line[1]
             line[0] = definition
-            line[1] = ' '.join(re.findall("\[.*?\]", definition))
+            line[1] = ' '.join(re.findall("\\[.*?\\]", definition))
             mw[word] = line
             line = f.readline().strip("\n").split('	')
         f.close()

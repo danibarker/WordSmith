@@ -23,7 +23,7 @@ class TwitchBot(commands.Bot):
         self.dictionary = dictionary
 
     async def event_ready(self):
-        print(f'Wordsmith 0.12 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.13 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!':
@@ -148,27 +148,29 @@ class TwitchBot(commands.Bot):
             await ctx.send(msg[0:500])
 
     @commands.command(name='define')
-    async def define(self, ctx, *stems):
-        if stems and len(stems) > 0:
+    async def define(self, ctx, *words):
+        if words and len(words) > 0:
             definitions = []
-            for stem in stems:
-                if stem:
-                    if re.search('[/!]', stem):
-                        return await ctx.send('Words must not contain / or !')
-                    definitions.append(self.dictionary.define(stem.upper(),config.channels[ctx.channel.name]["lexicon"]))
+            for word in words:
+                if re.search('[/!]', word):
+                    return await ctx.send('Words must not contain / or !')
+                definition = self.dictionary.define(word.upper(),config.channels[ctx.channel.name]["lexicon"])
+                definitions.append(definition)
+                if match := re.match('[A-Z]+ - one who ([a-z]+)', definition):
+                    stem = match.group(1)
+                    definitions.append(self.dictionary.define(stem.upper(),config.channels[ctx.channel.name]["lexicon"],True))
             msg = '; '.join(definitions)
             print(len(msg))
             await ctx.send(msg[0:500])
 
     @commands.command(name='inflect')
-    async def inflect(self, ctx, *stems):
-        if stems and len(stems) > 0:
+    async def inflect(self, ctx, *words):
+        if words and len(words) > 0:
             inflections = []
-            for stem in stems:
-                if stem:
-                    if re.search('[/!]', stem):
-                        return await ctx.send('Words must not contain / or !')
-                    inflections.append(self.dictionary.inflect(stem.upper(),config.channels[ctx.channel.name]["lexicon"]))
+            for word in words:
+                if re.search('[/!]', word):
+                    return await ctx.send('Words must not contain / or !')
+                inflections.append(self.dictionary.inflect(word.upper(),config.channels[ctx.channel.name]["lexicon"]))
             msg = '; '.join(inflections)
             print(len(msg))
             await ctx.send(msg[0:500])
