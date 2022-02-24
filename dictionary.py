@@ -148,8 +148,8 @@ def wordnik(stem, lexicon):
 
 
 def decorate(word, lexicon, mark=None):
-    if lexicon == 'csw#' and len(wordlist[lexicon][word]) == 6:
-       return (word, wordlist[lexicon][word][5])
+    if lexicon == 'csw#' and len(wordlist[lexicon][word]) == 7:
+       return (word, wordlist[lexicon][word][-1])
     else:
        return (word, mark)
 
@@ -165,6 +165,16 @@ def define(stem, lexicon):
         return None
     elif valid:
         return ('%s%s' % decorate(stem, lexicon, '')) + ' - ' + wordlist[lexicon][stem][0]
+    else:
+        return stem + '* - not found'
+
+
+def inflect(stem, lexicon):
+    offensive, valid = check(stem, lexicon)
+    if offensive:
+        return None
+    elif valid:
+        return ('%s%s' % decorate(stem, lexicon, '')) + ' ' + wordlist[lexicon][stem][1]
     else:
         return stem + '* - not found'
 
@@ -390,7 +400,10 @@ def open_files():
         f = open("csw.dat", "r")
         line = f.readline().strip("\n").split('	')
         while line != ['']:
-            csw[line[0]] = line[1:]
+            word, definition = line[0], line[1]
+            line[0] = definition
+            line[1] = re.search("(\[.*\])|$", definition).group()
+            csw[word] = line
             line = f.readline().strip("\n").split('	')
         f.close()
     except FileNotFoundError:
@@ -399,7 +412,10 @@ def open_files():
         f = open("twl.dat", "r")
         line = f.readline().strip("\n").split('	')
         while line != ['']:
-            twl[line[0]] = line[1:]
+            word, definition = line[0], line[1]
+            line[0] = definition
+            line[1] = re.search("(\[.*\])|$", definition).group()
+            twl[word] = line
             line = f.readline().strip("\n").split('	')
         f.close()
     except FileNotFoundError:
@@ -408,7 +424,10 @@ def open_files():
         f = open("mw.dat", "r")
         line = f.readline().strip("\n").split('	')
         while line != ['']:
-            mw[line[0]] = line[1:]
+            word, definition = line[0], line[1]
+            line[0] = definition
+            line[1] = re.search("(\[.*\])|$", definition).group()
+            mw[word] = line
             line = f.readline().strip("\n").split('	')
         f.close()
     except FileNotFoundError:

@@ -155,9 +155,21 @@ class TwitchBot(commands.Bot):
                 if stem:
                     if re.search('[/!]', stem):
                         return await ctx.send('Words must not contain / or !')
-                    definition = self.dictionary.define(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
-                    definitions.append(definition)
+                    definitions.append(self.dictionary.define(stem.upper(),config.channels[ctx.channel.name]["lexicon"]))
             msg = '; '.join(definitions)
+            print(len(msg))
+            await ctx.send(msg[0:500])
+
+    @commands.command(name='inflect')
+    async def inflect(self, ctx, *stems):
+        if stems and len(stems) > 0:
+            inflections = []
+            for stem in stems:
+                if stem:
+                    if re.search('[/!]', stem):
+                        return await ctx.send('Words must not contain / or !')
+                    inflections.append(self.dictionary.inflect(stem.upper(),config.channels[ctx.channel.name]["lexicon"]))
+            msg = '; '.join(inflections)
             print(len(msg))
             await ctx.send(msg[0:500])
 
