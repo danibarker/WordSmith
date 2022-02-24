@@ -52,7 +52,7 @@ class TwitchBot(commands.Bot):
                     msg = ''
                     p = p - 1
                 else:
-                    msg += f' Limited to first {n} results'
+                    msg += f' Limited to first {n} results '
                     break
             else:
                 msg += word 
