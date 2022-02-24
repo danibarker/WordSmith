@@ -159,24 +159,27 @@ def offensive(definition):
     return pattern.search(definition)
 
 
-def define(stem, lexicon):
-    offensive, valid = check(stem, lexicon)
+def define(word, lexicon):
+    offensive, valid = check(word, lexicon)
     if offensive:
         return None
     elif valid:
-        return ('%s%s' % decorate(stem, lexicon, '')) + ' - ' + wordlist[lexicon][stem][0]
+        return ('%s%s' % decorate(word, lexicon, '')) + ' - ' + wordlist[lexicon][word][0]
     else:
-        return stem + '* - not found'
+        return word + '* - not found'
 
 
-def inflect(stem, lexicon):
-    offensive, valid = check(stem, lexicon)
+def inflect(word, lexicon):
+    offensive, valid = check(word, lexicon)
     if offensive:
         return None
     elif valid:
-        return ('%s%s' % decorate(stem, lexicon, '')) + ' ' + wordlist[lexicon][stem][1]
+        stem = re.match('([A-Z]+), .*', wordlist[lexicon][word][0])
+        if stem:
+            word = stem.group(1)
+        return ('%s%s' % decorate(word, lexicon, '')) + ' ' + wordlist[lexicon][word][1]
     else:
-        return stem + '* - not found'
+        return word + '* - not found'
 
 
 def info(stem, lexicon, alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
