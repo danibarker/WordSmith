@@ -40,23 +40,27 @@ class TwitchBot(commands.Bot):
     def paginate(self, my_result, page='1'):
         num_results = len(my_result)
         msg = ''
+        lastmark = ''
         lastword = ''
         p = int(page)
-        for n, word in enumerate(my_result):
-            if len(msg) + len(word) > 455:
+        for n, element in enumerate(my_result):
+            word, mark = element
+            if lastword and mark == lastmark and word == lastword + 'S':
+                msg = msg[:(-2 if mark else -1)] + '[-S]'
+            elif len(msg) + len(word) > 455:
                 if p > 1:
                     msg = ''
                     p = p - 1
                 else:
-                    msg += f'Limited to first {n} results'
+                    msg += f' Limited to first {n} results'
                     break
-            if lastword and word == lastword + 'S':
-                msg = msg[:-1] + '[S] '
             else:
-                msg += word + ' '
+                msg += word 
+                lastmark = mark
                 lastword = word
+            msg += (mark if mark else '') + ' '
         print(len(msg))
-        return num_results, msg
+        return num_results, msg[:-1]
 
     @commands.command(name='predict')
     async def predict(self, ctx, opponent):

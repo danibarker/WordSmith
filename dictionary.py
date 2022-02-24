@@ -147,11 +147,11 @@ def wordnik(stem, lexicon):
         return False, False
 
 
-def decorate(word, lexicon):
+def decorate(word, lexicon, mark=None):
     if lexicon == 'csw#' and len(wordlist[lexicon][word]) == 6:
-       return word + wordlist[lexicon][word][5]
+       return (word, wordlist[lexicon][word][5])
     else:
-       return word
+       return (word, mark)
 
 
 def offensive(definition):
@@ -164,7 +164,7 @@ def define(stem, lexicon):
     if offensive:
         return None
     elif valid:
-        return decorate(stem, lexicon) + ' - ' + wordlist[lexicon][stem][0]
+        return ('%s%s' % decorate(stem, lexicon, '')) + ' - ' + wordlist[lexicon][stem][0]
     else:
         return stem + '* - not found'
 
@@ -248,7 +248,7 @@ def random_word(word_length, lexicon, related_word):
         while offensive(definition):
             word = select_random_word(word_length, words)
             definition = wordlist[lexicon][word][0]
-        msg = decorate(word, lexicon) + ' - ' + definition
+        msg = ('%s%s' % decorate(word, lexicon, '')) + ' - ' + definition
     return msg
 
 
