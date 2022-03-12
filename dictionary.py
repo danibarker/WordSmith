@@ -378,8 +378,7 @@ def middle_hooks(stem, lexicon):
 def stem(rack, lexicon):
     rack = rack.replace('?', '.')
     word_length = len(rack)-1
-    result = []
-
+    result = set()
     try:
         for x in range(0, word_length+1):
             pattern = re.compile(rf'^{rack[:x]}{rack[x+1:]}$', re.IGNORECASE)
@@ -387,8 +386,9 @@ def stem(rack, lexicon):
                 if len(word) == word_length and pattern.match(word):
                     definitions = wordlist[lexicon][word][0]
                     if not offensive(definitions):
-                        result.append(word)
-        return 'No stems found' if result == [] else ', '.join(result)
+                        word, mark = decorate(word, lexicon)
+                        result.add(word + (mark if mark else ''))
+        return 'No stems found' if result == [] else ', '.join(sorted(result))
     except KeyError:
         return 'No such lexicon'
 
