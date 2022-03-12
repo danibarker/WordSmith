@@ -5,7 +5,7 @@ import re
 csw = {}
 twl = {}
 mw = {}
-wordlist = {"csw":csw, "twl":twl, "mw":mw, "csw#":csw}
+wordlist = {'csw':csw, 'twl':twl, 'mw':mw, 'csw#':csw}
 
 
 def related_command(stem, lexicon):
@@ -22,8 +22,8 @@ def related(stem, lexicon):
     my_result = []
  
     for word in wordlist[lexicon]:
-        definition = wordlist[lexicon][word][0]
-        if pattern.search(definition) and not offensive(definition):
+        definitions = wordlist[lexicon][word][0]
+        if pattern.search(definitions) and not offensive(definitions):
             my_result.append(word)
     return my_result
 
@@ -36,8 +36,8 @@ def begins_with(hook, lexicon):
     
     for word in wordlist[lexicon]:
         if len(word) >= hook_length and pattern.match(word):
-            definition = wordlist[lexicon][word][0]
-            if not offensive(definition):
+            definitions = wordlist[lexicon][word][0]
+            if not offensive(definitions):
                 my_result.append(decorate(word, lexicon))
     return my_result
 
@@ -50,8 +50,8 @@ def contains(stem, lexicon):
     
     for word in wordlist[lexicon]:
         if len(word) >= stem_length and pattern.search(word):
-            definition = wordlist[lexicon][word][0]
-            if not offensive(definition):
+            definitions = wordlist[lexicon][word][0]
+            if not offensive(definitions):
                 my_result.append(decorate(word, lexicon))
     return my_result
 
@@ -62,8 +62,8 @@ def hidden(length, phrase, lexicon):
     for x in range(0, len(phrase) - length + 1):
         word = phrase[x:x + length]
         if word in wordlist[lexicon]:
-            definition = wordlist[lexicon][word][0]
-            if not offensive(definition):
+            definitions = wordlist[lexicon][word][0]
+            if not offensive(definitions):
                 my_result.append(decorate(word, lexicon))
     return my_result
 
@@ -77,8 +77,8 @@ def pattern(stem, lexicon):
 
     for word in wordlist[lexicon]:
         if pattern.match(word):
-            definition = wordlist[lexicon][word][0]
-            if not offensive(definition):
+            definitions = wordlist[lexicon][word][0]
+            if not offensive(definitions):
                 my_result.append(decorate(word, lexicon))
     return my_result
 
@@ -89,8 +89,8 @@ def regex(stem, lexicon):
 
     for word in wordlist[lexicon]:
         if pattern.search(word):
-            definition = wordlist[lexicon][word][0]
-            if not offensive(definition):
+            definitions = wordlist[lexicon][word][0]
+            if not offensive(definitions):
                 my_result.append(decorate(word, lexicon))
     return my_result
 
@@ -103,16 +103,16 @@ def ends_with(hook, lexicon):
     
     for word in wordlist[lexicon]:
         if len(word) >= hook_length and pattern.search(word):
-            definition = wordlist[lexicon][word][0]
-            if not offensive(definition):
+            definitions = wordlist[lexicon][word][0]
+            if not offensive(definitions):
                 my_result.append(decorate(word, lexicon))
     return my_result
 
 
 def check(stem, lexicon):
     if stem in wordlist[lexicon]:
-        definition = wordlist[lexicon][stem][0]
-        return offensive(definition), True
+        definitions = wordlist[lexicon][stem][0]
+        return offensive(definitions), True
     else:
         return False, False
 
@@ -120,14 +120,14 @@ def check(stem, lexicon):
 def common(stem, lexicon):
     cel = []
     try:
-        with open("CEL/cel.txt", "r") as f:
+        with open('CEL/cel.txt', 'r') as f:
             cel = f.read().upper().splitlines()
     except FileNotFoundError:
-        print("CEL/cel.txt not found")
+        print('CEL/cel.txt not found')
 
     if (stem in cel) and (stem in wordlist[lexicon]):
-        definition = wordlist[lexicon][stem][0]
-        return offensive(definition), True
+        definitions = wordlist[lexicon][stem][0]
+        return offensive(definitions), True
     else:
         return False, False
 
@@ -135,14 +135,14 @@ def common(stem, lexicon):
 def wordnik(stem, lexicon):
     wordnik = []
     try:
-        with open("wordlist/wordlist-20210729.txt", "r") as f:
-            wordnik = f.read().replace('"', '').upper().splitlines()
+        with open('wordlist/wordlist-20210729.txt', 'r') as f:
+            wordnik = f.read().replace('\'', '').upper().splitlines()
     except FileNotFoundError:
-        print("wordlist/wordlist-20210729.txt not found")
+        print('wordlist/wordlist-20210729.txt not found')
 
     if (stem in wordnik) and (stem in wordlist[lexicon]):
-        definition = wordlist[lexicon][stem][0]
-        return offensive(definition), True
+        definitions = wordlist[lexicon][stem][0]
+        return offensive(definitions), True
     else:
         return False, False
 
@@ -154,9 +154,9 @@ def decorate(word, lexicon, mark=None):
        return (word, mark)
 
 
-def offensive(definition):
+def offensive(definitions):
     pattern = re.compile(rf'\([a-z ]*\boffensive\b[a-z ]*\)|\boffensive\b(?:,| term| word)', re.IGNORECASE)
-    return pattern.search(definition)
+    return pattern.search(definitions)
 
 
 def uninflect(word, lexicon):
@@ -172,10 +172,8 @@ def define(word, lexicon, normalize=False):
         return None
     elif valid:
         if normalize:
-            root = uninflect(word, lexicon)
-            return ('%s%s' % decorate(root, lexicon, '')) + ' - ' + wordlist[lexicon][root][0]
-        else:
-            return ('%s%s' % decorate(word, lexicon, '')) + ' - ' + wordlist[lexicon][word][0]
+            word = uninflect(word, lexicon)
+        return ('%s%s' % decorate(word, lexicon, '')) + ' - ' + wordlist[lexicon][word][0]
     else:
         return word + '* - not found'
 
@@ -271,11 +269,11 @@ def random_word(word_length, lexicon, related_word):
     if wordlist[lexicon]:
         words = list(wordlist[lexicon]) if related_word == '' else related(related_word, lexicon)
         word = select_random_word(word_length, words)
-        definition = wordlist[lexicon][word][0]
-        while offensive(definition):
+        definitions = wordlist[lexicon][word][0]
+        while offensive(definitions):
             word = select_random_word(word_length, words)
-            definition = wordlist[lexicon][word][0]
-        msg = ('%s%s' % decorate(word, lexicon, '')) + ' - ' + definition
+            definitions = wordlist[lexicon][word][0]
+        msg = ('%s%s' % decorate(word, lexicon, '')) + ' - ' + definitions
     return msg
 
 
@@ -328,8 +326,8 @@ def anagram(rack, lexicon):
     
     for word in wordlist[lexicon]:
         if len(word) == word_length and pattern.match(wordlist[lexicon][word][4]):
-            definition = wordlist[lexicon][word][0]
-            if not offensive(definition):
+            definitions = wordlist[lexicon][word][0]
+            if not offensive(definitions):
                 words.append(decorate(word, lexicon))
     return words
 
@@ -342,8 +340,8 @@ def back_hooks(stem, lexicon):
     pattern = re.compile(rf'^{stem}.$', re.IGNORECASE)
     for word in wordlist[lexicon]:
         if len(word) > stem_length and pattern.match(word):
-            definition = wordlist[lexicon][word][0]
-            if not offensive(definition):
+            definitions = wordlist[lexicon][word][0]
+            if not offensive(definitions):
                 result.append(decorate(word, lexicon))
     return result
 
@@ -356,8 +354,8 @@ def front_hooks(stem, lexicon):
     pattern = re.compile(rf'^.{stem}$', re.IGNORECASE)
     for word in wordlist[lexicon]:
         if len(word) > stem_length and pattern.match(word):
-            definition = wordlist[lexicon][word][0]
-            if not offensive(definition):
+            definitions = wordlist[lexicon][word][0]
+            if not offensive(definitions):
                 result.append(decorate(word, lexicon))
     return result
 
@@ -371,8 +369,8 @@ def middle_hooks(stem, lexicon):
         pattern = re.compile(rf'^{stem[:x]}.{stem[x:]}$', re.IGNORECASE)
         for word in wordlist[lexicon]:
             if len(word) > stem_length and pattern.match(word):
-                definition = wordlist[lexicon][word][0]
-                if not offensive(definition):
+                definitions = wordlist[lexicon][word][0]
+                if not offensive(definitions):
                     result.append(decorate(word, lexicon))
     return result
 
@@ -387,65 +385,49 @@ def stem(rack, lexicon):
             pattern = re.compile(rf'^{rack[:x]}{rack[x+1:]}$', re.IGNORECASE)
             for word in wordlist[lexicon]:
                 if len(word) == word_length and pattern.match(word):
-                    definition = wordlist[lexicon][word][0]
-                    if not offensive(definition):
+                    definitions = wordlist[lexicon][word][0]
+                    if not offensive(definitions):
                         result.append(word)
         return 'No stems found' if result == [] else ', '.join(result)
     except KeyError:
         return 'No such lexicon'
 
 
-def crypto(cipher, lexicon):
-    words = []
-    groups = []
-    for letter in cipher:
-        if letter in groups:
-            words.append(r'\ '[0]+f'{groups.index(letter)+1}')
-        else:
-            add = r'\ '[0]+r'|\ '[:-1].join(f'{n+1}' for n in range(len(groups)))
-            if len(words)>0:
-                words.append(f'(?!{add})')
-            words.append(f'(.)')
-            
-            groups.append(letter)
-    return regex(f'^{"".join(words)}$', lexicon)
-
-
 def open_files():
     # wordlist DICTIONARY
     try:
-        f = open("csw.dat", "r")
-        line = f.readline().strip("\n").split('	')
+        f = open('csw.dat', 'r')
+        line = f.readline().strip('\n').split('	')
         while line != ['']:
-            word, definition = line[0], line[1]
-            line[0] = definition
-            line[1] = ' '.join(re.findall("\\[.*?\\]", definition))
+            word, definitions = line[0], line[1]
+            line[0] = definitions
+            line[1] = ' '.join(re.findall('\\[.*?\\]', definitions))
             csw[word] = line
-            line = f.readline().strip("\n").split('	')
+            line = f.readline().strip('\n').split('	')
         f.close()
     except FileNotFoundError:
-        print("csw.dat not found")
+        print('csw.dat not found')
     try:
-        f = open("twl.dat", "r")
-        line = f.readline().strip("\n").split('	')
+        f = open('twl.dat', 'r')
+        line = f.readline().strip('\n').split('	')
         while line != ['']:
-            word, definition = line[0], line[1]
-            line[0] = definition
-            line[1] = ' '.join(re.findall("\\[.*?\\]", definition))
+            word, definitions = line[0], line[1]
+            line[0] = definitions
+            line[1] = ' '.join(re.findall('\\[.*?\\]', definitions))
             twl[word] = line
-            line = f.readline().strip("\n").split('	')
+            line = f.readline().strip('\n').split('	')
         f.close()
     except FileNotFoundError:
-        print("twl.dat not found")
+        print('twl.dat not found')
     try:
-        f = open("mw.dat", "r")
-        line = f.readline().strip("\n").split('	')
+        f = open('mw.dat', 'r')
+        line = f.readline().strip('\n').split('	')
         while line != ['']:
-            word, definition = line[0], line[1]
-            line[0] = definition
-            line[1] = ' '.join(re.findall("\\[.*?\\]", definition))
+            word, definitions = line[0], line[1]
+            line[0] = definitions
+            line[1] = ' '.join(re.findall('\\[.*?\\]', definitions))
             mw[word] = line
-            line = f.readline().strip("\n").split('	')
+            line = f.readline().strip('\n').split('	')
         f.close()
     except FileNotFoundError:
-        print("mw.dat not found")
+        print('mw.dat not found')

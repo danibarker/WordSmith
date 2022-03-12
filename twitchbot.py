@@ -7,6 +7,7 @@ import re
 from alphagram import alphagram
 from api import predict
 from calculator import equity, evaluate
+from cipher import cipher
 
 config = cf.config()
 print(config)
@@ -324,8 +325,9 @@ class TwitchBot(commands.Bot):
                 await ctx.send(f'{stem.upper()}* not found')
 
     @commands.command(name='crypto')
-    async def crypto(self, ctx, cipher, page='1'):
-        result = self.dictionary.crypto(cipher.upper(),config.channels[ctx.channel.name]["lexicon"])
+    async def crypto(self, ctx, text, page='1'):
+        pattern = '^%s$' % cipher(text.upper())
+        result = self.dictionary.regex(pattern,config.channels[ctx.channel.name]["lexicon"])
         num, msg = self.paginate(result, page)
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
