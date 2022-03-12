@@ -172,10 +172,8 @@ def define(word, lexicon, normalize=False):
         return None
     elif valid:
         if normalize:
-            root = uninflect(word, lexicon)
-            return ('%s%s' % decorate(root, lexicon, '')) + ' - ' + wordlist[lexicon][root][0]
-        else:
-            return ('%s%s' % decorate(word, lexicon, '')) + ' - ' + wordlist[lexicon][word][0]
+            word = uninflect(word, lexicon)
+        return ('%s%s' % decorate(word, lexicon, '') + ' - ' + ' '.join(wordlist[lexicon][word][0:1]))
     else:
         return word + '* - not found'
 
@@ -418,8 +416,9 @@ def open_files():
         line = f.readline().strip("\n").split('	')
         while line != ['']:
             word, definition = line[0], line[1]
-            line[0] = definition
-            line[1] = ' '.join(re.findall("\\[.*?\\]", definition))
+            suffixes = re.findall("\\[.*?\\]", definition)
+            line[1] = ' '.join(suffixes)
+            line[0] = definition[:-(len(line[1])+1)]
             csw[word] = line
             line = f.readline().strip("\n").split('	')
         f.close()
@@ -430,8 +429,9 @@ def open_files():
         line = f.readline().strip("\n").split('	')
         while line != ['']:
             word, definition = line[0], line[1]
-            line[0] = definition
-            line[1] = ' '.join(re.findall("\\[.*?\\]", definition))
+            suffixes = re.findall("\\[.*?\\]", definition)
+            line[1] = ' '.join(suffixes)
+            line[0] = definition[:-(len(line[1])+1)]
             twl[word] = line
             line = f.readline().strip("\n").split('	')
         f.close()
@@ -442,8 +442,9 @@ def open_files():
         line = f.readline().strip("\n").split('	')
         while line != ['']:
             word, definition = line[0], line[1]
-            line[0] = definition
-            line[1] = ' '.join(re.findall("\\[.*?\\]", definition))
+            suffixes = re.findall("\\[.*?\\]", definition)
+            line[1] = ' '.join(suffixes)
+            line[0] = definition[:-(len(line[1])+1)]
             mw[word] = line
             line = f.readline().strip("\n").split('	')
         f.close()
