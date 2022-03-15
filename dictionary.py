@@ -186,8 +186,9 @@ def inflect(word, lexicon):
         root = uninflect(word, lexicon)
         result = [('%s%s' % decorate(root, lexicon, '')) + ' ' + wordlist[lexicon][root][1]]
         pattern = re.compile(rf', also ((?:[A-Z]+(?:, )?)+)')
-        if words := pattern.search(wordlist[lexicon][word][0]):
-            for word in words.group(1).split(', '):
+        for words in pattern.findall(wordlist[lexicon][word][0]):
+            for word in words.split(', '):
+                # see TACKY - technically inflections could be wrong
                 result.append(('%s%s' % decorate(word, lexicon, '')) + ' ' + wordlist[lexicon][word][1])
         return ', '.join(result)
     else:
