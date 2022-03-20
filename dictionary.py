@@ -164,7 +164,7 @@ def uninflect(word, lexicon):
     if not re.match('\\[.*[A-Z]+\\]', part):
         pattern = re.compile(rf'([A-Z]+)')
         return (part, pattern.findall(wordlist[lexicon][word][0]))
-    return (None, word)
+    return (None, [word])
 
 
 def define(word, lexicon):
