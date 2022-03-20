@@ -160,39 +160,28 @@ def offensive(definitions):
 
 
 def uninflect(word, lexicon):
-    if not re.match('\\[.*[A-Z]+\\]', wordlist[lexicon][word][1]):
-        if stem := re.match('([A-Z]+), .*', wordlist[lexicon][word][0]):
-            return stem.group(1)
-    return word
+    part = wordlist[lexicon][word][1]
+    if not re.match('\\[.*[A-Z]+\\]', part):
+        pattern = re.compile(rf'([A-Z]+)')
+        return (part, pattern.findall(wordlist[lexicon][word][0]))
+    return (None, word)
 
 
-def define(word, lexicon, normalize=False):
-    offensive, valid = check(word, lexicon)
-    if offensive:
-        return None
-    elif valid:
-        if normalize:
-            word = uninflect(word, lexicon)
-        return ('%s%s' % decorate(word, lexicon, '')) + ' - ' + wordlist[lexicon][word][0]
-    else:
-        return word + '* - not found'
+def define(word, lexicon):
+    definitions = wordlist[lexicon][word][0]
+    return ('%s%s' % decorate(word, lexicon, '')) + ' - ' + definitions
 
 
 def inflect(word, lexicon):
-    offensive, valid = check(word, lexicon)
-    if offensive:
-        return None
-    elif valid:
-        root = uninflect(word, lexicon)
-        result = [('%s%s' % decorate(root, lexicon, '')) + ' ' + wordlist[lexicon][root][1]]
-        pattern = re.compile(rf', also ((?:[A-Z]+(?:, )?)+)')
-        for words in pattern.findall(wordlist[lexicon][word][0]):
-            for word in words.split(', '):
-                # see TACKY - technically inflections could be wrong
-                result.append(('%s%s' % decorate(word, lexicon, '')) + ' ' + wordlist[lexicon][word][1])
-        return ', '.join(result)
-    else:
-        return word + '* - not found'
+    # ASSUME either a word is either a root or an inflection (not both)
+    # ASSUME inflections have only one part of speech
+    results = []
+    part, roots = uninflect(word, lexicon)
+    for root in roots:
+        for inflection in wordlist[lexicon][root][1].split(' / '):
+            if part is None or inflection.startswith(part[:-1]):
+                results.append(('%s%s' % decorate(root, lexicon, '')) + ' ' + inflection)
+    return ', '.join(results)
 
 
 def info(stem, lexicon, alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
@@ -402,7 +391,7 @@ def open_files():
         while line != ['']:
             word, definitions = line[0], line[1]
             line[0] = definitions
-            line[1] = ' '.join(re.findall('\\[.*?\\]', definitions))
+            line[1] = ' / '.join(re.findall('\\[.*?\\]', definitions))
             csw[word] = line
             line = f.readline().strip('\n').split('	')
         f.close()
@@ -414,7 +403,7 @@ def open_files():
         while line != ['']:
             word, definitions = line[0], line[1]
             line[0] = definitions
-            line[1] = ' '.join(re.findall('\\[.*?\\]', definitions))
+            line[1] = ' / '.join(re.findall('\\[.*?\\]', definitions))
             twl[word] = line
             line = f.readline().strip('\n').split('	')
         f.close()
@@ -426,7 +415,7 @@ def open_files():
         while line != ['']:
             word, definitions = line[0], line[1]
             line[0] = definitions
-            line[1] = ' '.join(re.findall('\\[.*?\\]', definitions))
+            line[1] = ' / '.join(re.findall('\\[.*?\\]', definitions))
             mw[word] = line
             line = f.readline().strip('\n').split('	')
         f.close()
