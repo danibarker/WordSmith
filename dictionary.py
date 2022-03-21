@@ -161,11 +161,18 @@ def offensive(definitions):
 
 def uninflect(word, lexicon):
     definition = wordlist[lexicon][word][0]
+    part = wordlist[lexicon][word][1]
     pattern = re.compile(r'[A-Z]{2,}')
     if match := re.match(pattern, definition):
-        return (wordlist[lexicon][word][1], match.group(0))
+        word = match.group(0)
     else:
-        return (None, word)
+        part = None
+    words = [word]
+    pattern = re.compile(rf', also ((?:[A-Z]+(?:, )?)+)')
+    for match in re.findall(pattern, wordlist[lexicon][word][0]):
+        for word in match.split(', '):
+            words.append(word)
+    return (part, words)
 
 
 def define(word, lexicon):
@@ -177,17 +184,16 @@ def inflect(word, lexicon):
     # ASSUME either a word is either a root or an inflection (not both)
     # ASSUME inflections have only one part of speech
     result = []
-    part, root = uninflect(word, lexicon)
-    if part is None:
-        entries = wordlist[lexicon][root][1].split('] / [')
-        result.append('%s%s' % decorate(root, lexicon, '') + ' ' + '; '.join(entries))
-        pattern = re.compile(rf', also ((?:[A-Z]+(?:, )?)+)')
-        for word in re.findall(pattern, wordlist[lexicon][root][0]):
-            result.append(('%s%s' % decorate(word, lexicon, '')) + ' ' + wordlist[lexicon][word][1])
-    else:
-        for inflection in wordlist[lexicon][root][1].split(' / '):
-            if part is None or inflection.startswith(part[:2]):
-                result.append(('%s%s' % decorate(root, lexicon, '')) + ' ' + inflection)
+    part, roots = uninflect(word, lexicon)
+    for root in roots:
+        print (root)
+        if part is None:
+            entries = wordlist[lexicon][root][1].split('] / [')
+            result.append('%s%s' % decorate(root, lexicon, '') + ' ' + '; '.join(entries))
+        else:
+            for inflection in wordlist[lexicon][root][1].split(' / '):
+                if part is None or inflection.startswith(part[:2]):
+                    result.append(('%s%s' % decorate(root, lexicon, '')) + ' ' + inflection)
     return ', '.join(result)
 
 
