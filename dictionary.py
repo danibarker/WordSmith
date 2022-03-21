@@ -160,11 +160,12 @@ def offensive(definitions):
 
 
 def uninflect(word, lexicon):
-    part = wordlist[lexicon][word][1]
-    if not re.match('\\[.*[A-Z]+\\]', part):
-        pattern = re.compile(rf'([A-Z]+)')
-        return (part, pattern.findall(wordlist[lexicon][word][0]))
-    return (None, [word])
+    definition = wordlist[lexicon][word][0]
+    pattern = re.compile(r'[A-Z]{2,}')
+    if match := re.match(pattern, definition):
+        return (wordlist[lexicon][word][1], match.group(0))
+    else:
+        return (None, word)
 
 
 def define(word, lexicon):
@@ -175,13 +176,19 @@ def define(word, lexicon):
 def inflect(word, lexicon):
     # ASSUME either a word is either a root or an inflection (not both)
     # ASSUME inflections have only one part of speech
-    results = []
-    part, roots = uninflect(word, lexicon)
-    for root in roots:
+    result = []
+    part, root = uninflect(word, lexicon)
+    if part is None:
+        entries = wordlist[lexicon][root][1].split('] / [')
+        result.append('%s%s' % decorate(root, lexicon, '') + ' ' + '; '.join(entries))
+        pattern = re.compile(rf', also ((?:[A-Z]+(?:, )?)+)')
+        for word in re.findall(pattern, wordlist[lexicon][root][0]):
+            result.append(('%s%s' % decorate(word, lexicon, '')) + ' ' + wordlist[lexicon][word][1])
+    else:
         for inflection in wordlist[lexicon][root][1].split(' / '):
-            if part is None or inflection.startswith(part[:-1]):
-                results.append(('%s%s' % decorate(root, lexicon, '')) + ' ' + inflection)
-    return ', '.join(results)
+            if part is None or inflection.startswith(part[:2]):
+                result.append(('%s%s' % decorate(root, lexicon, '')) + ' ' + inflection)
+    return ', '.join(result)
 
 
 def info(stem, lexicon, alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
