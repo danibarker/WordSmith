@@ -159,11 +159,12 @@ class TwitchBot(commands.Bot):
                 if offensive:
                     pass
                 elif valid:
-                    definition = self.dictionary.define(word.upper(),config.channels[ctx.channel.name]["lexicon"])
-                    definitions.append(definition)
-                    if match := re.match('[A-Z]+ - one who ([a-z]+)', definition):
-                        stem = match.group(1)
-                        definitions.append(self.dictionary.define(stem.upper(),config.channels[ctx.channel.name]["lexicon"]))
+                    lexicon = config.channels[ctx.channel.name]["lexicon"]
+                    word, definition = self.dictionary.define(word.upper(), lexicon)
+                    definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, lexicon, '')[1], definition))
+                    if match := re.match(rf'one who ([a-z]+) \[', definition):
+                        word, definition = self.dictionary.define(match.group(1).upper(), lexicon)
+                        definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, lexicon, '')[1], definition))
                 else:
                     definitions.append(word.upper() + '* - not found')
             msg = '; '.join(definitions)

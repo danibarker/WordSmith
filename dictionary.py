@@ -176,8 +176,9 @@ def uninflect(word, lexicon):
 
 
 def define(word, lexicon):
-    definitions = wordlist[lexicon][word][0]
-    return ('%s%s' % decorate(word, lexicon, '')) + ' - ' + definitions
+    if match := re.match(r'[A-Z]{2,}', wordlist[lexicon][word][0]):
+        word = match.group(0)
+    return (word, wordlist[lexicon][word][0])
 
 
 def inflect(word, lexicon):
@@ -186,7 +187,6 @@ def inflect(word, lexicon):
     result = []
     part, roots = uninflect(word, lexicon)
     for root in roots:
-        print (root)
         if part is None:
             entries = wordlist[lexicon][root][1].split('] / [')
             result.append('%s%s' % decorate(root, lexicon, '') + ' ' + '; '.join(entries))
@@ -404,7 +404,7 @@ def open_files():
         while line != ['']:
             word, definitions = line[0], line[1]
             line[0] = definitions
-            line[1] = ' / '.join(re.findall('\\[.*?\\]', definitions))
+            line[1] = ' / '.join(re.findall(rf'\\[.*?\\]', definitions))
             csw[word] = line
             line = f.readline().strip('\n').split('	')
         f.close()
@@ -416,7 +416,7 @@ def open_files():
         while line != ['']:
             word, definitions = line[0], line[1]
             line[0] = definitions
-            line[1] = ' / '.join(re.findall('\\[.*?\\]', definitions))
+            line[1] = ' / '.join(re.findall(rf'\\[.*?\\]', definitions))
             twl[word] = line
             line = f.readline().strip('\n').split('	')
         f.close()
@@ -428,7 +428,7 @@ def open_files():
         while line != ['']:
             word, definitions = line[0], line[1]
             line[0] = definitions
-            line[1] = ' / '.join(re.findall('\\[.*?\\]', definitions))
+            line[1] = ' / '.join(re.findall(rf'\\[.*?\\]', definitions))
             mw[word] = line
             line = f.readline().strip('\n').split('	')
         f.close()
