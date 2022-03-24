@@ -1,5 +1,6 @@
 from twitchio.ext import commands
 import twitchio as tw
+from Levenshtein import ratio
 import config as cf
 import inflect
 import random as rd
@@ -24,7 +25,7 @@ class TwitchBot(commands.Bot):
         self.dictionary = dictionary
 
     async def event_ready(self):
-        print(f'Wordsmith 0.14 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.15 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!':
@@ -162,8 +163,11 @@ class TwitchBot(commands.Bot):
                     lexicon = config.channels[ctx.channel.name]["lexicon"]
                     word, definition = self.dictionary.define(word.upper(), lexicon)
                     definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, lexicon, '')[1], definition))
-                    while match := re.match(rf'(?:\(obsolete\) )?(?:a |characterized by |not |one that |one who |somewhat |the state of being )?([a-z]+)(?:,| \[)', definition):
-                        word, definition = self.dictionary.define(match.group(1).upper(), lexicon)
+                    while match := re.match(rf'(?:\(obsolete\) )?(?:a |characterized by |not |one that |one who |somewhat |the state of being |to |to make )?([a-z]+)(?:[,;]| \[)', definition):
+                        term = match.group(1).upper()
+                        if ratio(word, term) < 0.5:
+                            break
+                        word, definition = self.dictionary.define(term, lexicon)
                         definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, lexicon, '')[1], definition))
                 else:
                     definitions.append(word.upper() + '* - not found')
