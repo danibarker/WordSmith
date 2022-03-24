@@ -163,7 +163,7 @@ class TwitchBot(commands.Bot):
                     lexicon = config.channels[ctx.channel.name]["lexicon"]
                     word, definition = self.dictionary.define(word.upper(), lexicon)
                     definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, lexicon, '')[1], definition))
-                    while match := re.match(rf'(?:\(obsolete\) )?(?:a |characterized by |not |one that |one who |somewhat |the state of being |to |to make )?([a-z]+)(?:[,;]| \[)', definition):
+                    while match := re.match(rf'(?:\([ A-Za-z]+\) )?(?:a |capable of (?:being )?|causing |characterized by |not |one that |one who |somewhat |the state of being |to |to make )?([a-z]+)(?:[,;]| \[)', definition):
                         term = match.group(1).upper()
                         if ratio(word, term) < 0.5:
                             break
