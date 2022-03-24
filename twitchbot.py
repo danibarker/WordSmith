@@ -61,7 +61,6 @@ class TwitchBot(commands.Bot):
                 lastmark = mark
                 lastword = word
             msg += (mark if mark else '') + ' '
-        print(len(msg))
         return num_results, msg[:-1]
 
     @commands.command(name='predict')
@@ -346,6 +345,7 @@ class TwitchBot(commands.Bot):
         pattern = '^%s$' % cipher(text.upper())
         result = self.dictionary.regex(pattern,config.channels[ctx.channel.name]["lexicon"])
         num, msg = self.paginate(result, page)
+        print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='hidden')
