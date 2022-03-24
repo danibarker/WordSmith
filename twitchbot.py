@@ -102,7 +102,7 @@ class TwitchBot(commands.Bot):
     async def wordnik(self, ctx, stem):
         if re.search('[/!]', stem):
             return await ctx.send('Words must not contain / or !')
-        offensive, common = self.dictionary.common(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
+        offensive, common = self.dictionary.wordnik(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
         if not offensive:
             if common:
                 msg = stem.upper() + ' is open-source VoteYea'

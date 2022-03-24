@@ -1,4 +1,6 @@
 from alphagram import alphagram
+import mmap
+import os
 import random
 import re
 
@@ -6,6 +8,7 @@ csw = {}
 twl = {}
 mw = {}
 wordlist = {'csw':csw, 'twl':twl, 'mw':mw, 'csw#':csw}
+wordmap = {}
 
 
 def related_command(stem, lexicon):
@@ -117,34 +120,25 @@ def check(stem, lexicon):
         return False, False
 
 
-def common(stem, lexicon):
-    cel = []
-    try:
-        with open('CEL/cel.txt', 'r') as f:
-            cel = f.read().upper().splitlines()
-    except FileNotFoundError:
-        print('CEL/cel.txt not found')
-
-    if (stem in cel) and (stem in wordlist[lexicon]):
-        definitions = wordlist[lexicon][stem][0]
-        return offensive(definitions), True
-    else:
-        return False, False
+def common(word, lexicon):
+    if word in wordlist[lexicon] and 'cel' in wordmap:
+        mm = wordmap['cel']
+        mm.seek(0)
+        if mm.readline() == (word.lower()+'\n').encode():
+            return offensive(wordlist[lexicon][word][0]), True
+        mm.seek(-1, os.SEEK_CUR)
+        if mm.find(('\n'+word.lower()+'\n').encode()) != -1:
+            return offensive(wordlist[lexicon][word][0]), True
+    return False, False
 
 
-def wordnik(stem, lexicon):
-    wordnik = []
-    try:
-        with open('wordlist/wordlist-20210729.txt', 'r') as f:
-            wordnik = f.read().replace('\'', '').upper().splitlines()
-    except FileNotFoundError:
-        print('wordlist/wordlist-20210729.txt not found')
-
-    if (stem in wordnik) and (stem in wordlist[lexicon]):
-        definitions = wordlist[lexicon][stem][0]
-        return offensive(definitions), True
-    else:
-        return False, False
+def wordnik(word, lexicon):
+    if word in wordlist[lexicon] and 'wordnik' in wordmap:
+        mm = wordmap['wordnik']
+        mm.seek(0)
+        if mm.find(('"'+word.lower()+'"').encode()) != -1:
+            return offensive(wordlist[lexicon][word][0]), True
+    return False, False
 
 
 def decorate(word, lexicon, mark=None):
@@ -399,38 +393,52 @@ def stem(rack, lexicon):
 def open_files():
     # wordlist DICTIONARY
     try:
-        f = open('csw.dat', 'r')
-        line = f.readline().strip('\n').split('	')
-        while line != ['']:
-            word, definitions = line[0], line[1]
-            line[0] = definitions
-            line[1] = ' / '.join(re.findall(rf'\\[.*?\\]', definitions))
-            csw[word] = line
+        with open('csw.dat', 'r') as f:
             line = f.readline().strip('\n').split('	')
-        f.close()
+            while line != ['']:
+                word, definitions = line[0], line[1]
+                line[0] = definitions
+                line[1] = ' / '.join(re.findall(rf'\\[.*?\\]', definitions))
+                csw[word] = line
+                line = f.readline().strip('\n').split('	')
+            f.close()
     except FileNotFoundError:
         print('csw.dat not found')
     try:
-        f = open('twl.dat', 'r')
-        line = f.readline().strip('\n').split('	')
-        while line != ['']:
-            word, definitions = line[0], line[1]
-            line[0] = definitions
-            line[1] = ' / '.join(re.findall(rf'\\[.*?\\]', definitions))
-            twl[word] = line
+        with open('twl.dat', 'r') as f:
             line = f.readline().strip('\n').split('	')
-        f.close()
+            while line != ['']:
+                word, definitions = line[0], line[1]
+                line[0] = definitions
+                line[1] = ' / '.join(re.findall(rf'\\[.*?\\]', definitions))
+                twl[word] = line
+                line = f.readline().strip('\n').split('	')
+            f.close()
     except FileNotFoundError:
         print('twl.dat not found')
     try:
-        f = open('mw.dat', 'r')
-        line = f.readline().strip('\n').split('	')
-        while line != ['']:
-            word, definitions = line[0], line[1]
-            line[0] = definitions
-            line[1] = ' / '.join(re.findall(rf'\\[.*?\\]', definitions))
-            mw[word] = line
+        with open('mw.dat', 'r') as f:
             line = f.readline().strip('\n').split('	')
-        f.close()
+            while line != ['']:
+                word, definitions = line[0], line[1]
+                line[0] = definitions
+                line[1] = ' / '.join(re.findall(rf'\\[.*?\\]', definitions))
+                mw[word] = line
+                line = f.readline().strip('\n').split('	')
+            f.close()
     except FileNotFoundError:
         print('mw.dat not found')
+    try:
+        with open('CEL/cel.txt', 'rb') as f:
+            if os.stat(f.name).st_size:
+                wordmap['cel'] = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
+            f.close()
+    except FileNotFoundError:
+        print('CEL/cel.txt not found')
+    try:
+        with open('wordlist/wordlist-20210729.txt', 'rb') as f:
+            if os.stat(f.name).st_size:
+                wordmap['wordnik'] = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
+            f.close()
+    except FileNotFoundError:
+        print('wordlist/wordlist-20210729.txt not found')
