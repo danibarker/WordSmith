@@ -162,7 +162,7 @@ class TwitchBot(commands.Bot):
                     lexicon = config.channels[ctx.channel.name]["lexicon"]
                     word, definition = self.dictionary.define(word.upper(), lexicon)
                     definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, lexicon, '')[1], definition))
-                    if match := re.match(rf'(?:not|one who) ([a-z]+) \[', definition):
+                    if match := re.match(rf'(?:not |one who )?([a-z]+) \[', definition):
                         word, definition = self.dictionary.define(match.group(1).upper(), lexicon)
                         definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, lexicon, '')[1], definition))
                 else:
