@@ -319,10 +319,10 @@ def anagram(rack, lexicon):
             mask = mask + ('[%c-Z]?' % (alpha))
         else:
             mask = mask + ('[%c-Z]{0,%d}' % (alpha, num_blanks))
-    pattern = re.compile('^%s$' % ''.join(mask), re.IGNORECASE)
+    pattern = re.compile(''.join(mask), re.IGNORECASE)
     
     for word in wordlist[lexicon]:
-        if len(word) == word_length and pattern.match(wordlist[lexicon][word][5]):
+        if len(word) == word_length and pattern.fullmatch(wordlist[lexicon][word][5]):
             definitions = wordlist[lexicon][word][1]
             if not offensive(definitions):
                 words.append(decorate(word, lexicon))
