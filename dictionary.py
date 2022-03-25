@@ -232,27 +232,27 @@ def hook(stem, lexicon):
             counter = -1
             for x in entry:
                 counter = counter + 1
-                if counter == 1 and x:
-                    msg = msg + ' Front: ' + x
                 if counter == 2 and x:
+                    msg = msg + ' Front: ' + x
+                if counter == 3 and x:
                     msg = msg + ' Back: ' + x
         else:
             hooks = front_hooks(stem, lexicon)
             if hooks:
                 msg = msg + ' Front:'
-                for x in hooks:
-                    msg = msg + ' ' + x
+                for word in hooks:
+                    msg += (' %s%s' % decorate(word, lexicon, ''))
             hooks = back_hooks(stem, lexicon)
             if hooks:
                 msg = msg + ' Back:'
-                for x in hooks:
-                    msg = msg + ' ' + x
+                for word in hooks:
+                    msg += (' %s%s' % decorate(word, lexicon, ''))
 
         hooks = middle_hooks(stem, lexicon)
         if hooks:
             msg = msg + ' Middle:'
-            for x in hooks:
-                msg = msg + ' ' + x
+            for word in hooks:
+                msg += (' %s%s' % decorate(word, lexicon, ''))
         return 'No hooks found' if msg == '' else msg.lstrip()
     except KeyError:
         return 'No such lexicon'
@@ -335,10 +335,8 @@ def back_hooks(stem, lexicon):
 
     pattern = re.compile(rf'^{stem}.$', re.IGNORECASE)
     for word in wordlist[lexicon]:
-        if len(word) > stem_length and pattern.match(word):
-            definitions = wordlist[lexicon][word][1]
-            if not offensive(definitions):
-                result.append(decorate(word, lexicon))
+        if len(word) > stem_length and pattern.match(word) and not offensive(wordlist[lexicon][word][1]):
+            result.append(word)
     return result
 
 
@@ -349,10 +347,8 @@ def front_hooks(stem, lexicon):
 
     pattern = re.compile(rf'^.{stem}$', re.IGNORECASE)
     for word in wordlist[lexicon]:
-        if len(word) > stem_length and pattern.match(word):
-            definitions = wordlist[lexicon][word][1]
-            if not offensive(definitions):
-                result.append(decorate(word, lexicon))
+        if len(word) > stem_length and pattern.match(word) and not offensive(wordlist[lexicon][word][1]):
+            result.append(word)
     return result
 
 
@@ -364,10 +360,8 @@ def middle_hooks(stem, lexicon):
     for x in range(1, stem_length):
         pattern = re.compile(rf'^{stem[:x]}.{stem[x:]}$', re.IGNORECASE)
         for word in wordlist[lexicon]:
-            if len(word) > stem_length and pattern.match(word):
-                definitions = wordlist[lexicon][word][1]
-                if not offensive(definitions):
-                    result.append(decorate(word, lexicon))
+            if len(word) > stem_length and pattern.match(word) and not offensive(wordlist[lexicon][word][1]):
+                result.append(word)
     return result
 
 
