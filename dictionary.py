@@ -288,12 +288,13 @@ def anagram_1(rack, lexicon):
         msg = 'No anagrams found'
     else:
         msg = ''
-        for n, word in enumerate(my_result):
+        for n, element in enumerate(my_result):
+            word, mark = element
             if len(msg) + len(word) > 465:
                 msg += f'Limited to first {n} results'
                 break
             else:
-                msg += my_result[n] + ' '
+                msg += '%s%s ' % decorate(word, lexicon, '')
     return num_results, msg.rstrip()
 
 
@@ -321,7 +322,7 @@ def anagram(rack, lexicon):
     pattern = re.compile('^%s$' % ''.join(mask), re.IGNORECASE)
     
     for word in wordlist[lexicon]:
-        if len(word) == word_length and pattern.match(wordlist[lexicon][word][4]):
+        if len(word) == word_length and pattern.match(wordlist[lexicon][word][5]):
             definitions = wordlist[lexicon][word][1]
             if not offensive(definitions):
                 words.append(decorate(word, lexicon))

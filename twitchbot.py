@@ -39,13 +39,13 @@ class TwitchBot(commands.Bot):
             else:
                 await self.handle_commands(ctx)
 
-    def paginate(self, my_result, page='1'):
-        num_results = len(my_result)
+    def paginate(self, result, page='1'):
+        num_results = len(result)
         msg = ''
         lastmark = ''
         lastword = ''
         p = int(page)
-        for n, element in enumerate(my_result):
+        for n, element in enumerate(result):
             word, mark = element
             if lastword and mark == lastmark and word == lastword + 'S':
                 msg = msg[:(-2 if mark else -1)] + '[-S]'
