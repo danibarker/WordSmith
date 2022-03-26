@@ -69,6 +69,7 @@ class TwitchBot(commands.Bot):
             msg = predict(config, ctx.channel.name, opponent)
         else:
             msg = f'Command can only be used by {ctx.channel.name} or moderators'
+        print(len(msg))
         await ctx.send(msg)
 
     @commands.command(name='check')
