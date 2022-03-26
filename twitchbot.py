@@ -39,14 +39,17 @@ class TwitchBot(commands.Bot):
             else:
                 await self.handle_commands(ctx)
 
-    def paginate(self, result, page='1'):
+    def paginate(self, result, lexicon, page):
         num_results = len(result)
         msg = ''
         lastmark = ''
         lastword = ''
         p = int(page)
         for n, element in enumerate(result):
-            word, mark = element
+            offensive, word, entry = element
+            if offensive:
+                pass
+            mark = self.dictionary.mark(entry, lexicon, '')
             if lastword and mark == lastmark and word == lastword + 'S':
                 msg = msg[:(-2 if mark else -1)] + '[-S]'
             elif len(msg) + len(word) > 455:
@@ -76,12 +79,9 @@ class TwitchBot(commands.Bot):
     async def check(self, ctx, stem):
         if re.search('[/!]', stem):
             return await ctx.send('Words must not contain / or !')
-        offensive, valid = self.dictionary.check(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
+        offensive, word, entry = self.dictionary.check(stem.upper(),config.channels[ctx.channel.name]['lexicon'])
         if not offensive:
-            if valid:
-                msg = stem.upper() + ' is valid VoteYea'
-            else:
-                msg = stem.upper() + '* not found VoteNay'
+            msg = (word + ' is valid VoteYea') if entry else (word + '* not found VoteNay')
             print(len(msg))
             await ctx.send(msg[0:500])
 
@@ -89,12 +89,9 @@ class TwitchBot(commands.Bot):
     async def common(self, ctx, stem):
         if re.search('[/!]', stem):
             return await ctx.send('Words must not contain / or !')
-        offensive, common = self.dictionary.common(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
+        offensive, entry = self.dictionary.common(stem.upper(),config.channels[ctx.channel.name]['lexicon'])
         if not offensive:
-            if common:
-                msg = stem.upper() + ' is common VoteYea'
-            else:
-                msg = stem.upper() + '* not found VoteNay'
+            msg = (stem.upper() + ' is common VoteYea') if entry else (stem.upper() + '* not common VoteNay')
             print(len(msg))
             await ctx.send(msg[0:500])
 
@@ -102,7 +99,7 @@ class TwitchBot(commands.Bot):
     async def wordnik(self, ctx, stem):
         if re.search('[/!]', stem):
             return await ctx.send('Words must not contain / or !')
-        offensive, common = self.dictionary.wordnik(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
+        offensive, common = self.dictionary.wordnik(stem.upper(),config.channels[ctx.channel.name]['lexicon'])
         if not offensive:
             if common:
                 msg = stem.upper() + ' is open-source VoteYea'
@@ -114,8 +111,8 @@ class TwitchBot(commands.Bot):
     @commands.command(name='equity')
     async def equity(self, ctx, *racks):
         if racks and len(racks) > 0:
-            lexicon = config.channels[ctx.channel.name]["lexicon"]
-            alphabet = config.channels[ctx.channel.name]["alphabet"]
+            lexicon = config.channels[ctx.channel.name]['lexicon']
+            alphabet = config.channels[ctx.channel.name]['alphabet']
             results = []
             for rack in racks:
                 if rack:
@@ -137,7 +134,7 @@ class TwitchBot(commands.Bot):
     @commands.command(name='sum')
     async def sum(self, ctx, *racks):
         if racks and len(racks) > 0:
-            alphabet = config.channels[ctx.channel.name]["alphabet"]
+            alphabet = config.channels[ctx.channel.name]['alphabet']
             results = []
             for rack in racks:
                 if rack:
@@ -156,21 +153,21 @@ class TwitchBot(commands.Bot):
             for word in words:
                 if re.search('[/!]', word):
                     return await ctx.send('Words must not contain / or !')
-                offensive, valid = self.dictionary.check(word.upper(),config.channels[ctx.channel.name]["lexicon"])
+                offensive, word, entry = self.dictionary.check(word.upper(),config.channels[ctx.channel.name]['lexicon'])
                 if offensive:
                     pass
-                elif valid:
-                    lexicon = config.channels[ctx.channel.name]["lexicon"]
-                    word, definition = self.dictionary.define(word.upper(), lexicon)
-                    definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, lexicon, '')[1], definition))
+                elif entry:
+                    lexicon = config.channels[ctx.channel.name]['lexicon']
+                    word, definition = self.dictionary.define(word, entry, lexicon)
+                    definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, entry, lexicon, '')[1], definition))
                     while match := re.match(rf'(?:\([ A-Za-z]+\) )?(?:a |capable of (?:being )?|causing |characterized by |not |one that |one who |somewhat |the state of being |to |to make )?([a-z]+)(?:[,;]| \[)', definition):
                         term = match.group(1).upper()
                         if ratio(word, term) < 0.5:
                             break
                         word, definition = self.dictionary.define(term, lexicon)
-                        definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, lexicon, '')[1], definition))
+                        definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, entry, lexicon, '')[1], definition))
                 else:
-                    definitions.append(word.upper() + '* - not found')
+                    definitions.append(word + '* - not found')
             msg = '; '.join(definitions)
             print(len(msg))
             await ctx.send(msg[0:500])
@@ -182,11 +179,11 @@ class TwitchBot(commands.Bot):
             for word in words:
                 if re.search('[/!]', word):
                     return await ctx.send('Words must not contain / or !')
-                offensive, valid = self.dictionary.check(word.upper(),config.channels[ctx.channel.name]["lexicon"])
+                offensive, entry = self.dictionary.check(word.upper(),config.channels[ctx.channel.name]['lexicon'])
                 if offensive:
                     pass
-                elif valid:
-                    inflections.append(self.dictionary.inflect(word.upper(),config.channels[ctx.channel.name]["lexicon"]))
+                elif entry:
+                    inflections.append(self.dictionary.inflect(word.upper(),config.channels[ctx.channel.name]['lexicon']))
                 else:
                     inflections.append(word.upper() + '* - not found')
             msg = '; '.join(inflections)
@@ -196,7 +193,7 @@ class TwitchBot(commands.Bot):
     @commands.command(name='lexicon')
     async def lexicon(self, ctx, word):
         if ctx.author.name == ctx.channel.name or ctx.author.is_mod:
-            config.channels[ctx.channel.name]["lexicon"]=word.lower()
+            config.channels[ctx.channel.name]['lexicon']=word.lower()
             cf.save(config)
             msg = f'Lexicon changed to {word.lower()}'
         else:
@@ -214,77 +211,78 @@ class TwitchBot(commands.Bot):
 
     @commands.command(name='related')
     async def related(self, ctx, stem, page='1'):
-        result = self.dictionary.related_command(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
-        num, msg = self.paginate(result, page)
+        result = self.dictionary.related_command(stem.upper(),config.channels[ctx.channel.name]['lexicon'])
+        num, msg = self.paginate(result, config.channels[ctx.channel.name]['lexicon'], page)
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='beginswith')
     async def beginswith(self, ctx, hook, page='1'):
-        result = self.dictionary.begins_with(hook.upper(),config.channels[ctx.channel.name]["lexicon"])
-        num, msg = self.paginate(result, page)
+        result = self.dictionary.begins_with(hook.upper(),config.channels[ctx.channel.name]['lexicon'])
+        num, msg = self.paginate(result, config.channels[ctx.channel.name]['lexicon'], page)
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='startswith')
     async def startswith(self, ctx, hook, page='1'):
-        result = self.dictionary.begins_with(hook.upper(),config.channels[ctx.channel.name]["lexicon"])
-        num, msg = self.paginate(result, page)
+        result = self.dictionary.begins_with(hook.upper(),config.channels[ctx.channel.name]['lexicon'])
+        num, msg = self.paginate(result, config.channels[ctx.channel.name]['lexicon'], page)
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='endswith')
     async def endswith(self, ctx, hook, page='1'):
-        result = self.dictionary.ends_with(hook.upper(),config.channels[ctx.channel.name]["lexicon"])
-        num, msg = self.paginate(result, page)
+        result = self.dictionary.ends_with(hook.upper(),config.channels[ctx.channel.name]['lexicon'])
+        num, msg = self.paginate(result, config.channels[ctx.channel.name]['lexicon'], page)
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='finisheswith')
     async def finisheswith(self, ctx, hook, page='1'):
-        result = self.dictionary.ends_with(hook.upper(),config.channels[ctx.channel.name]["lexicon"])
-        num, msg = self.paginate(result, page)
+        result = self.dictionary.ends_with(hook.upper(),config.channels[ctx.channel.name]['lexicon'])
+        num, msg = self.paginate(result, config.channels[ctx.channel.name]['lexicon'], page)
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='contains')
     async def contains(self, ctx, stem, page='1'):
-        result = self.dictionary.contains(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
-        num, msg = self.paginate(result, page)
+        result = self.dictionary.contains(stem.upper(),config.channels[ctx.channel.name]['lexicon'])
+        num, msg = self.paginate(result, config.channels[ctx.channel.name]['lexicon'], page)
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='pattern')
     async def pattern(self, ctx, pattern, page='1'):
-        result = self.dictionary.pattern(pattern.upper(),config.channels[ctx.channel.name]["lexicon"])
-        num, msg = self.paginate(result, page)
+        result = self.dictionary.pattern(pattern.upper(),config.channels[ctx.channel.name]['lexicon'])
+        num, msg = self.paginate(result, config.channels[ctx.channel.name]['lexicon'], page)
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='regex')
     async def regex(self, ctx, pattern, page='1'):
-        result = self.dictionary.regex(pattern.upper(),config.channels[ctx.channel.name]["lexicon"])
-        num, msg = self.paginate(result, page)
+        result = self.dictionary.find(pattern.upper(),config.channels[ctx.channel.name]['lexicon'])
+        num, msg = self.paginate(result, config.channels[ctx.channel.name]['lexicon'], page)
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='hook')
     async def hook(self, ctx, stem):
-        msg = self.dictionary.hook(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
+        msg = self.dictionary.hook(stem.upper(),config.channels[ctx.channel.name]['lexicon'])
         print(len(msg))
         await ctx.send(msg)
 
-    @commands.command(name='stem')
-    async def stem(self, ctx, rack):
-        msg = self.dictionary.stem(rack.upper(),config.channels[ctx.channel.name]["lexicon"])
+    @commands.command(name='unhook')
+    async def unhook(self, ctx, rack, page='1'):
+        result = self.dictionary.unhook(rack.upper(),config.channels[ctx.channel.name]['lexicon'])
+        num, msg = self.paginate(result, config.channels[ctx.channel.name]['lexicon'], page)
         print(len(msg))
         await ctx.send(msg)
 
     @commands.command(name='info')
     async def info(self, ctx, *stems):
         if stems and len(stems) > 0:
-            lexicon = config.channels[ctx.channel.name]["lexicon"]
-            alphabet = config.channels[ctx.channel.name]["alphabet"]
+            lexicon = config.channels[ctx.channel.name]['lexicon']
+            alphabet = config.channels[ctx.channel.name]['alphabet']
             results = []
             for stem in stems:
                 if stem:
@@ -312,7 +310,7 @@ class TwitchBot(commands.Bot):
                         if length + len(msg) + len(word) > 465:
                             msg += f'Limited to first {n} results'
                             break
-                        msg += ' %s%s' % (word, self.dictionary.decorate(word, lexicon, '')[1])
+                        msg += ' %s%s' % self.dictionary.decorate(word, entry, lexicon, '')
                 else:
                     msg = 'No anagrams found'
                 length += len(msg) + 2
@@ -325,16 +323,16 @@ class TwitchBot(commands.Bot):
 
     @commands.command(name='bingo')
     async def bingo(self, ctx, length='7'):
-        msg = self.dictionary.random_word(int(length), config.channels[ctx.channel.name]["lexicon"],"")
+        msg = self.dictionary.random_word(int(length), config.channels[ctx.channel.name]['lexicon'],'')
         print(len(msg))
         await ctx.send(msg)
 
     @commands.command(name='random')
     async def random(self, ctx, option='0'):
         if option.isnumeric():
-            msg = self.dictionary.random_word(int(option), config.channels[ctx.channel.name]["lexicon"], '')
+            msg = self.dictionary.random_word(int(option), config.channels[ctx.channel.name]['lexicon'], '')
         else:
-            msg = self.dictionary.random_word(0, config.channels[ctx.channel.name]["lexicon"], option)
+            msg = self.dictionary.random_word(0, config.channels[ctx.channel.name]['lexicon'], option)
         print(len(msg))
         await ctx.send(msg)
 
@@ -342,25 +340,25 @@ class TwitchBot(commands.Bot):
     async def pronounce(self, ctx, stem):
         if re.search('[/!]', stem):
             return await ctx.send('Words must not contain / or !')
-        offensive, valid = self.dictionary.check(stem.upper(),config.channels[ctx.channel.name]["lexicon"])
+        offensive, entry = self.dictionary.check(stem.upper(),config.channels[ctx.channel.name]['lexicon'])
         if not offensive:
-            if valid:
+            if entry:
                 await ctx.send(f'https://collinsdictionary.com/sounds/hwd_sounds/en_gb_{stem.lower()}.mp3')
             else:
                 await ctx.send(f'{stem.upper()}* not found')
 
     @commands.command(name='crypto')
     async def crypto(self, ctx, text, page='1'):
-        pattern = '^%s$' % cipher(text.upper())
-        result = self.dictionary.regex(pattern,config.channels[ctx.channel.name]["lexicon"])
-        num, msg = self.paginate(result, page)
+        pattern = cipher(text.upper())
+        result = self.dictionary.find(pattern,config.channels[ctx.channel.name]['lexicon'])
+        num, msg = self.paginate(result, config.channels[ctx.channel.name]['lexicon'], page)
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='hidden')
     async def hidden(self, ctx, length, phrase='', page='1'):
-        result = self.dictionary.hidden(int(length),phrase.upper(),config.channels[ctx.channel.name]["lexicon"])
-        num, msg = self.paginate(result, page)
+        result = self.dictionary.hidden(int(length),phrase.upper(),config.channels[ctx.channel.name]['lexicon'])
+        num, msg = self.paginate(result, config.channels[ctx.channel.name]['lexicon'], page)
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
