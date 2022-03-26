@@ -298,18 +298,26 @@ class TwitchBot(commands.Bot):
     @commands.command(name='anagram')
     async def anagram(self, ctx, *racks):
         if racks and len(racks) > 0:
+            lexicon = config.channels[ctx.channel.name]['lexicon']
             results = []
             msg = None
             length = -2
             for rack in racks:
-                if rack:
-                    result = self.dictionary.anagram_1(rack.upper(),config.channels[ctx.channel.name]["lexicon"])
-                    count, words = result
-                    msg = f'{count} %s:\n{words}' % engine.plural('result', count)
-                    length += len(msg) + 2
-                    if length >= 500:
-                        break
-                    results.append(msg)
+                if anagrams := self.dictionary.anagram(rack.upper(), lexicon):
+                    count = len(anagrams)
+                    msg = f'{count} %s' % engine.plural('result', count)
+                    for n, element in enumerate(anagrams):
+                        word, entry = element
+                        if length + len(msg) + len(word) > 465:
+                            msg += f'Limited to first {n} results'
+                            break
+                        msg += ' %s%s' % (word, self.dictionary.decorate(word, lexicon, '')[1])
+                else:
+                    msg = 'No anagrams found'
+                length += len(msg) + 2
+                if length >= 500:
+                    break
+                results.append(msg)
             msg = '; '.join(results)
             print(len(msg))
             await ctx.send(msg[0:500])

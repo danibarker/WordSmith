@@ -280,24 +280,6 @@ def select_random_word(word_length, words):
     return word
 
 
-def anagram_1(rack, lexicon):
-    # RETURNS ANAGRAMS OF RACK, DB IS LEXICON
-    my_result = anagram(rack, lexicon)
-    num_results = len(my_result)
-    if num_results == 0:
-        msg = 'No anagrams found'
-    else:
-        msg = ''
-        for n, element in enumerate(my_result):
-            word, mark = element
-            if len(msg) + len(word) > 465:
-                msg += f'Limited to first {n} results'
-                break
-            else:
-                msg += '%s%s ' % decorate(word, lexicon, '')
-    return num_results, msg.rstrip()
-
-
 def anagram(rack, lexicon):
     # RETURNS ANAGRAMS OF RACK, DB IS LEXICON
     words = []
