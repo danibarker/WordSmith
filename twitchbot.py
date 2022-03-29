@@ -25,7 +25,7 @@ class TwitchBot(commands.Bot):
         self.dictionary = dictionary
 
     async def event_ready(self):
-        print(f'Wordsmith 0.15 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.16 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!':
@@ -158,14 +158,14 @@ class TwitchBot(commands.Bot):
                     pass
                 elif entry:
                     lexicon = config.channels[ctx.channel.name]['lexicon']
-                    word, definition = self.dictionary.define(word, entry, lexicon)
-                    definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, entry, lexicon, '')[1], definition))
+                    word, entry, definition, mark = self.dictionary.define(word, entry, lexicon, '')
+                    definitions.append('%s%s - %s' % (word, mark, definition))
                     while match := re.match(rf'(?:\([ A-Za-z]+\) )?(?:a |capable of (?:being )?|causing |characterized by |not |one that |one who |somewhat |the state of being |to |to make )?([a-z]+)(?:[,;]| \[)', definition):
                         term = match.group(1).upper()
                         if ratio(word, term) < 0.5:
                             break
-                        word, definition = self.dictionary.define(term, lexicon)
-                        definitions.append('%s%s - %s' % (word, self.dictionary.decorate(word, entry, lexicon, '')[1], definition))
+                        word, entry, definition, mark = self.dictionary.define(word, entry, lexicon, '')
+                        definitions.append('%s%s - %s' % (word, mark, definition))
                 else:
                     definitions.append(word + '* - not found')
             msg = '; '.join(definitions)

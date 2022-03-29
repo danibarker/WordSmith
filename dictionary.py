@@ -83,7 +83,7 @@ def read(mm, pos):
 
 
 def parse(line):
-    entry = line.decode().strip('\n').split('	')
+    entry = line.decode().strip().split('	')
     word = entry[0]
     entry[0] = ' / '.join(re.findall(rf'\\[.*?\\]', entry[1]))
     return word, entry
@@ -160,10 +160,12 @@ def uninflect(word, lexicon):
     return (part, words)
 
 
-def define(word, entry, lexicon):
+def define(word, entry, lexicon, default):
     if match := re.match(r'[A-Z]{2,}', entry[1]):
-        _, word, entry = check(match.group(0), lexicon)
-    return word, entry[1]
+        _, root, entry2 = check(match.group(0), lexicon)
+        if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
+            word, entry = root, entry2
+    return word, entry, entry[1], mark(entry, lexicon, default)
 
 
 def inflect(word, lexicon):
