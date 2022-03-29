@@ -16,8 +16,7 @@ def related(word, lexicon):
     mm.seek(0)
     for line in iter(mm.readline, b''):
         word, entry = parse(line)
-        definitions = entry[1]
-        if pattern.search(definitions) and not offensive(definitions):
+        if pattern.search(entry[1]) and not offensive(entry[1]):
             words.append(decorate(word, entry, lexicon))
     return words
 
@@ -50,7 +49,7 @@ def hidden(length, phrase, lexicon):
     for x in range(0, len(phrase) - length + 1):
         word = phrase[x:x + length]
         offensive, word, entry = check(word, lexicon)
-        if entry and not offensive(entry[1]):
+        if entry and not offensive:
             words.append(decorate(word, entry, lexicon))
     return words
 
@@ -66,8 +65,7 @@ def pattern(stem, lexicon):
     mm.seek(0)
     for line in iter(mm.readline, b''):
         word, entry = parse(line)
-        definitions = entry[1]
-        if pattern.search(definitions) and not offensive(definitions):
+        if pattern.search(word) and not offensive(entry[1]):
             words.append(decorate(word, entry, lexicon))
     return words
 
@@ -282,7 +280,7 @@ def anagram(rack, lexicon):
         mask = ''
         alpha = 'A'
         for letter in letters:
-            if num_blanks > 0 and letter != alpha:
+            if letter != alpha:
                 if num_blanks == 1:
                     mask = mask + ('[%c-%c]?' % (alpha, chr(ord(letter)-1)))
                 else:
@@ -296,7 +294,7 @@ def anagram(rack, lexicon):
     else:
         mask = ''.join(letters)
 
-    pattern = '[A-Z]' * word_length
+    pattern = (rf'[A-Z]' if (num_blanks) else rf'[{rack}]') * word_length
     for match in re.finditer(rf'^\b{pattern}\b.*\b({mask})\b.*$'.encode(), wordlist[lexicon], re.MULTILINE):
         word, entry = parse(match.group(0))
         if not offensive(entry[1]):
