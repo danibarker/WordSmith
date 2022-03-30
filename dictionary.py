@@ -1,3 +1,4 @@
+from Levenshtein import ratio
 from alphagram import alphagram
 import mmap
 import os
@@ -158,8 +159,8 @@ def uninflect(word, entry, lexicon):
 
 
 def define(word, entry, lexicon, default):
-    if match := dull(entry[1]):
-        _, root, entry2 = check(match.group(1).upper(), lexicon)
+    if root := dull(word, entry[1]):
+        _, root, entry2 = check(root, lexicon)
         if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
             word, entry = root, entry2
             if match := re.match(r'[A-Z]{2,}', entry[1]):
@@ -254,15 +255,18 @@ def hook(stem, lexicon):
         return 'No such lexicon'
 
 
-def dull(definitions):
-    return re.match(r'(?:\([ A-Za-z]+\) )?(?:a |causing |characterized by |not |one that |one who |pertaining to an? |related to |somewhat |that can be |(?:the )?[a-z]+ of being |to |to make )?([a-z]+)(?:[,;]| \[)', definitions)
+def dull(word, definitions):
+    if match := re.match(r'(?:\([ A-Za-z]+\) )?(?:a |causing |characterized by |not |one that |one who |pertaining to an? |related to |somewhat |that can be |(?:the )?[a-z]+ of being |to |to make )?([a-z]+)(?:[,;]| \[)', definitions):
+        root = match.group(1).upper()
+        if ratio(word, root) >= 0.5:
+            return root
 
 
 def random_word(word_length, lexicon):
     if word_length <= 1 or word_length > 15:
         word_length = None
     word, entry = select_random_word(lexicon)
-    while (word_length is not None and len(word) != word_length) or re.match(r'[A-Z]{2,}', entry[1]) or dull(entry[1]) or offensive(entry[1]):
+    while (word_length is not None and len(word) != word_length) or re.match(r'[A-Z]{2,}', entry[1]) or dull(word, entry[1]) or offensive(entry[1]):
         word, entry = select_random_word(lexicon)
     return ('%s%s' % decorate(word, entry, lexicon, '')) + ' - ' + entry[1]
 
