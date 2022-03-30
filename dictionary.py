@@ -98,7 +98,7 @@ def find(pattern, lexicon, lower=1, upper=15):
 
 def check(word, lexicon):
     result = []
-    alphagram = sorted(word)
+    alphagram = ''.join(sorted(word))
     for match in re.finditer(rf'^\b({word})\b.*\b{alphagram}\b.*$'.encode(), wordlist[lexicon], re.MULTILINE):
         word, entry = parse(match.group(0))
         return (offensive(entry[1]), word, entry)
@@ -255,7 +255,7 @@ def hook(stem, lexicon):
 
 
 def dull(definitions):
-    return re.match(r'(?:\([ A-Za-z]+\) )?(?:a |capable of (?:being )?|causing |characterized by |not |one that |one who |related to |somewhat |the state of being |to |to make )?([a-z]+)(?:[,;]| \[)', definitions)
+    return re.match(r'(?:\([ A-Za-z]+\) )?(?:a |causing |characterized by |not |one that |one who |pertaining to an? |related to |somewhat |(?:the )?[a-z]+ of being |to |to make )?([a-z]+)(?:[,;]| \[)', definitions)
 
 
 def random_word(word_length, lexicon):
