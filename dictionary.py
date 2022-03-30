@@ -47,8 +47,7 @@ def hidden(length, phrase, lexicon):
     phrase = phrase.replace(' ', '')
     words = []
     for x in range(0, len(phrase) - length + 1):
-        word = phrase[x:x + length]
-        offensive, word, entry = check(word, lexicon)
+        offensive, word, entry = check(phrase[x:x+length], lexicon)
         if entry and not offensive:
             words.append(decorate(word, entry, lexicon))
     return words
@@ -143,42 +142,43 @@ def offensive(definitions):
     return pattern.search(definitions)
 
 
-def uninflect(word, lexicon):
-    part = wordlist[lexicon][word][0]
-    pattern = re.compile(r'[A-Z]{2,}')
-    if match := re.match(pattern, wordlist[lexicon][word][1]):
+def uninflect(word, entry, lexicon):
+    part = None
+    if match := re.match(r'[A-Z]{2,}', entry[1]):
         word = match.group(0)
-    else:
-        part = None
+        part = entry[0]
+    elif match := re.match(r'related to ([a-z]{2,}) \[adj\]', entry[1]):
+        word = match.group(1).upper()
     words = [word]
     pattern = re.compile(rf', also ((?:[A-Z]+(?:, )?)+)')
-    for match in re.findall(pattern, wordlist[lexicon][word][1]):
+    for match in re.findall(pattern, entry[1]):
         for word in match.split(', '):
             words.append(word)
     return (part, words)
 
 
 def define(word, entry, lexicon, default):
-    if match := re.match(r'[A-Z]{2,}', entry[1]):
-        _, root, entry2 = check(match.group(0), lexicon)
+    if match := dull(entry[1]):
+        _, root, entry2 = check(match.group(1).upper(), lexicon)
         if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
             word, entry = root, entry2
     return word, entry, entry[1], mark(entry, lexicon, default)
 
 
-def inflect(word, lexicon):
+def inflect(word, entry, lexicon):
     # ASSUME either a word is either a root or an inflection (not both)
     # ASSUME inflections have only one part of speech
     result = []
-    part, roots = uninflect(word, lexicon)
+    part, roots = uninflect(word, entry, lexicon)
     for root in roots:
+        _, root, entry = check(root, lexicon)
         if part is None:
-            entries = wordlist[lexicon][root][1].split('] / [')
-            result.append('%s%s' % decorate(root, lexicon, '') + ' ' + '; '.join(entries))
+            entries = entry[1].split('] / [')
+            result.append('%s%s' % decorate(root, entry, lexicon, '') + ' ' + '; '.join(entries))
         else:
-            for inflection in wordlist[lexicon][root][1].split(' / '):
+            for inflection in entry[1].split(' / '):
                 if part is None or inflection.startswith(part[:2]):
-                    result.append(('%s%s' % decorate(root, lexicon, '')) + ' ' + inflection)
+                    result.append(('%s%s' % decorate(root, entry, lexicon, '')) + ' ' + inflection)
     return ', '.join(result)
 
 
@@ -250,11 +250,15 @@ def hook(stem, lexicon):
         return 'No such lexicon'
 
 
+def dull(definitions):
+    return re.match(r'([A-Z]{2,})', definitions) or re.match(r'(?:\([ A-Za-z]+\) )?(?:a |capable of (?:being )?|causing |characterized by |not |one that |one who |related to |somewhat |the state of being |to |to make )?([a-z]+)(?:[,;]| \[)', definitions)
+
+
 def random_word(word_length, lexicon):
     if word_length <= 1 or word_length > 15:
         word_length = None
     word, entry = select_random_word(lexicon)
-    while (word_length is not None and len(word) != word_length) or re.match(r'[A-Z]{2,}', entry[1]) or offensive(entry[1]):
+    while (word_length is not None and len(word) != word_length) or dull(entry[1]) or offensive(entry[1]):
         word, entry = select_random_word(lexicon)
     return ('%s%s' % decorate(word, entry, lexicon, '')) + ' - ' + entry[1]
 

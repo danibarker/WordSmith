@@ -1,6 +1,5 @@
 from twitchio.ext import commands
 import twitchio as tw
-from Levenshtein import ratio
 import config as cf
 import inflect
 import random as rd
@@ -160,12 +159,6 @@ class TwitchBot(commands.Bot):
                     lexicon = config.channels[ctx.channel.name]['lexicon']
                     word, entry, definition, mark = self.dictionary.define(word, entry, lexicon, '')
                     definitions.append('%s%s - %s' % (word, mark, definition))
-                    while match := re.match(rf'(?:\([ A-Za-z]+\) )?(?:a |capable of (?:being )?|causing |characterized by |not |one that |one who |somewhat |the state of being |to |to make )?([a-z]+)(?:[,;]| \[)', definition):
-                        term = match.group(1).upper()
-                        if ratio(word, term) < 0.5:
-                            break
-                        word, entry, definition, mark = self.dictionary.define(word, entry, lexicon, '')
-                        definitions.append('%s%s - %s' % (word, mark, definition))
                 else:
                     definitions.append(word + '* - not found')
             msg = '; '.join(definitions)
@@ -179,11 +172,11 @@ class TwitchBot(commands.Bot):
             for word in words:
                 if re.search('[/!]', word):
                     return await ctx.send('Words must not contain / or !')
-                offensive, entry = self.dictionary.check(word.upper(),config.channels[ctx.channel.name]['lexicon'])
+                offensive, word, entry = self.dictionary.check(word.upper(),config.channels[ctx.channel.name]['lexicon'])
                 if offensive:
                     pass
                 elif entry:
-                    inflections.append(self.dictionary.inflect(word.upper(),config.channels[ctx.channel.name]['lexicon']))
+                    inflections.append(self.dictionary.inflect(word.upper(),entry,config.channels[ctx.channel.name]['lexicon']))
                 else:
                     inflections.append(word.upper() + '* - not found')
             msg = '; '.join(inflections)
@@ -341,7 +334,7 @@ class TwitchBot(commands.Bot):
     async def pronounce(self, ctx, stem):
         if re.search('[/!]', stem):
             return await ctx.send('Words must not contain / or !')
-        offensive, entry = self.dictionary.check(stem.upper(),config.channels[ctx.channel.name]['lexicon'])
+        offensive, word, entry = self.dictionary.check(stem.upper(),config.channels[ctx.channel.name]['lexicon'])
         if not offensive:
             if entry:
                 await ctx.send(f'https://collinsdictionary.com/sounds/hwd_sounds/en_gb_{stem.lower()}.mp3')
