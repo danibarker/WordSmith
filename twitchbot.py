@@ -211,7 +211,7 @@ class TwitchBot(commands.Bot):
 
     @commands.command(name='related')
     async def related(self, ctx, stem, page='1'):
-        result = self.dictionary.related_command(stem.upper(),config.channels[ctx.channel.name]['lexicon'])
+        result = self.dictionary.related(stem.upper(),config.channels[ctx.channel.name]['lexicon'])
         num, msg = self.paginate(result, config.channels[ctx.channel.name]['lexicon'], page)
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
@@ -323,16 +323,17 @@ class TwitchBot(commands.Bot):
 
     @commands.command(name='bingo')
     async def bingo(self, ctx, length='7'):
-        msg = self.dictionary.random_word(int(length), config.channels[ctx.channel.name]['lexicon'],'')
+        msg = self.dictionary.random_word(int(length), config.channels[ctx.channel.name]['lexicon'])
         print(len(msg))
         await ctx.send(msg)
 
     @commands.command(name='random')
     async def random(self, ctx, option='0'):
         if option.isnumeric():
-            msg = self.dictionary.random_word(int(option), config.channels[ctx.channel.name]['lexicon'], '')
+            msg = self.dictionary.random_word(int(option), config.channels[ctx.channel.name]['lexicon'])
         else:
-            msg = self.dictionary.random_word(0, config.channels[ctx.channel.name]['lexicon'], option)
+            result = self.dictionary.related(option.upper(),config.channels[ctx.channel.name]['lexicon'], '')
+            msg = '%s%s' % result[0] if len(result) else ''
         print(len(msg))
         await ctx.send(msg)
 

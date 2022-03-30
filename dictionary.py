@@ -7,7 +7,7 @@ import re
 wordlist = {}
 
 
-def related(word, lexicon):
+def related(word, lexicon, default=None):
     word = word.replace('?', '.')
     pattern = re.compile(rf'(?<![a-z]){re.escape(word)}s?(?![a-z])', re.IGNORECASE)
     words = []
@@ -17,7 +17,7 @@ def related(word, lexicon):
     for line in iter(mm.readline, b''):
         word, entry = parse(line)
         if pattern.search(entry[1]) and not offensive(entry[1]):
-            words.append(decorate(word, entry, lexicon))
+            words.append(decorate(word, entry, lexicon, default))
     return words
 
 
@@ -250,10 +250,9 @@ def hook(stem, lexicon):
         return 'No such lexicon'
 
 
-def random_word(word_length, lexicon, related_word):
+def random_word(word_length, lexicon):
     if word_length <= 1 or word_length > 15:
         word_length = None
-    #words = list(wordlist[lexicon]) if related_word == '' else related(related_word, lexicon)
     word, entry = select_random_word(lexicon)
     while (word_length is not None and len(word) != word_length) or offensive(entry[1]):
         word = select_random_word(lexicon)
