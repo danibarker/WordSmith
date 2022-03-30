@@ -162,8 +162,8 @@ def define(word, entry, lexicon, default):
         _, root, entry2 = check(match.group(1).upper(), lexicon)
         if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
             word, entry = root, entry2
-            if match := dull(entry[1]):
-                _, root, entry2 = check(match.group(1).upper(), lexicon)
+            if match := re.match(r'[A-Z]{2,}', entry[1]):
+                _, root, entry2 = check(match.group(0), lexicon)
                 if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
                     word, entry = root, entry2
     return word, entry, entry[1], mark(entry, lexicon, default)
@@ -255,14 +255,14 @@ def hook(stem, lexicon):
 
 
 def dull(definitions):
-    return re.match(r'([A-Z]{2,})', definitions) or re.match(r'(?:\([ A-Za-z]+\) )?(?:a |capable of (?:being )?|causing |characterized by |not |one that |one who |related to |somewhat |the state of being |to |to make )?([a-z]+)(?:[,;]| \[)', definitions)
+    return re.match(r'(?:\([ A-Za-z]+\) )?(?:a |capable of (?:being )?|causing |characterized by |not |one that |one who |related to |somewhat |the state of being |to |to make )?([a-z]+)(?:[,;]| \[)', definitions)
 
 
 def random_word(word_length, lexicon):
     if word_length <= 1 or word_length > 15:
         word_length = None
     word, entry = select_random_word(lexicon)
-    while (word_length is not None and len(word) != word_length) or dull(entry[1]) or offensive(entry[1]):
+    while (word_length is not None and len(word) != word_length) or re.match(r'[A-Z]{2,}', entry[1]) or dull(entry[1]) or offensive(entry[1]):
         word, entry = select_random_word(lexicon)
     return ('%s%s' % decorate(word, entry, lexicon, '')) + ' - ' + entry[1]
 

@@ -160,6 +160,8 @@ class TwitchBot(commands.Bot):
                 elif entry:
                     lexicon = self.config.channels[ctx.channel.name]['lexicon']
                     word, entry, definition, mark = dictionary.define(word, entry, lexicon, '')
+                    if match := re.match(r'[A-Z]{2,}', entry[1]):
+                        word, entry, definition, mark = dictionary.define(match.group(0), entry, lexicon, '')
                     definitions.append('%s%s - %s' % (word, mark, definition))
                 else:
                     definitions.append(word + '* - not found')
