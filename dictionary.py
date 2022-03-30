@@ -1,5 +1,5 @@
-from Levenshtein import ratio
 from alphagram import alphagram
+from difflib import SequenceMatcher
 import mmap
 import os
 import random
@@ -256,9 +256,9 @@ def hook(stem, lexicon):
 
 
 def dull(word, definitions):
-    if match := re.match(r'(?:\([ A-Za-z]+\) )?(?:a |causing |characterized by |not |one that |one who |pertaining to an? |related to |somewhat |that can be |(?:the )?[a-z]+ of being |to |to make )?([a-z]+)(?:[,;]| \[)', definitions):
+    if match := re.match(r'(?:\([ A-Za-z]+\) )?(?:[a-z]+ )*([a-z]+)(?:[,;]| \[)', definitions):
         root = match.group(1).upper()
-        if ratio(word, root) >= 0.5:
+        if SequenceMatcher(None, word, root).ratio() >= 0.65:
             return root
 
 
