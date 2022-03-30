@@ -255,7 +255,7 @@ def hook(stem, lexicon):
 
 
 def dull(definitions):
-    return re.match(r'(?:\([ A-Za-z]+\) )?(?:a |causing |characterized by |not |one that |one who |pertaining to an? |related to |somewhat |(?:the )?[a-z]+ of being |to |to make )?([a-z]+)(?:[,;]| \[)', definitions)
+    return re.match(r'(?:\([ A-Za-z]+\) )?(?:a |causing |characterized by |not |one that |one who |pertaining to an? |related to |somewhat |that can be |(?:the )?[a-z]+ of being |to |to make )?([a-z]+)(?:[,;]| \[)', definitions)
 
 
 def random_word(word_length, lexicon):
