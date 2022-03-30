@@ -35,7 +35,7 @@ def contains(stem, lexicon):
 def hidden(length, phrase, lexicon):
     phrase = phrase.replace(' ', '')
     words = []
-    for x in range(0, len(phrase) - length + 1):
+    for x in range(len(phrase) - length + 1):
         offensive, word, entry = check(phrase[x:x+length], lexicon)
         if entry and not offensive:
             words.append(decorate(word, entry, lexicon))
@@ -326,7 +326,7 @@ def middle_hooks(stem, lexicon):
 def unhook(rack, lexicon):
     rack = rack.replace('?', '.')
     pattern = []
-    for x in range(1, len(rack)):
+    for x in range(len(rack)):
         pattern.append(rf'{rack[:x]}{rack[x+1:]}')
     pattern = '|'.join(pattern)
     return find(rf'{pattern}', lexicon, len(rack)-1, len(rack)-1)
