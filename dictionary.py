@@ -178,30 +178,31 @@ def inflect(word, entry, lexicon):
 def info(stem, lexicon, alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
     msg = ''
     try:
-        word, entry = find(stem, lexicon)
-        if entry:
+        offensive, word, entry = check(stem, lexicon)
+        if offensive:
+            pass
+        elif entry:
             counter = -1
             for x in entry:
                 counter = counter + 1
                 if counter == 0:
                     msg = stem
-                    counter += 1
-                if counter == 1:
+                elif counter == 1:
                     msg = msg + ' - ' + x
-                if counter == 2 and x:
+                elif counter == 2 and x:
                     msg = msg + ' Front Hooks: ' + x
-                if counter == 3 and x:
+                elif counter == 3 and x:
                     msg = msg + ' Back Hooks: ' + x
-                if counter == 4:
+                elif counter == 4:
                     msg = msg + ' Probability: ' + str(x)
-                if counter == 5:
+                elif counter == 5:
                     msg = msg + ' Alphagram: ' + alphagram(x, alphabet)
 
             hooks = middle_hooks(stem, lexicon)
             if hooks:
                 msg = msg + ' Middle Hooks:'
-                for x in hooks:
-                    msg = msg + ' ' + x
+                for _, word, entry in hooks:
+                    msg += (' %s%s' % decorate(word, entry, lexicon, ''))
             return msg
         else:
             return 'No such word'
@@ -212,8 +213,10 @@ def info(stem, lexicon, alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
 def hook(stem, lexicon):
     msg = ''
     try:
-        word, entry = find(stem, lexicon)
-        if entry:
+        offensive, word, entry = check(stem, lexicon)
+        if offensive:
+            pass
+        elif entry:
             counter = -1
             for x in entry:
                 counter = counter + 1
@@ -225,18 +228,18 @@ def hook(stem, lexicon):
             hooks = front_hooks(stem, lexicon)
             if hooks:
                 msg = msg + ' Front:'
-                for word, entry in hooks:
+                for _, word, entry in hooks:
                     msg += (' %s%s' % decorate(word, entry, lexicon, ''))
             hooks = back_hooks(stem, lexicon)
             if hooks:
                 msg = msg + ' Back:'
-                for word, entry in hooks:
+                for _, word, entry in hooks:
                     msg += (' %s%s' % decorate(word, entry, lexicon, ''))
 
         hooks = middle_hooks(stem, lexicon)
         if hooks:
             msg = msg + ' Middle:'
-            for word, entry in hooks:
+            for _, word, entry in hooks:
                 msg += (' %s%s' % decorate(word, entry, lexicon, ''))
         return 'No hooks found' if msg == '' else msg.lstrip()
     except KeyError:

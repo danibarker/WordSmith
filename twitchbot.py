@@ -285,7 +285,11 @@ class TwitchBot(commands.Bot):
                 if stem:
                     msg = dictionary.info(stem.upper(), lexicon, alphabet)
                     if len(stem) >= 2 and len(stem) <= 5:
-                        msg += equity(stem, lexicon)[len(stem):]
+                        result = equity(stem, lexicon)
+                        if result[0] == '{':
+                            msg += ' Equity: %s' % result
+                        else:
+                            msg += ' Equity: %0.3f' % result[1]
                     results.append(msg)
             msg = '; '.join(results)
             print(len(msg))
