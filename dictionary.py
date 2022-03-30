@@ -100,7 +100,7 @@ def find(pattern, lexicon, lower=1, upper=15):
 def check(word, lexicon):
     result = []
     alphagram = ''.join(sorted(word))
-    for match in re.finditer(rf'^\b({word})\b.*\b\d+\b\t\b{alphagram}\b.*$'.encode(), wordlist[lexicon], re.MULTILINE):
+    if match := re.search(rf'^\b({word})\b.*\b[a-z]+\b.*\b\d+\b\t\b{alphagram}\b.*$'.encode(), wordlist[lexicon], re.MULTILINE):
         word, entry = parse(match.group(0))
         return (offensive(entry[1]), word, entry)
     return False, word, None
