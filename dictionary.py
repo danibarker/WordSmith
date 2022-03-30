@@ -29,19 +29,7 @@ def begins_with(hook, lexicon):
 
 def contains(stem, lexicon):
     stem = stem.replace('?', '.')
-    stem_length = len(stem)
-    pattern = re.compile(stem, re.IGNORECASE)
-    words = []
-    
-    mm = wordlist[lexicon]
-    mm.seek(0)
-    for line in iter(mm.readline, b''):
-        word, entry = parse(line)
-        # TODO: fix
-        if len(word) >= stem_length and pattern.match(word):
-            if not offensive(entry[1]):
-                words.append(decorate(word, entry, lexicon))
-    return words
+    return find(rf'[A-Z]*{stem}[A-Z]*', lexicon, len(stem))
 
 
 def hidden(length, phrase, lexicon):
