@@ -162,6 +162,10 @@ def define(word, entry, lexicon, default):
         _, root, entry2 = check(match.group(1).upper(), lexicon)
         if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
             word, entry = root, entry2
+            if match := dull(entry[1]):
+                _, root, entry2 = check(match.group(1).upper(), lexicon)
+                if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
+                    word, entry = root, entry2
     return word, entry, entry[1], mark(entry, lexicon, default)
 
 
