@@ -51,37 +51,58 @@ class TwitchBot(commands.Bot):
         await ctx.send(msg)
 
     @commands.command(name='check')
-    async def check(self, ctx, stem):
-        if re.search('[/!]', stem):
-            return await ctx.send('Words must not contain / or !')
-        offensive, word, entry = dictionary.check(stem.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        if not offensive:
-            msg = (word + ' is valid VoteYea') if entry else (word + '* not found VoteNay')
+    async def check(self, ctx, *words):
+        if words and len(words) > 0:
+            lexicon = self.config.channels[ctx.channel.name]['lexicon']
+            results = []
+            for word in words:
+                if re.search(r'[/!]', word):
+                    return await ctx.send('Words must not contain / or !')
+                offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
+                if not offensive:
+                    msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
+                    msg = (msg + ' is valid VoteYea') if dictionary.common(word.lower()) else (msg + ' not found VoteNay')
+                    if len(' '.join(results)) + len(msg) < 495:
+                        results.append(msg)
+            msg = ' '.join(results)
             print(len(msg))
-            await ctx.send(msg[0:500])
+            await ctx.send(msg)
 
     @commands.command(name='common')
-    async def common(self, ctx, stem):
-        if re.search('[/!]', stem):
-            return await ctx.send('Words must not contain / or !')
-        offensive, word, entry = dictionary.check(stem.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        if not offensive:
-            msg = (word + ' is common VoteYea') if dictionary.common(word.lower()) else (word + '* not common VoteNay')
+    async def common(self, ctx, *words):
+        if words and len(words) > 0:
+            lexicon = self.config.channels[ctx.channel.name]['lexicon']
+            results = []
+            for word in words:
+                if re.search(r'[/!]', word):
+                    return await ctx.send('Words must not contain / or !')
+                offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
+                if not offensive:
+                    msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
+                    msg = (msg + ' is common VoteYea') if dictionary.common(word.lower()) else (msg + ' not common VoteNay')
+                    if len(' '.join(results)) + len(msg) < 495:
+                        results.append(msg)
+            msg = ' '.join(results)
             print(len(msg))
-            await ctx.send(msg[0:500])
+            await ctx.send(msg)
 
     @commands.command(name='wordnik')
-    async def wordnik(self, ctx, stem):
-        if re.search('[/!]', stem):
-            return await ctx.send('Words must not contain / or !')
-        offensive, word, entry = dictionary.check(stem.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        if not offensive:
-            if dictionary.wordnik(word.lower()):
-                msg = stem.upper() + ' is open-source VoteYea'
-            else:
-                msg = stem.upper() + '* not found VoteNay'
+    async def wordnik(self, ctx, *words):
+        if words and len(words) > 0:
+            lexicon = self.config.channels[ctx.channel.name]['lexicon']
+            results = []
+            for word in words:
+                if re.search(r'[/!]', word):
+                    return await ctx.send('Words must not contain / or !')
+                offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
+                if not offensive:
+                    msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
+                    msg = (msg + ' is open-source VoteYea') if dictionary.common(word.lower()) else (msg + ' not open-source VoteNay')
+                    if len(' '.join(results)) + len(msg) < 495:
+                        results.append(msg)
+            msg = ' '.join(results)
             print(len(msg))
-            await ctx.send(msg[0:500])
+            await ctx.send(msg)
 
     @commands.command(name='equity')
     async def equity(self, ctx, *racks):
