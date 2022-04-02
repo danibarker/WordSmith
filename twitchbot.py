@@ -9,6 +9,7 @@ from api import predict
 from calculator import equity, evaluate
 from cipher import cipher
 import dictionary
+from pager import paginate
 
 custom_commands = cf.custom_commands()
 engine = inflect.engine()
@@ -26,7 +27,7 @@ class TwitchBot(commands.Bot):
         super().run()
 
     async def event_ready(self):
-        print(f'Wordsmith 0.17 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.18 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!':
@@ -39,33 +40,6 @@ class TwitchBot(commands.Bot):
                 await ctx.channel.send(message)
             else:
                 await self.handle_commands(ctx)
-
-    def paginate(self, result, lexicon, page):
-        num_results = len(result)
-        msg = ''
-        lastmark = ''
-        lastword = ''
-        p = int(page)
-        for n, element in enumerate(result):
-            offensive, word, entry = element
-            if offensive:
-                pass
-            mark = dictionary.mark(entry, lexicon, '')
-            if lastword and mark == lastmark and word == lastword + 'S':
-                msg = msg[:(-2 if mark else -1)] + '[-S]'
-            elif len(msg) + len(word) > 455:
-                if p > 1:
-                    msg = ''
-                    p = p - 1
-                else:
-                    msg += f' Limited to first {n} results '
-                    break
-            else:
-                msg += word 
-                lastmark = mark
-                lastword = word
-            msg += (mark if mark else '') + ' '
-        return num_results, msg[:-1]
 
     @commands.command(name='predict')
     async def predict(self, ctx, opponent):
@@ -209,56 +183,56 @@ class TwitchBot(commands.Bot):
     @commands.command(name='related')
     async def related(self, ctx, stem, page='1'):
         result = dictionary.related(stem.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        num, msg = self.paginate(result, self.config.channels[ctx.channel.name]['lexicon'], page)
+        num, msg = paginate(result, int(page))
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='beginswith')
     async def beginswith(self, ctx, hook, page='1'):
         result = dictionary.begins_with(hook.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        num, msg = self.paginate(result, self.config.channels[ctx.channel.name]['lexicon'], page)
+        num, msg = paginate(result, int(page))
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='startswith')
     async def startswith(self, ctx, hook, page='1'):
         result = dictionary.begins_with(hook.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        num, msg = self.paginate(result, self.config.channels[ctx.channel.name]['lexicon'], page)
+        num, msg = paginate(result, int(page))
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='endswith')
     async def endswith(self, ctx, hook, page='1'):
         result = dictionary.ends_with(hook.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        num, msg = self.paginate(result, self.config.channels[ctx.channel.name]['lexicon'], page)
+        num, msg = paginate(result, int(page))
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='finisheswith')
     async def finisheswith(self, ctx, hook, page='1'):
         result = dictionary.ends_with(hook.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        num, msg = self.paginate(result, self.config.channels[ctx.channel.name]['lexicon'], page)
+        num, msg = paginate(result, int(page))
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='contains')
     async def contains(self, ctx, stem, page='1'):
         result = dictionary.contains(stem.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        num, msg = self.paginate(result, self.config.channels[ctx.channel.name]['lexicon'], page)
+        num, msg = paginate(result, int(page))
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='pattern')
     async def pattern(self, ctx, pattern, page='1'):
         result = dictionary.pattern(pattern.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        num, msg = self.paginate(result, self.config.channels[ctx.channel.name]['lexicon'], page)
+        num, msg = paginate(result, int(page))
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='regex')
     async def regex(self, ctx, pattern, page='1'):
         result = dictionary.find(pattern.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        num, msg = self.paginate(result, self.config.channels[ctx.channel.name]['lexicon'], page)
+        num, msg = paginate(result, int(page))
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
@@ -271,7 +245,7 @@ class TwitchBot(commands.Bot):
     @commands.command(name='unhook')
     async def unhook(self, ctx, rack, page='1'):
         result = dictionary.unhook(rack.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        num, msg = self.paginate(result, self.config.channels[ctx.channel.name]['lexicon'], page)
+        num, msg = paginate(result, int(page))
         print(len(msg))
         await ctx.send(msg)
 
@@ -309,7 +283,7 @@ class TwitchBot(commands.Bot):
                     for n, element in enumerate(anagrams):
                         word, entry = element
                         if length + len(msg) + len(word) > 465:
-                            msg += f'Limited to first {n} results'
+                            msg += f' Limited to first {n} results'
                             break
                         msg += ' %s%s' % dictionary.decorate(word, entry, lexicon, '')
                 else:
@@ -353,14 +327,14 @@ class TwitchBot(commands.Bot):
     async def crypto(self, ctx, text, page='1'):
         pattern = cipher(text.upper())
         result = dictionary.find(pattern, self.config.channels[ctx.channel.name]['lexicon'])
-        num, msg = self.paginate(result, self.config.channels[ctx.channel.name]['lexicon'], page)
+        num, msg = paginate(result, int(page))
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
     @commands.command(name='hidden')
     async def hidden(self, ctx, length, phrase='', page='1'):
         result = dictionary.hidden(int(length),phrase.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-        num, msg = self.paginate(result, self.config.channels[ctx.channel.name]['lexicon'], page)
+        num, msg = paginate(result, int(page))
         print(len(msg))
         await ctx.send(f'{num} %s:\n{msg}' % engine.plural('result', num))
 
