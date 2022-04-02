@@ -1,5 +1,3 @@
-import dictionary
-
 def paginate(elements, page, limit=455):
     msg = ''
     lastmark = None
