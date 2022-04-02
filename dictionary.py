@@ -94,25 +94,12 @@ def check(word, lexicon):
     return False, word, None
 
 
-def common(word, entry, lexicon):
-    if 'cel' in wordlist:
-        mm = wordlist['cel']
-        mm.seek(0)
-        if mm.readline() == (word.lower()+'\n').encode():
-            return offensive(entry[1]), True
-        mm.seek(-1, os.SEEK_CUR)
-        if mm.find(('\n'+word.lower()+'\t').encode()) != -1:
-            return offensive(entry[1]), True
-    return False, False
+def common(word):
+    return re.search(rf'^{word}$'.encode(), wordlist['cel'], re.MULTILINE)
 
 
-def wordnik(word, entry, lexicon):
-    if 'wordnik' in wordlist:
-        mm = wordlist['wordnik']
-        mm.seek(0)
-        if mm.find(('"'+word.lower()+'"').encode()) != -1:
-            return offensive(entry[1]), True
-    return False, False
+def wordnik(word):
+    return re.search(rf'^"{word}"$'.encode(), wordlist['wordnik'], re.MULTILINE)
 
 
 def decorate(word, entry, lexicon, default=None):

@@ -64,9 +64,9 @@ class TwitchBot(commands.Bot):
     async def common(self, ctx, stem):
         if re.search('[/!]', stem):
             return await ctx.send('Words must not contain / or !')
-        offensive, entry = dictionary.common(stem.upper(), self.config.channels[ctx.channel.name]['lexicon'])
+        offensive, word, entry = dictionary.check(stem.upper(), self.config.channels[ctx.channel.name]['lexicon'])
         if not offensive:
-            msg = (stem.upper() + ' is common VoteYea') if entry else (stem.upper() + '* not common VoteNay')
+            msg = (word + ' is common VoteYea') if dictionary.common(word.lower()) else (word + '* not common VoteNay')
             print(len(msg))
             await ctx.send(msg[0:500])
 
@@ -74,9 +74,9 @@ class TwitchBot(commands.Bot):
     async def wordnik(self, ctx, stem):
         if re.search('[/!]', stem):
             return await ctx.send('Words must not contain / or !')
-        offensive, common = dictionary.wordnik(stem.upper(), self.config.channels[ctx.channel.name]['lexicon'])
+        offensive, word, entry = dictionary.check(stem.upper(), self.config.channels[ctx.channel.name]['lexicon'])
         if not offensive:
-            if common:
+            if dictionary.wordnik(word.lower()):
                 msg = stem.upper() + ' is open-source VoteYea'
             else:
                 msg = stem.upper() + '* not found VoteNay'
