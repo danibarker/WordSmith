@@ -8,7 +8,7 @@ import re
 wordlist = {}
 
 
-def related(word, lexicon, default=None):
+def related(word, lexicon):
     word = word.replace('?', '.')
     pattern = re.compile(rf'(?<![a-z]){re.escape(word)}s?(?![a-z])', re.IGNORECASE)
     words = []
@@ -18,7 +18,7 @@ def related(word, lexicon, default=None):
     for line in iter(mm.readline, b''):
         word, entry = parse(line)
         if pattern.search(entry[1]) and not offensive(entry[1]):
-            words.append(decorate(word, entry, lexicon, default))
+            words.append((word, entry))
     return words
 
 
@@ -81,7 +81,7 @@ def find(pattern, lexicon, lower=1, upper=15):
         if lower <= len(match.group(1)) <= upper:
             word, entry = parse(match.group(0))
             if not offensive(entry[1]):
-                result.append((False, word, entry))
+                result.append((word, entry))
     return result
 
 
