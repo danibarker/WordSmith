@@ -19,3 +19,10 @@ def paginate(elements, page, limit=455):
             lastmark, lastword = mark, word
         msg += (mark if mark else '') + ' '
     return len(elements), msg[:-1]
+
+def truncate(delimiter, results, limit=495):
+    msg = delimiter.join(results)
+    while len(msg) > limit:
+        results = results[:-1]
+        msg = delimiter.join(results)
+    return msg

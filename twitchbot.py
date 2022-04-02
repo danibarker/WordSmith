@@ -9,7 +9,7 @@ from api import predict
 from calculator import equity, evaluate
 from cipher import cipher
 import dictionary
-from pager import paginate
+from pager import paginate, truncate
 
 custom_commands = cf.custom_commands()
 engine = inflect.engine()
@@ -61,10 +61,8 @@ class TwitchBot(commands.Bot):
                 offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
                 if not offensive:
                     msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
-                    msg = (msg + ' is valid VoteYea') if dictionary.common(word.lower()) else (msg + ' not found VoteNay')
-                    if len(' '.join(results)) + len(msg) < 495:
-                        results.append(msg)
-            msg = ' '.join(results)
+                    results.append((msg + ' is valid VoteYea') if dictionary.common(word.lower()) else (msg + ' not found VoteNay'))
+            msg = truncate(' ', results)
             print(len(msg))
             await ctx.send(msg)
 
@@ -79,10 +77,8 @@ class TwitchBot(commands.Bot):
                 offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
                 if not offensive:
                     msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
-                    msg = (msg + ' is common VoteYea') if dictionary.common(word.lower()) else (msg + ' not common VoteNay')
-                    if len(' '.join(results)) + len(msg) < 495:
-                        results.append(msg)
-            msg = ' '.join(results)
+                    results.append(msg = (msg + ' is common VoteYea') if dictionary.common(word.lower()) else (msg + ' not common VoteNay'))
+            msg = truncate(' ', results)
             print(len(msg))
             await ctx.send(msg)
 
@@ -97,10 +93,8 @@ class TwitchBot(commands.Bot):
                 offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
                 if not offensive:
                     msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
-                    msg = (msg + ' is open-source VoteYea') if dictionary.common(word.lower()) else (msg + ' not open-source VoteNay')
-                    if len(' '.join(results)) + len(msg) < 495:
-                        results.append(msg)
-            msg = ' '.join(results)
+                    results.append((msg + ' is open-source VoteYea') if dictionary.common(word.lower()) else (msg + ' not open-source VoteNay'))
+            msg = truncate(' ', results)
             print(len(msg))
             await ctx.send(msg)
 
@@ -123,9 +117,9 @@ class TwitchBot(commands.Bot):
                     else:
                         msg = alphagram(rack.upper(), alphabet) + ': ?'
                     results.append(msg)
-            msg = '; '.join(results)
+            msg = truncate('; ', results)
             print(len(msg))
-            await ctx.send(msg[0:500])
+            await ctx.send(msg)
 
     @commands.command(name='sum')
     async def sum(self, ctx, *racks):
@@ -138,9 +132,9 @@ class TwitchBot(commands.Bot):
                         return await ctx.send('Racks must not contain / or !')
                     msg = '%s: %d' % (alphagram(rack.upper(), alphabet), evaluate(rack.upper()))
                     results.append(msg)
-            msg = '; '.join(results)
+            msg = truncate('; ', results)
             print(len(msg))
-            await ctx.send(msg[0:500])
+            await ctx.send(msg)
 
     @commands.command(name='define')
     async def define(self, ctx, *words):
@@ -160,9 +154,9 @@ class TwitchBot(commands.Bot):
                     definitions.append('%s%s - %s' % (word, mark, definition))
                 else:
                     definitions.append(word + '* - not found')
-            msg = '; '.join(definitions)
+            msg = truncate('; ', definitions)
             print(len(msg))
-            await ctx.send(msg[0:500])
+            await ctx.send(msg)
 
     @commands.command(name='inflect')
     async def inflect(self, ctx, *words):
@@ -178,9 +172,9 @@ class TwitchBot(commands.Bot):
                     inflections.append(dictionary.inflect(word.upper(), entry, self.config.channels[ctx.channel.name]['lexicon']))
                 else:
                     inflections.append(word.upper() + '* - not found')
-            msg = '; '.join(inflections)
+            msg = truncate('; ', inflections)
             print(len(msg))
-            await ctx.send(msg[0:500])
+            await ctx.send(msg)
 
     @commands.command(name='lexicon')
     async def lexicon(self, ctx, word):
@@ -286,9 +280,9 @@ class TwitchBot(commands.Bot):
                         else:
                             msg += ' Equity: %0.3f' % result[1]
                     results.append(msg)
-            msg = '; '.join(results)
+            msg = truncate('; ', results)
             print(len(msg))
-            await ctx.send(msg[0:500])
+            await ctx.send(msg)
 
     @commands.command(name='anagram')
     async def anagram(self, ctx, *racks):
@@ -313,9 +307,9 @@ class TwitchBot(commands.Bot):
                 if length >= 500:
                     break
                 results.append(msg)
-            msg = '; '.join(results)
+            msg = truncate('; ', results)
             print(len(msg))
-            await ctx.send(msg[0:500])
+            await ctx.send(msg)
 
     @commands.command(name='bingo')
     async def bingo(self, ctx, length='7'):
