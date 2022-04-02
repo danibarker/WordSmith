@@ -9,26 +9,22 @@ wordlist = {}
 
 
 def related(word, lexicon):
-    word = word.replace('?', '.')
-    pattern = re.compile(rf'(?<![a-z]){re.escape(word)}s?(?![a-z])', re.IGNORECASE)
+    word = word.replace('?', '[A-Z]').lower()
     words = []
- 
-    mm = wordlist[lexicon]
-    mm.seek(0)
-    for line in iter(mm.readline, b''):
-        word, entry = parse(line)
-        if pattern.search(entry[1]) and not offensive(entry[1]):
+    for match in re.finditer(rf'^[A-Z]+\t[^\t]*\b{word}\b.*\b[A-Z]+\b.*$'.encode(), wordlist[lexicon], re.MULTILINE):
+        word, entry = parse(match.group(0))
+        if not offensive(entry[1]):
             words.append((word, entry))
     return words
 
 
 def begins_with(hook, lexicon):
-    hook = hook.replace('?', '.')
+    hook = hook.replace('?', '[A-Z]')
     return find(rf'{hook}[A-Z]*', lexicon, len(hook))
 
 
 def contains(stem, lexicon):
-    stem = stem.replace('?', '.')
+    stem = stem.replace('?', '[A-Z]')
     return find(rf'[A-Z]*{stem}[A-Z]*', lexicon, len(stem))
 
 
@@ -43,23 +39,14 @@ def hidden(length, phrase, lexicon):
 
 
 def pattern(stem, lexicon):
-    stem = stem.replace('?','.')
-    stem = stem.replace('*','.*')
-    stem = re.sub('(\\d+)','.{\\1}', stem)
-    pattern = re.compile(rf'^{stem}$', re.IGNORECASE)
-    words = []
-
-    mm = wordlist[lexicon]
-    mm.seek(0)
-    for line in iter(mm.readline, b''):
-        word, entry = parse(line)
-        if pattern.search(word) and not offensive(entry[1]):
-            words.append(decorate(word, entry, lexicon))
-    return words
+    stem = stem.replace('?','[A-Z]')
+    stem = stem.replace('*','[A-Z]*')
+    stem = re.sub('(\\d+)','[A-Z]{\\1}', stem)
+    return find(stem.upper(), lexicon)
 
 
 def ends_with(hook, lexicon):
-    hook = hook.replace('?', '.')
+    hook = hook.replace('?', '[A-Z]')
     return find(rf'[A-Z]*{hook}', lexicon, len(hook))
 
 
@@ -292,17 +279,17 @@ def anagram(rack, lexicon):
 
 
 def back_hooks(stem, lexicon):
-    stem = stem.replace('?', '.')
+    stem = stem.replace('?', '[A-Z]')
     return find(rf'{stem}.', lexicon, len(stem)+1)
 
 
 def front_hooks(stem, lexicon):
-    stem = stem.replace('?', '.')
+    stem = stem.replace('?', '[A-Z]')
     return find(rf'.{stem}', lexicon, len(stem)+1)
 
 
 def middle_hooks(stem, lexicon):
-    stem = stem.replace('?', '.')
+    stem = stem.replace('?', '[A-Z]')
     pattern = []
     for x in range(1, len(stem)):
         pattern.append(rf'{stem[:x]}.{stem[x:]}')
@@ -311,7 +298,7 @@ def middle_hooks(stem, lexicon):
 
 
 def unhook(rack, lexicon):
-    rack = rack.replace('?', '.')
+    rack = rack.replace('?', '[A-Z]')
     pattern = []
     for x in range(len(rack)):
         pattern.append(rf'{rack[:x]}{rack[x+1:]}')
