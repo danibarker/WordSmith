@@ -13,7 +13,7 @@ def related(word, lexicon):
     words = []
     for match in re.finditer(rf'^[A-Z]+\t[^\t]*\b{word}\b.*\b[A-Z]+\b.*$'.encode(), wordlist[lexicon], re.MULTILINE):
         word, entry = parse(match.group(0))
-        if not offensive(entry[1]):
+        if not dull(word, entry[1]) and not recursive(entry[1]) and not offensive(entry[1]):
             words.append((word, entry))
     return words
 
@@ -107,7 +107,7 @@ def offensive(definitions):
 
 def uninflect(word, entry, lexicon):
     part = None
-    if match := re.match(r'[A-Z]{2,}', entry[1]):
+    if match := recursive(entry[1]):
         word = match.group(0)
         part = entry[0]
     elif match := re.match(r'related to ([a-z]{2,}) \[adj\]', entry[1]):
@@ -125,7 +125,7 @@ def define(word, entry, lexicon, default):
         _, root, entry2 = check(root, lexicon)
         if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
             word, entry = root, entry2
-            if match := re.match(r'[A-Z]{2,}', entry[1]):
+            if match := recursive(entry[1]):
                 _, root, entry2 = check(match.group(0), lexicon)
                 if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
                     word, entry = root, entry2
@@ -223,15 +223,19 @@ def hook(stem, lexicon):
 def dull(word, definitions):
     if match := re.match(r'(?:\([ A-Za-z]+\) )?(?:[a-z]+ )*([a-z]+)(?:[,;]| \[)', definitions):
         root = match.group(1).upper()
-        if SequenceMatcher(None, word, root).ratio() >= 0.65:
+        if SequenceMatcher(None, word, root).ratio() >= 0.8:
             return root
+
+
+def recursive(definitions):
+    return re.match(r'[A-Z]{2,}', definitions)
 
 
 def random_word(word_length, lexicon):
     if word_length <= 1 or word_length > 15:
         word_length = None
     word, entry = select_random_word(lexicon)
-    while (word_length is not None and len(word) != word_length) or re.match(r'[A-Z]{2,}', entry[1]) or dull(word, entry[1]) or offensive(entry[1]):
+    while (word_length is not None and len(word) != word_length) or re.match(r'[A-Z]{2,}', entry[1]) or dull(word, entry[1]) or recursive(entry[1]) or offensive(entry[1]):
         word, entry = select_random_word(lexicon)
     return ('%s%s' % decorate(word, entry, lexicon, '')) + ' - ' + entry[1]
 
