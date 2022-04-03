@@ -11,7 +11,7 @@ wordlist = {}
 def related(word, lexicon):
     word = word.replace('?', '[A-Z]').lower()
     words = []
-    for match in re.finditer(rf'^[A-Z]+\t[^\t]*\b{word}\b.*\b[A-Z]+\b.*$'.encode(), wordlist[lexicon], re.MULTILINE):
+    for match in re.finditer(rf'^[A-Z]+\t[^\t]*\b{word}\b.*\b[A-Z]+\b(?:\t.)?\r?$'.encode(), wordlist[lexicon], re.MULTILINE):
         word, entry = parse(match.group(0))
         if not dull(word, entry[1]) and not recursive(entry[1]) and not offensive(entry[1]):
             words.append((word, entry))
@@ -64,7 +64,7 @@ def parse(line):
 
 def find(pattern, lexicon, lower=1, upper=15):
     result = []
-    for match in re.finditer(rf'^\b({pattern})\b.*$'.encode(), wordlist[lexicon], re.MULTILINE):
+    for match in re.finditer(rf'^\b({pattern})\b.*\r?$'.encode(), wordlist[lexicon], re.MULTILINE):
         if lower <= len(match.group(1)) <= upper:
             word, entry = parse(match.group(0))
             if not offensive(entry[1]):
@@ -75,18 +75,18 @@ def find(pattern, lexicon, lower=1, upper=15):
 def check(word, lexicon):
     result = []
     alphagram = ''.join(sorted(word))
-    if match := re.search(rf'^\b({word})\b.*\b[a-z]+\b.*\b\d+\b\t\b{alphagram}\b.*$'.encode(), wordlist[lexicon], re.MULTILINE):
+    if match := re.search(rf'^\b({word})\b.*\b[a-z]+\b.*\b\d+\b\t\b{alphagram}\b.*\r?$'.encode(), wordlist[lexicon], re.MULTILINE):
         word, entry = parse(match.group(0))
         return (offensive(entry[1]), word, entry)
     return False, word, None
 
 
 def common(word):
-    return re.search(rf'^{word}$'.encode(), wordlist['cel'], re.MULTILINE)
+    return re.search(rf'^{word}\r?$'.encode(), wordlist['cel'], re.MULTILINE)
 
 
 def wordnik(word):
-    return re.search(rf'^"{word}"$'.encode(), wordlist['wordnik'], re.MULTILINE)
+    return re.search(rf'^"{word}"\r?$'.encode(), wordlist['wordnik'], re.MULTILINE)
 
 
 def decorate(word, entry, lexicon, default=None):
@@ -275,7 +275,7 @@ def anagram(rack, lexicon):
         mask = ''.join(letters)
 
     pattern = (rf'[A-Z]' if (num_blanks) else rf'[{rack}]') * word_length
-    for match in re.finditer(rf'^\b{pattern}\b.*\b({mask})\b.*$'.encode(), wordlist[lexicon], re.MULTILINE):
+    for match in re.finditer(rf'^\b{pattern}\b.*\b({mask})\b.*\r?$'.encode(), wordlist[lexicon], re.MULTILINE):
         word, entry = parse(match.group(0))
         if not offensive(entry[1]):
             words.append((word, entry))

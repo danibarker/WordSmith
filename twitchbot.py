@@ -77,7 +77,7 @@ class TwitchBot(commands.Bot):
                 offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
                 if not offensive:
                     msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
-                    results.append(msg = (msg + ' is common VoteYea') if dictionary.common(word.lower()) else (msg + ' not common VoteNay'))
+                    results.append((msg + ' is common VoteYea') if dictionary.common(word.lower()) else (msg + ' not common VoteNay'))
             msg = truncate(' ', results)
             print(len(msg))
             await ctx.send(msg)
