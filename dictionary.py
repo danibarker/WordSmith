@@ -238,7 +238,7 @@ def random_word(word_length, lexicon):
     if word_length <= 1 or word_length > 15:
         word_length = None
     word, entry = select_random_word(lexicon)
-    while (word_length is not None and len(word) != word_length) or re.match(r'[A-Z]{2,}', entry[1]) or dull(word, entry[1]) or recursive(entry[1]) or offensive(entry[1]):
+    while (word_length is not None and len(word) != word_length) or dull(word, entry[1]) or recursive(entry[1]) or offensive(entry[1]):
         word, entry = select_random_word(lexicon)
     return ('%s%s' % decorate(word, entry, lexicon, '')) + ' - ' + entry[1]
 
