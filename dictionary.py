@@ -19,13 +19,15 @@ def related(word, lexicon):
 
 
 def begins_with(hook, lexicon):
+    lower = len(hook)
     hook = hook.replace('?', '[A-Z]')
-    return find(rf'{hook}[A-Z]*', lexicon, len(hook))
+    return find(rf'{hook}[A-Z]*', lexicon, lower, lower)
 
 
 def contains(stem, lexicon):
+    lower = len(stem)
     stem = stem.replace('?', '[A-Z]')
-    return find(rf'[A-Z]*{stem}[A-Z]*', lexicon, len(stem))
+    return find(rf'[A-Z]*{stem}[A-Z]*', lexicon, lower)
 
 
 def hidden(length, phrase, lexicon):
@@ -46,8 +48,9 @@ def pattern(stem, lexicon):
 
 
 def ends_with(hook, lexicon):
+    lower = len(hook)
     hook = hook.replace('?', '[A-Z]')
-    return find(rf'[A-Z]*{hook}', lexicon, len(hook))
+    return find(rf'[A-Z]*{hook}', lexicon, lower)
 
 
 def read(mm, pos):
@@ -283,31 +286,33 @@ def anagram(rack, lexicon):
 
 
 def back_hooks(stem, lexicon):
+    lower = len(stem)
     stem = stem.replace('?', '[A-Z]')
-    return find(rf'{stem}.', lexicon, len(stem)+1)
+    return find(rf'{stem}.', lexicon, lower+1)
 
 
 def front_hooks(stem, lexicon):
+    lower = len(stem)
     stem = stem.replace('?', '[A-Z]')
-    return find(rf'.{stem}', lexicon, len(stem)+1)
+    return find(rf'.{stem}', lexicon, lower+1)
 
 
 def middle_hooks(stem, lexicon):
-    stem = stem.replace('?', '[A-Z]')
+    lower = len(stem) + 1
     pattern = []
     for x in range(1, len(stem)):
         pattern.append(rf'{stem[:x]}.{stem[x:]}')
-    pattern = '|'.join(pattern)
-    return find(rf'{pattern}', lexicon, len(stem)+1, len(stem)+1)
+    pattern = ('|'.join(pattern)).replace('?', '[A-Z]')
+    return find(rf'{pattern}', lexicon, lower, lower)
 
 
 def unhook(rack, lexicon):
-    rack = rack.replace('?', '[A-Z]')
+    lower = len(rack) - 1
     pattern = []
     for x in range(len(rack)):
         pattern.append(rf'{rack[:x]}{rack[x+1:]}')
-    pattern = '|'.join(pattern)
-    return find(rf'{pattern}', lexicon, len(rack)-1, len(rack)-1)
+    pattern = ('|'.join(pattern)).replace('?', '[A-Z]')
+    return find(rf'{pattern}', lexicon, lower, lower)
 
 
 def open_files():
