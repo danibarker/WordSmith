@@ -1,19 +1,27 @@
-from dictionary import decorate
+from dictionary import mark
+import re
+
+def plural(word, lastword):
+    return re.fullmatch(rf'{lastword}(ES|S)', word)
 
 def merge(elements, lexicon):
     msg = ''
-    lastmark = None
+    lastmarking = None
     lastword = None
     for n, element in enumerate(elements):
         word, entry = element
-        word, mark = decorate(word, entry, lexicon, '')
-        if lastword and mark == lastmark and word == lastword + 'S':
-            msg = msg[:(-2 if mark else -1)] + '[-S]'
-            lastmark, lastword = None, None
+        marking = mark(entry, lexicon, '')
+        suffix = plural(word, lastword) if lastword else None
+        if lastword and marking == lastmarking and suffix:
+            msg = msg[:(-2 if marking else -1)] + f'[-{suffix.group(1)}]'
+            lastmarking, lastword = '', None
+        elif lastword and not lastmarking and suffix:
+            msg = msg[:-1] + (f'[-{suffix.group(1)}%s]' % marking)
+            marking, lastword = '', None
         else:
             msg += word
-            lastmark, lastword = mark, word
-        msg += (mark if mark else '') + ' '
+            lastmarking, lastword = marking, word
+        msg += marking + ' '
     return msg[:-1].split(' ')
 
 def paginate(elements, lexicon, page, limit=455):
