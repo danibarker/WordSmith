@@ -8,7 +8,7 @@ import re
 wordlist = {}
 
 
-def related(word, lexicon):
+def related(word, lexicon, limit=100):
     word = word.replace('?', '[A-Z]').lower()
     words = []
     cache = {}
@@ -17,6 +17,8 @@ def related(word, lexicon):
         if not recursive(word, entry, lexicon, cache) and not offensive(entry[1]):
             cache[word] = entry
             words.append((word, entry))
+            if len(words) >= limit:
+                break
     return words
 
 
