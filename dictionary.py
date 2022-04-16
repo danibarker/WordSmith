@@ -137,13 +137,9 @@ def inflect(word, entry, lexicon):
     roots = uninflect(word, entry, lexicon)
     for root in roots:
         _, root, entry = check(root, lexicon)
-        if roots[0] == word:
-            entries = entry[0].split('] / [')
-            result.append('%s%s' % decorate(root, entry, lexicon, '') + ' ' + '; '.join(entries))
-        else:
-            for inflection in entry[0].split(' / '):
-                if verb == (inflection[1] == 'v'):
-                    result.append(('%s%s' % decorate(root, entry, lexicon, '')) + ' ' + inflection)
+        for inflection in entry[0].split(' / '):
+            if (inflection[1] == 'v') == verb:
+                result.append(('%s%s' % decorate(root, entry, lexicon, '')) + ' ' + inflection)
     return ', '.join(result)
 
 
