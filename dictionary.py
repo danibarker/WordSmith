@@ -133,14 +133,19 @@ def inflect(word, entry, lexicon):
     # ASSUME either a word is either a root or an inflection (not both)
     # ASSUME inflections have only one part of speech
     result = []
-    verb = (entry[0][1] == 'v')
+    nonverb, verb = False, False
+    for inflection in entry[0].split(' / '):
+        if inflection[1] == 'v':
+            verb = True
+        else:
+            nonverb = True
     roots = uninflect(word, entry, lexicon)
     for root in roots:
         _, root, entry = check(root, lexicon)
         for inflection in entry[0].split(' / '):
-            if (inflection[1] == 'v') == verb:
+            if (verb if (inflection[1] == 'v') else nonverb):
                 result.append(('%s%s' % decorate(root, entry, lexicon, '')) + ' ' + inflection)
-    return ', '.join(result)
+    return (' / ' if roots[-1] == word else ', ').join(result)
 
 
 def info(stem, lexicon, alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
