@@ -13,7 +13,7 @@ def related(word, lexicon):
     words = []
     for match in re.finditer(rf'^[A-Z]+\t[^\t]*\b{word}\b.*\b[A-Z]+\b(?:\t.)?\r?$'.encode(), wordlist[lexicon], re.MULTILINE):
         word, entry = parse(match.group(0))
-        if not dull(word, entry[1]) and not recursive(entry[1]) and not offensive(entry[1]):
+        if not recursive(word, entry, lexicon) and not offensive(entry[1]):
             words.append((word, entry))
     return words
 
@@ -110,8 +110,8 @@ def offensive(definitions):
 
 def uninflect(word, entry, lexicon):
     part = None
-    if match := recursive(entry[1]):
-        word = match.group(0)
+    if match := recursive(word, entry, lexicon):
+        word, entry = match
         part = entry[0]
     words = [word]
     pattern = re.compile(rf', also ((?:[A-Z]+(?:, )?)+)')
@@ -122,14 +122,8 @@ def uninflect(word, entry, lexicon):
 
 
 def define(word, entry, lexicon, default):
-    if match := recursive(entry[1]):
-        _, root, entry2 = check(match.group(0), lexicon)
-        if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
-            word, entry = root, entry2
-    if root := dull(word, entry[1]):
-        _, root, entry2 = check(root, lexicon)
-        if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
-            word, entry = root, entry2
+    if match := recursive(word, entry, lexicon):
+        word, entry = match
     return word, entry, entry[1], mark(entry, lexicon, default)
 
 
@@ -221,23 +215,25 @@ def hook(stem, lexicon):
         return 'No such lexicon'
 
 
-def dull(word, definitions):
-    # A definition is dull if the root word is used to describe an inflection
-    if match := re.match(r'(?:\([ A-Za-z]+\) )?(?:[a-z]+ )*([a-z]+)(?:[,;]| \[)', definitions):
+def recursive(word, entry, lexicon):
+    if match := re.match(r'[A-Z]{2,}', entry[1]):
+        _, root, entry2 = check(match.group(0), lexicon)
+        if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
+            return root, entry2
+    # check if the uninflected word is used to define the word (WINDY - related to wind)
+    if match := re.match(r'(?:\([ A-Za-z]+\) )?(?:[a-z]+ )*([a-z]+)(?:[,;]| \[)', entry[1]):
         root = match.group(1).upper()
         if SequenceMatcher(None, word, root).ratio() >= 0.8:
-            return root
-
-
-def recursive(definitions):
-    return re.match(r'[A-Z]{2,}', definitions)
+            _, root, entry2 = check(root, lexicon)
+            if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
+                return root, entry2
 
 
 def random_word(word_length, lexicon):
     if word_length <= 1 or word_length > 15:
         word_length = None
     word, entry = select_random_word(lexicon)
-    while (word_length is not None and len(word) != word_length) or dull(word, entry[1]) or recursive(entry[1]) or offensive(entry[1]):
+    while (word_length is not None and len(word) != word_length) or recursive(word, entry, lexicon) or offensive(entry[1]):
         word, entry = select_random_word(lexicon)
     return ('%s%s' % decorate(word, entry, lexicon, '')) + ' - ' + entry[1]
 
