@@ -11,9 +11,11 @@ wordlist = {}
 def related(word, lexicon):
     word = word.replace('?', '[A-Z]').lower()
     words = []
+    cache = {}
     for match in re.finditer(rf'^[A-Z]+\t[^\t]*\b{word}\b.*\b[A-Z]+\b(?:\t.)?\r?$'.encode(), wordlist[lexicon], re.MULTILINE):
         word, entry = parse(match.group(0))
-        if not recursive(word, entry, lexicon) and not offensive(entry[1]):
+        if not recursive(word, entry, lexicon, cache) and not offensive(entry[1]):
+            cache[word] = entry
             words.append((word, entry))
     return words
 
@@ -215,16 +217,23 @@ def hook(stem, lexicon):
         return 'No such lexicon'
 
 
-def recursive(word, entry, lexicon):
+def recursive(word, entry, lexicon, cache={}):
     if match := re.match(r'[A-Z]{2,}', entry[1]):
-        _, root, entry2 = check(match.group(0), lexicon)
+        root = match.group(0)
+        if root in cache:
+            entry2 = cache[root]
+        else:
+            _, root, entry2 = check(root, lexicon)
         if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
             return root, entry2
     # check if the uninflected word is used to define the word (WINDY - related to wind)
     if match := re.match(r'(?:\([ A-Za-z]+\) )?(?:[a-z]+ )*([a-z]+)(?:[,;]| \[)', entry[1]):
         root = match.group(1).upper()
         if SequenceMatcher(None, word, root).ratio() >= 0.8:
-            _, root, entry2 = check(root, lexicon)
+            if root in cache:
+                entry2 = cache[root]
+            else:
+                _, root, entry2 = check(root, lexicon)
             if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
                 return root, entry2
 
