@@ -25,7 +25,7 @@ def related(word, lexicon, limit=100):
 def begins_with(hook, lexicon):
     lower = len(hook)
     hook = hook.replace('?', '[A-Z]')
-    return find(rf'{hook}[A-Z]*', lexicon, lower, lower)
+    return find(rf'{hook}[A-Z]*', lexicon, lower)
 
 
 def contains(stem, lexicon):
