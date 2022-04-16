@@ -113,16 +113,14 @@ def offensive(definitions):
 
 
 def uninflect(word, entry, lexicon):
-    part = None
     if match := recursive(word, entry, lexicon):
         word, entry = match
-        part = entry[0]
     words = [word]
     pattern = re.compile(rf', also ((?:[A-Z]+(?:, )?)+)')
     for match in re.findall(pattern, entry[1]):
         for word in match.split(', '):
             words.append(word)
-    return (part, words)
+    return words
 
 
 def define(word, entry, lexicon, default):
@@ -135,16 +133,17 @@ def inflect(word, entry, lexicon):
     # ASSUME either a word is either a root or an inflection (not both)
     # ASSUME inflections have only one part of speech
     result = []
-    part, roots = uninflect(word, entry, lexicon)
+    verb = (entry[0][1] == 'v')
+    roots = uninflect(word, entry, lexicon)
     for root in roots:
         _, root, entry = check(root, lexicon)
-        if part:
-            for inflection in entry[0].split(' / '):
-                if inflection.startswith(part[:2]):
-                    result.append(('%s%s' % decorate(root, entry, lexicon, '')) + ' ' + inflection)
-        else:
+        if roots[0] == word:
             entries = entry[0].split('] / [')
             result.append('%s%s' % decorate(root, entry, lexicon, '') + ' ' + '; '.join(entries))
+        else:
+            for inflection in entry[0].split(' / '):
+                if verb == (inflection[1] == 'v'):
+                    result.append(('%s%s' % decorate(root, entry, lexicon, '')) + ' ' + inflection)
     return ', '.join(result)
 
 
