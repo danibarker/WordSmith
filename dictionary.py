@@ -113,8 +113,6 @@ def uninflect(word, entry, lexicon):
     if match := recursive(entry[1]):
         word = match.group(0)
         part = entry[0]
-    elif match := re.match(r'related to ([a-z]{2,}) \[adj\]', entry[1]):
-        word = match.group(1).upper()
     words = [word]
     pattern = re.compile(rf', also ((?:[A-Z]+(?:, )?)+)')
     for match in re.findall(pattern, entry[1]):
@@ -124,14 +122,14 @@ def uninflect(word, entry, lexicon):
 
 
 def define(word, entry, lexicon, default):
+    if match := recursive(entry[1]):
+        _, root, entry2 = check(match.group(0), lexicon)
+        if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
+            word, entry = root, entry2
     if root := dull(word, entry[1]):
         _, root, entry2 = check(root, lexicon)
         if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
             word, entry = root, entry2
-            if match := recursive(entry[1]):
-                _, root, entry2 = check(match.group(0), lexicon)
-                if mark(entry, lexicon, '') == mark(entry2, lexicon, ''):
-                    word, entry = root, entry2
     return word, entry, entry[1], mark(entry, lexicon, default)
 
 
@@ -224,6 +222,7 @@ def hook(stem, lexicon):
 
 
 def dull(word, definitions):
+    # A definition is dull if the root word is used to describe an inflection
     if match := re.match(r'(?:\([ A-Za-z]+\) )?(?:[a-z]+ )*([a-z]+)(?:[,;]| \[)', definitions):
         root = match.group(1).upper()
         if SequenceMatcher(None, word, root).ratio() >= 0.8:

@@ -148,8 +148,6 @@ class TwitchBot(commands.Bot):
                     pass
                 elif entry:
                     lexicon = self.config.channels[ctx.channel.name]['lexicon']
-                    if match := dictionary.recursive(entry[1]):
-                        _, word, entry = dictionary.check(match.group(0), lexicon)
                     word, entry, definition, mark = dictionary.define(word, entry, lexicon, '')
                     definitions.append('%s%s - %s' % (word, mark, definition))
                 else:
