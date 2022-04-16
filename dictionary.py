@@ -61,7 +61,7 @@ def read(mm, pos):
 def parse(line):
     entry = line.decode().strip().split('	')
     word = entry[0]
-    entry[0] = ' / '.join(re.findall(rf'\\[.*?\\]', entry[1]))
+    entry[0] = ' / '.join(re.findall(rf'\[.*?\]', entry[1]))
     return word, entry
 
 
@@ -142,13 +142,13 @@ def inflect(word, entry, lexicon):
     part, roots = uninflect(word, entry, lexicon)
     for root in roots:
         _, root, entry = check(root, lexicon)
-        if part is None:
-            entries = entry[1].split('] / [')
-            result.append('%s%s' % decorate(root, entry, lexicon, '') + ' ' + '; '.join(entries))
-        else:
-            for inflection in entry[1].split(' / '):
-                if part is None or inflection.startswith(part[:2]):
+        if part:
+            for inflection in entry[0].split(' / '):
+                if inflection.startswith(part[:2]):
                     result.append(('%s%s' % decorate(root, entry, lexicon, '')) + ' ' + inflection)
+        else:
+            entries = entry[0].split('] / [')
+            result.append('%s%s' % decorate(root, entry, lexicon, '') + ' ' + '; '.join(entries))
     return ', '.join(result)
 
 
