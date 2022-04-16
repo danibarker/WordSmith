@@ -133,25 +133,28 @@ def part(inflection):
     # Checks if the inflection (word) is irregular, or a verb
     # Common root form adjectives and nouns tend to homograph
     # whereas common root form verbs are fewer and distinct
-    irregular = re.match(r'\[(?:conj|int|interj|prep|pron)\b', inflection)
-    other = re.match(r'\[(?:adj|adv|n)\b', inflection)
-    verb = re.match(r'\[v\b', inflection)
+    irregular = re.search(r'\[(?:conj|int|interj|prep|pron)\b', inflection)
+    other = re.search(r'\[(?:adj|adv|n)\b', inflection)
+    verb = re.search(r'\[v\b', inflection)
     return irregular, other, verb
 
 
 def inflect(word, entry, lexicon):
-    # ASSUME either a word is either a root or an inflection (not both)
-    # ASSUME inflections have only one part of speech
     result = []
     irregular, other, verb = part(entry[0])
     roots = uninflect(word, entry, lexicon)
     for root in roots:
         _, root, entry = check(root, lexicon)
+        count = 0
         for inflection in entry[0].split(' / '):
             irregular2, other2, verb2 = part(inflection)
             if (irregular and irregular2) or (other and other2) or (verb and verb2):
+                # Delimits homographs with slashes and alternatives with commas
+                if count:
+                    result.append('')
                 result.append(('%s%s' % decorate(root, entry, lexicon, '')) + ' ' + inflection)
-    return (' / ' if roots[-1] == word else ', ').join(result)
+                count += 1
+    return ', '.join(result).replace(', , ', ' / ')
 
 
 def info(stem, lexicon, alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
