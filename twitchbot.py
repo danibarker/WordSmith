@@ -60,8 +60,7 @@ class TwitchBot(commands.Bot):
                     return await ctx.send('Words must not contain / or !')
                 offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
                 if not offensive:
-                    msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
-                    results.append((msg + ' is valid VoteYea') if dictionary.common(word.lower()) else (msg + ' not found VoteNay'))
+                    results.append('%s%s is valid VoteYea' % (dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s* not found VoteNay' % word))
             msg = truncate(' ', results)
             print(len(msg))
             await ctx.send(msg)
