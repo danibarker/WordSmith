@@ -11,15 +11,16 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.9
+      with:
+        submodules: recursive
+    - name: Set up Python 3.10
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: "3.10"
     - name: "Get pip cache dir"
       id: pip-cache
       run: |
