@@ -1,4 +1,4 @@
 discord.py~=1.7.3
-inflect~=5.5.2
+inflect~=5.6.0
 requests~=2.27.1
 twitchio~=2.2.0
