@@ -2,10 +2,16 @@ from alphagram import alphagram
 from difflib import SequenceMatcher
 import mmap
 import os
+import pronouncing
 import random
 import re
 
 wordlist = {}
+
+
+def rhyme(word, lexicon):
+    rhymes = '|'.join(pronouncing.rhymes(word)).upper()
+    return find(rf'{rhymes}', lexicon)
 
 
 def related(word, lexicon, limit=100):
