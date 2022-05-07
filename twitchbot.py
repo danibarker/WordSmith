@@ -27,7 +27,7 @@ class TwitchBot(commands.Bot):
         super().run()
 
     async def event_ready(self):
-        print(f'Wordsmith 0.21 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.22 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if len(ctx.content) > 1 and ctx.content[0] == '!':
@@ -191,6 +191,12 @@ class TwitchBot(commands.Bot):
             msg = f'Command can only be used by {ctx.channel.name} or moderators'
             print(len(msg))
             await ctx.send(msg)
+
+    @commands.command(name='origin')
+    async def origin(self, ctx, word):
+        msg = dictionary.origin(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
+        print(len(msg))
+        await ctx.send(msg)
 
     @commands.command(name='rhyme')
     async def rhyme(self, ctx, word, page='1'):
