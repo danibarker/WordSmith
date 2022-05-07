@@ -26,13 +26,14 @@ def merge(elements, lexicon):
 
 def paginate(elements, lexicon, page, limit=455):
     msg = ''
-    for n, element in enumerate(merge(elements, lexicon)):
-        if len(msg) + len(element) > limit:
+    merged = merge(elements, lexicon)
+    for n, element in enumerate(merged):
+        if len(msg) + len(element) > limit and len(msg) + len(' '.join(merged[n:])) > limit + 25:
             if page > 1:
                 msg = ''
                 page -= 1
             else:
-                msg += f' Limited to first {n} results '
+                msg += f'Limited to first {n} results '
                 break
         msg += element + ' '
     return len(elements), msg[:-1]
