@@ -1,6 +1,5 @@
 from alphagram import alphagram
 from difflib import SequenceMatcher
-from ety import origins
 import mmap
 import os
 import pronouncing
@@ -8,16 +7,6 @@ import random
 import re
 
 wordlist = {}
-
-
-def origin(word, lexicon):
-    offensive, root, entry = check(word, lexicon)
-    if entry and not offensive:
-        roots = origins(root.lower(), recursive=True)
-        if roots:
-            return '; '.join(root.pretty for root in roots)
-        else:
-            return 'No origins found for root: %s' % root
 
 
 def rhyme(word, lexicon):

@@ -9,6 +9,7 @@ from api import predict
 from calculator import equity, evaluate
 from cipher import cipher
 import dictionary
+from ety import origins
 from pager import paginate, truncate
 
 custom_commands = cf.custom_commands()
@@ -194,7 +195,13 @@ class TwitchBot(commands.Bot):
 
     @commands.command(name='origin')
     async def origin(self, ctx, word):
-        msg = dictionary.origin(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
+        offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
+        if not offensive:
+            if entry:
+                roots = origins(word.lower())
+                msg = '; '.join(root.pretty for root in roots) if roots else f'Origins not found for {word}'
+            else:
+                msg = f'{word.upper()}* not found'
         print(len(msg))
         await ctx.send(msg)
 
