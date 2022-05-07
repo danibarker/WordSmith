@@ -198,7 +198,7 @@ class TwitchBot(commands.Bot):
         offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
         if not offensive:
             if entry:
-                roots = origins(word.lower())
+                roots = origins(word.lower(), recursive=True)
                 msg = '; '.join(root.pretty for root in roots) if roots else f'Origins not found for {word}'
             else:
                 msg = f'{word.upper()}* not found'
