@@ -29,14 +29,20 @@ def related(word, lexicon, limit=100):
 
 
 def begins_with(hook, lexicon):
-    lower = len(hook)
+    lower = len(hook.replace('*', ''))
     hook = hook.replace('?', '[A-Z]')
+    hook = hook.replace('*', '[A-Z]*')
+    hook = hook.replace('+', '[A-Z]+')
+    hook = re.sub('(\\d+)','[A-Z]{\\1}', hook)
     return find(rf'{hook}[A-Z]*', lexicon, lower)
 
 
 def contains(stem, lexicon):
-    lower = len(stem)
+    lower = len(stem.replace('*', ''))
     stem = stem.replace('?', '[A-Z]')
+    stem = stem.replace('*', '[A-Z]*')
+    stem = stem.replace('+', '[A-Z]+')
+    stem = re.sub('(\\d+)','[A-Z]{\\1}', stem)
     return find(rf'[A-Z]*{stem}[A-Z]*', lexicon, lower)
 
 
@@ -51,15 +57,20 @@ def hidden(length, phrase, lexicon):
 
 
 def pattern(stem, lexicon):
+    lower = len(stem.replace('*', ''))
     stem = stem.replace('?','[A-Z]')
     stem = stem.replace('*','[A-Z]*')
-    stem = re.sub('(\\d+)','[A-Z]{\\1}', stem)
+    stem = stem.replace('+','[A-Z]+')
+    stem = re.sub('(\\d+)','[A-Z]{\\1}', stem, lower)
     return find(stem.upper(), lexicon)
 
 
 def ends_with(hook, lexicon):
-    lower = len(hook)
+    lower = len(hook.replace('*', ''))
     hook = hook.replace('?', '[A-Z]')
+    hook = hook.replace('*', '[A-Z]*')
+    hook = hook.replace('+', '[A-Z]+')
+    hook = re.sub('(\\d+)','[A-Z]{\\1}', hook)
     return find(rf'[A-Z]*{hook}', lexicon, lower)
 
 
@@ -213,12 +224,12 @@ def hook(stem, lexicon):
                 if counter == 3 and x:
                     msg = msg + ' Back: ' + x
         else:
-            hooks = front_hooks(stem, lexicon)
+            hooks = pattern(f'.{stem}', lexicon)
             if hooks:
                 msg = msg + ' Front:'
                 for _, word, entry in hooks:
                     msg += (' %s%s' % decorate(word, entry, lexicon, ''))
-            hooks = back_hooks(stem, lexicon)
+            hooks = pattern(f'{stem}.', lexicon)
             if hooks:
                 msg = msg + ' Back:'
                 for _, word, entry in hooks:
@@ -304,18 +315,6 @@ def anagram(rack, lexicon):
         if not offensive(entry[1]):
             words.append((word, entry))
     return words
-
-
-def back_hooks(stem, lexicon):
-    lower = len(stem)
-    stem = stem.replace('?', '[A-Z]')
-    return find(rf'{stem}.', lexicon, lower+1)
-
-
-def front_hooks(stem, lexicon):
-    lower = len(stem)
-    stem = stem.replace('?', '[A-Z]')
-    return find(rf'.{stem}', lexicon, lower+1)
 
 
 def middle_hooks(stem, lexicon):
