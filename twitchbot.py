@@ -9,6 +9,7 @@ from api import predict
 from calculator import equity, evaluate
 from cipher import cipher
 import dictionary
+from difflib import SequenceMatcher
 from ety import origins
 from pager import paginate, truncate
 
@@ -28,19 +29,28 @@ class TwitchBot(commands.Bot):
         super().run()
 
     async def event_ready(self):
-        print(f'Wordsmith 0.23 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.24 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
-        if len(ctx.content) > 1 and ctx.content[0] == '!':
+        if ctx.author and not ctx.author.name == self.nick:
             print(ctx.content)
-            if ctx.content[1:] in custom_commands.keys():
-                with open(custom_commands[ctx.content[1:]], 'r') as f:
-                    messages = list(f)
-                message = rd.choice(messages).strip()
+            if SequenceMatcher(None, "Wanna become famous? Buy followers, primes and views on example*com (example . com)!", ctx.content).ratio() >= 0.8:
+                if not ctx.author.is_mod:
+                    message = f'/timeout {ctx.author.name}'
+                    print(len(message))
+                    await ctx.channel.send(message)
+                message = '"If fame is only to come after death, I am in no hurry for it." - Martial'
                 print(len(message))
                 await ctx.channel.send(message)
-            else:
-                await self.handle_commands(ctx)
+            elif len(ctx.content) > 1 and ctx.content[0] == '!':
+                if ctx.content[1:] in custom_commands.keys():
+                    with open(custom_commands[ctx.content[1:]], 'r') as f:
+                        messages = list(f)
+                    message = rd.choice(messages).strip()
+                    print(len(message))
+                    await ctx.channel.send(message)
+                else:
+                    await self.handle_commands(ctx)
 
     @commands.command(name='predict')
     async def predict(self, ctx, opponent):
@@ -187,11 +197,11 @@ class TwitchBot(commands.Bot):
     @commands.command(name='timeout')
     async def timeout(self, ctx, user):
         if ctx.author.name == ctx.channel.name or ctx.author.is_mod:
-            await ctx.timeout(user)
+            message = f'/timeout {user}'
         else:
             msg = f'Command can only be used by {ctx.channel.name} or moderators'
-            print(len(msg))
-            await ctx.send(msg)
+        print(len(msg))
+        await ctx.send(msg)
 
     @commands.command(name='origin')
     async def origin(self, ctx, word):
