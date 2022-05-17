@@ -215,7 +215,7 @@ class TwitchBot(commands.Bot):
         print(len(msg))
         await ctx.send(msg)
 
-    @commands.command(name='rhyme')
+    @commands.command(name='rhymeswith')
     async def rhyme(self, ctx, word, page='1'):
         result = dictionary.rhyme(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
         num, msg = paginate(result, self.config.channels[ctx.channel.name]['lexicon'], int(page))
