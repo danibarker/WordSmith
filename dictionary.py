@@ -113,6 +113,10 @@ def wordnik(word):
     return re.search(rf'^"{word}"\r?$'.encode(), wordlist['wordnik'], re.MULTILINE)
 
 
+def yawl(word):
+    return re.search(rf'^{word}$'.encode(), wordlist['yawl'], re.MULTILINE)
+
+
 def decorate(word, entry, lexicon, default=None):
     return (word, mark(entry, lexicon, default))
 
@@ -374,3 +378,10 @@ def open_files():
             f.close()
     except FileNotFoundError:
         print('wordlist/wordlist-20210729.txt not found')
+    try:
+        with open('yawl/yawl-0.3.2.03/word.list', 'rb') as f:
+            if os.stat(f.name).st_size:
+                wordlist['yawl'] = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
+            f.close()
+    except FileNotFoundError:
+        print('yawl/yawl-0.3.2.03/word.list not found')

@@ -29,7 +29,7 @@ class TwitchBot(commands.Bot):
         super().run()
 
     async def event_ready(self):
-        print(f'Wordsmith 0.24 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.25 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if ctx.author and not ctx.author.name == self.nick:
@@ -67,8 +67,6 @@ class TwitchBot(commands.Bot):
             lexicon = self.config.channels[ctx.channel.name]['lexicon']
             results = []
             for word in words:
-                if re.search(r'[/!]', word):
-                    return await ctx.send('Words must not contain / or !')
                 offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
                 if not offensive:
                     results.append('%s%s is valid VoteYea' % (dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s* not found VoteNay' % word))
@@ -82,8 +80,6 @@ class TwitchBot(commands.Bot):
             lexicon = self.config.channels[ctx.channel.name]['lexicon']
             results = []
             for word in words:
-                if re.search(r'[/!]', word):
-                    return await ctx.send('Words must not contain / or !')
                 offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
                 if not offensive:
                     msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
@@ -98,12 +94,24 @@ class TwitchBot(commands.Bot):
             lexicon = self.config.channels[ctx.channel.name]['lexicon']
             results = []
             for word in words:
-                if re.search(r'[/!]', word):
-                    return await ctx.send('Words must not contain / or !')
                 offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
                 if not offensive:
                     msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
-                    results.append((msg + ' is open-source VoteYea') if dictionary.common(word.lower()) else (msg + ' not open-source VoteNay'))
+                    results.append((msg + ' is open-source VoteYea') if dictionary.wordnik(word.lower()) else (msg + ' not open-source VoteNay'))
+            msg = truncate(' ', results)
+            print(len(msg))
+            await ctx.send(msg)
+
+    @commands.command(name='yawl')
+    async def yawl(self, ctx, *words):
+        if words and len(words) > 0:
+            lexicon = self.config.channels[ctx.channel.name]['lexicon']
+            results = []
+            for word in words:
+                offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
+                if not offensive:
+                    msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
+                    results.append((msg + ' is open-source VoteYea') if dictionary.yawl(word.lower()) else (msg + ' not open-source VoteNay'))
             msg = truncate(' ', results)
             print(len(msg))
             await ctx.send(msg)
@@ -116,8 +124,6 @@ class TwitchBot(commands.Bot):
             results = []
             for rack in racks:
                 if rack:
-                    if re.search('[/!]', rack):
-                        return await ctx.send('Racks must not contain / or !')
                     if len(rack) >= 2 and len(rack) <= 5:
                         result = equity(rack, lexicon)
                         if result[0] == '{':
@@ -138,8 +144,6 @@ class TwitchBot(commands.Bot):
             results = []
             for rack in racks:
                 if rack:
-                    if re.search('[/!]', rack):
-                        return await ctx.send('Racks must not contain / or !')
                     msg = '%s: %d' % (alphagram(rack.upper(), alphabet), evaluate(rack.upper()))
                     results.append(msg)
             msg = truncate('; ', results)
@@ -151,8 +155,6 @@ class TwitchBot(commands.Bot):
         if words and len(words) > 0:
             definitions = []
             for word in words:
-                if re.search('[/!]', word):
-                    return await ctx.send('Words must not contain / or !')
                 offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
                 if offensive:
                     pass
@@ -171,8 +173,6 @@ class TwitchBot(commands.Bot):
         if words and len(words) > 0:
             inflections = []
             for word in words:
-                if re.search('[/!]', word):
-                    return await ctx.send('Words must not contain / or !')
                 offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
                 if offensive:
                     pass
@@ -358,8 +358,6 @@ class TwitchBot(commands.Bot):
 
     @commands.command(name='pronounce')
     async def pronounce(self, ctx, stem):
-        if re.search('[/!]', stem):
-            return await ctx.send('Words must not contain / or !')
         offensive, word, entry = dictionary.check(stem.upper(), self.config.channels[ctx.channel.name]['lexicon'])
         if not offensive:
             if entry:

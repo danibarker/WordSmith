@@ -4,3 +4,6 @@
 [submodule "wordlist"]
 	path = wordlist
 	url = https://github.com/wordnik/wordlist.git
+[submodule "yawl"]
+	path = yawl
+	url = https://github.com/elasticdog/yawl.git
