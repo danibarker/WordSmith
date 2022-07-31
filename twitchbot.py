@@ -29,7 +29,7 @@ class TwitchBot(commands.Bot):
         super().run()
 
     async def event_ready(self):
-        print(f'Wordsmith 0.25 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.26 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if ctx.author and not ctx.author.name == self.nick:
