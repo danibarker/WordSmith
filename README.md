@@ -43,25 +43,21 @@
 
  	5. Copy your client ID from your new Twitch application into config.json
 
-  	6. Using https://twitchapps.com/tokengen/ generate a token with scope chat:edit chat:read
+  	6. Using https://twitchapps.com/tokengen/ generate an API token with scope channel:manage:predictions and an IRC token with scope chat:edit chat:read (documentation: https://dev.twitch.tv/docs/authentication/scopes)
 
-  	6. Copy this chat token into config.json as the IRC token
-
-  	7. Go to https://twitchapps.com/tokengen/ and obtain an API Access Token (no scope?)
-
-  	8. Open config.json and replace the lines with your information, be sure to leave the variables in quotes:
+  	7. Open config.json and replace the lines with your information, be sure to leave the variables in quotes:
 	  	
-		api_token is the API oauth token (TwitchIO automatically supplies the oauth: prefix?)
-		irc_token is the IRC oauth token
-	  	client_id is your client id
+		api_token is the API token (TwitchIO supplies an oauth: prefix, so omit "oauth:")
+		irc_token is the IRC token
+	  	client_id is your Twitch Application ID
 	  	nick is your bot's username
 	  	channels is the channels you want it to join and their initial lexicon
 
-  	9. Save this file
+  	8. Save this file
 
-  	10. That's it, run wordsmith.py and it should connect and show a message saying "it is online"
+  	9. That's it, run wordsmith.exe and it should connect and show a message saying "Wordsmith [version] by Danielle Barker | [nick]"
     
- 	11. To run wordsmith.py you will need to have the twitchio package installed, instructions can be found in the readme at https://github.com/TwitchIO/TwitchIO or try your luck with installing Python and `pip install -r requirements.txt` or if you are feeling lucky, skip this step and hope that `WordSmith.exe` already contains this package.
+ 	10. To run "python wordsmith.py" you will need to have the twitchio package installed, instructions can be found in the readme at https://github.com/TwitchIO/TwitchIO or try your luck with installing Python and `pip install -r requirements.txt`.
 
 ## Commands for the bot
 
