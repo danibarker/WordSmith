@@ -1,6 +1,17 @@
 import requests
 
 
+def common(word):
+    context = { 'accept': 'application/json', 'authority': 'woogles.io', 'origin': 'https://woogles.io', 'User-Agent': 'wordsmith-bot' }
+    request = { 'lexicon': 'ECWL', 'words': [word], 'definitions': False }
+    response = requests.post('https://woogles.io/twirp/word_service.WordService/DefineWords', json=request, headers=context)
+    values = response.json()
+    try:
+        return values['results'][word]['v']
+    except KeyError:
+        return response.text
+
+
 def equity(rack, lexicon):
     parameters = {'rack': rack, 'lexicon': lexicon}
     response = requests.get('https://cross-tables.com/leaves_values.php', headers={'User-Agent': 'wordsmith-bot'}, params=parameters)

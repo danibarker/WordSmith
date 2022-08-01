@@ -105,10 +105,6 @@ def check(word, lexicon):
     return False, word, None
 
 
-def common(word):
-    return re.search(rf'^{word}\r?$'.encode(), wordlist['cel'], re.MULTILINE)
-
-
 def wordnik(word):
     return re.search(rf'^"{word}"\r?$'.encode(), wordlist['wordnik'], re.MULTILINE)
 
@@ -364,13 +360,6 @@ def open_files():
             f.close()
     except FileNotFoundError:
         print('mw.dat not found')
-    try:
-        with open('CEL/cel.txt', 'rb') as f:
-            if os.stat(f.name).st_size:
-                wordlist['cel'] = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
-            f.close()
-    except FileNotFoundError:
-        print('CEL/cel.txt not found')
     try:
         with open('wordlist/wordlist-20210729.txt', 'rb') as f:
             if os.stat(f.name).st_size:
