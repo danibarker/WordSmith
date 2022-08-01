@@ -48,7 +48,7 @@
            TwitchIO usage:
                https://twitchio.dev/en/latest/twitchio.html
                https://twitchio.dev/en/latest/reference.html#twitchio.PartialUser.create_poll
-               https://twitchio.dev/en/latest/reference.html?highlight=create_prediction#twitchio.PartialUser.create_prediction
+               https://twitchio.dev/en/latest/reference.html#twitchio.PartialUser.create_prediction
 
   	7. Open config.json and replace the lines with your information, be sure to leave the variables in quotes:
 	  	
