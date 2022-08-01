@@ -22,7 +22,7 @@ def equity(rack, lexicon):
         return response.text
 
 
-def predict(config, name, opponent):
+def predict(config, name, player, opponent):
     authorization = {'Authorization': 'Bearer ' + config.api_token, 'Client-Id': config.client_id}
     parameters = {'login': name}
     response = requests.get('https://api.twitch.tv/helix/users', headers=authorization, params=parameters)

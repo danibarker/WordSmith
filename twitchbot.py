@@ -53,9 +53,9 @@ class TwitchBot(commands.Bot):
                     await self.handle_commands(ctx)
 
     @commands.command(name='predict')
-    async def predict(self, ctx, opponent):
+    async def predict(self, ctx, player, opponent='Opponent'):
         if ctx.author.name == ctx.channel.name or ctx.author.is_mod:
-            msg = predict(self.config, ctx.channel.name, opponent)
+            msg = predict(self.config, ctx.channel.name, player, opponent)
         else:
             msg = f'Command can only be used by {ctx.channel.name} or moderators'
         print(len(msg))
