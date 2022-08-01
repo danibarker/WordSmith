@@ -43,7 +43,8 @@
 
  	5. Copy your client ID from your new Twitch application into config.json
 
-  	6. Using https://twitchapps.com/tokengen/ generate an API token with scope channel:manage:predictions and an IRC token with scope chat:edit chat:read (documentation: https://dev.twitch.tv/docs/authentication/scopes)
+  	6. Generate an API token with scope channel:manage:polls channel:manage:predictions and an IRC token with scope chat:edit chat:read
+           API specification: https://dev.twitch.tv/docs/authentication/scopes
 
   	7. Open config.json and replace the lines with your information, be sure to leave the variables in quotes:
 	  	

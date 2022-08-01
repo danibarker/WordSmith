@@ -5,7 +5,7 @@ import inflect
 import random as rd
 import re
 from alphagram import alphagram
-from api import common, predict
+from api import common, poll, predict
 from calculator import equity, evaluate
 from cipher import cipher
 import dictionary
@@ -51,6 +51,15 @@ class TwitchBot(commands.Bot):
                     await ctx.channel.send(message)
                 else:
                     await self.handle_commands(ctx)
+
+    @commands.command(name='poll')
+    async def poll(self, ctx, tiles):
+        if ctx.author.name == ctx.channel.name or ctx.author.is_mod:
+            msg = poll(self.config, ctx.channel.name, tiles)
+        else:
+            msg = f'Command can only be used by {ctx.channel.name} or moderators'
+        print(len(msg))
+        await ctx.send(msg)
 
     @commands.command(name='predict')
     async def predict(self, ctx, player, opponent='Opponent'):
