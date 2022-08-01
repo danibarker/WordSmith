@@ -45,6 +45,10 @@
 
   	6. Generate an API token with scope channel:manage:polls channel:manage:predictions and an IRC token with scope chat:edit chat:read
            API specification: https://dev.twitch.tv/docs/authentication/scopes
+           TwitchIO usage:
+               https://twitchio.dev/en/latest/twitchio.html
+               https://twitchio.dev/en/latest/reference.html#twitchio.PartialUser.create_poll
+               https://twitchio.dev/en/latest/reference.html?highlight=create_prediction#twitchio.PartialUser.create_prediction
 
   	7. Open config.json and replace the lines with your information, be sure to leave the variables in quotes:
 	  	
