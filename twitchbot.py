@@ -29,7 +29,7 @@ class TwitchBot(commands.Bot):
         super().run()
 
     async def event_ready(self):
-        print(f'Wordsmith 0.26 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.27 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if ctx.author and not ctx.author.name == self.nick:
@@ -85,8 +85,10 @@ class TwitchBot(commands.Bot):
                     msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
                     results.append((msg + ' is common VoteYea') if dictionary.common(word.lower()) else (msg + ' not common VoteNay'))
             msg = truncate(' ', results)
-            print(len(msg))
-            await ctx.send(msg)
+        else:
+            msg = 'Common English Lexicon, Copyright (c) 2021 Fj00. Used with permission.';
+        print(len(msg))
+        await ctx.send(msg)
 
     @commands.command(name='wordnik')
     async def wordnik(self, ctx, *words):
