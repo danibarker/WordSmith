@@ -92,7 +92,7 @@ class TwitchBot(commands.Bot):
                 offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
                 if not offensive:
                     msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
-                    results.append((msg + ' is common VoteYea') if common(word) else (msg + ' not common VoteNay'))
+                    results.append((msg + ' is common VoteYea') if common(word) else (msg + ' is not common VoteNay'))
             msg = truncate(' ', results)
         else:
             msg = 'Common English Lexicon, Copyright (c) 2021 Fj00. Used with permission.';
