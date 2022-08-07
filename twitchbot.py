@@ -5,7 +5,7 @@ import inflect
 import random as rd
 import re
 from alphagram import alphagram
-from api import common, poll, predict
+from api import poll, predict, validate
 from calculator import equity, evaluate
 from cipher import cipher
 import dictionary
@@ -29,7 +29,7 @@ class TwitchBot(commands.Bot):
         super().run()
 
     async def event_ready(self):
-        print(f'Wordsmith 0.28 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.29 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if ctx.author and not ctx.author.name == self.nick:
@@ -87,15 +87,16 @@ class TwitchBot(commands.Bot):
     async def common(self, ctx, *words):
         if words and len(words) > 0:
             lexicon = self.config.channels[ctx.channel.name]['lexicon']
+            common = validate('ECWL', [word.upper() for word in words])
             results = []
             for word in words:
                 offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
                 if not offensive:
                     msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
-                    results.append((msg + ' is common VoteYea') if common(word) else (msg + ' is not common VoteNay'))
+                    results.append((msg + ' is common VoteYea') if common[word]['v'] else (msg + ' is not common VoteNay'))
             msg = truncate(' ', results)
         else:
-            msg = 'Common English Lexicon, Copyright (c) 2021 Fj00. Used with permission.';
+            msg = 'Common English Lexicon, Copyright (c) 2021-2022 Fj00. Used with permission.';
         print(len(msg))
         await ctx.send(msg)
 

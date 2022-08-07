@@ -1,13 +1,13 @@
 import requests
 
 
-def common(word):
+def validate(lexicon, words):
     authorization = { 'authority': 'woogles.io', 'origin': 'https://woogles.io', 'User-Agent': 'wordsmith-bot' }
-    request = { 'lexicon': 'ECWL', 'words': [word], 'definitions': False }
+    request = { 'lexicon': lexicon, 'words': words, 'definitions': False }
     response = requests.post('https://woogles.io/twirp/word_service.WordService/DefineWords', json=request, headers=authorization)
     values = response.json()
     try:
-        return values['results'][word]['v']
+        return values['results'];
     except KeyError:
         return response.text
 
