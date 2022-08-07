@@ -1,6 +1,17 @@
 import requests
 
 
+def define(lexicon, words):
+    authorization = { 'authority': 'woogles.io', 'origin': 'https://woogles.io', 'User-Agent': 'wordsmith-bot' }
+    request = { 'lexicon': lexicon, 'words': words, 'definitions': True }
+    response = requests.post('https://woogles.io/twirp/word_service.WordService/DefineWords', json=request, headers=authorization)
+    values = response.json()
+    try:
+        return values['results'];
+    except KeyError:
+        return response.text
+
+
 def validate(lexicon, words):
     authorization = { 'authority': 'woogles.io', 'origin': 'https://woogles.io', 'User-Agent': 'wordsmith-bot' }
     request = { 'lexicon': lexicon, 'words': words, 'definitions': False }

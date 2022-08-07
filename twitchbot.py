@@ -5,7 +5,7 @@ import inflect
 import random as rd
 import re
 from alphagram import alphagram
-from api import poll, predict, validate
+from api import define, poll, predict, validate
 from calculator import equity, evaluate
 from cipher import cipher
 import dictionary
@@ -29,7 +29,7 @@ class TwitchBot(commands.Bot):
         super().run()
 
     async def event_ready(self):
-        print(f'Wordsmith 0.29 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.30 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if ctx.author and not ctx.author.name == self.nick:
@@ -166,14 +166,15 @@ class TwitchBot(commands.Bot):
     async def define(self, ctx, *words):
         if words and len(words) > 0:
             definitions = []
-            for word in words:
-                offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-                if offensive:
-                    pass
-                elif entry:
-                    lexicon = self.config.channels[ctx.channel.name]['lexicon']
-                    word, entry, definition, mark = dictionary.define(word, entry, lexicon, '')
-                    definitions.append('%s%s - %s' % (word, mark, definition))
+            lexicon = self.config.channels[ctx.channel.name]['lexicon']
+            if lexicon == 'csw' or lexicon == 'csw#':
+                lexicon = 'CSW19'
+            elif lexicon == 'twl':
+                lexicon = 'NWL18'
+            entries = define(lexicon, [word.upper() for word in words])
+            for word in entries:
+                if entries[word]['v']:
+                    definitions.append('%s - %s' % (word, entries[word]['d']))
                 else:
                     definitions.append(word + '* - not found')
             msg = truncate('; ', definitions)
