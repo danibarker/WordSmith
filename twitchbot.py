@@ -85,7 +85,7 @@ class TwitchBot(commands.Bot):
                     results.append(word + ' is valid VoteYea')
                 else:
                     results.append(word + '* not found VoteNay')
-            msg = truncate('; ', results)
+            msg = truncate(' ', results)
             print(len(msg))
             await ctx.send(msg)
 
