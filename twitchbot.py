@@ -29,7 +29,7 @@ class TwitchBot(commands.Bot):
         super().run()
 
     async def event_ready(self):
-        print(f'Wordsmith 0.30 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.31 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if ctx.author and not ctx.author.name == self.nick:
@@ -73,27 +73,32 @@ class TwitchBot(commands.Bot):
     @commands.command(name='check')
     async def check(self, ctx, *words):
         if words and len(words) > 0:
-            lexicon = self.config.channels[ctx.channel.name]['lexicon']
             results = []
-            for word in words:
-                offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-                if not offensive:
-                    results.append('%s%s is valid VoteYea' % (dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s* not found VoteNay' % word))
-            msg = truncate(' ', results)
+            lexicon = self.config.channels[ctx.channel.name]['lexicon']
+            if lexicon == 'csw' or lexicon == 'csw#':
+                lexicon = 'CSW19'
+            elif lexicon == 'twl':
+                lexicon = 'NWL18'
+            entries = validate(lexicon, [word.upper() for word in words])
+            for word in entries:
+                if entries[word]['v']:
+                    results.append(word + ' is valid VoteYea')
+                else:
+                    results.append(word + '* not found VoteNay')
+            msg = truncate('; ', results)
             print(len(msg))
             await ctx.send(msg)
 
     @commands.command(name='common')
     async def common(self, ctx, *words):
         if words and len(words) > 0:
-            lexicon = self.config.channels[ctx.channel.name]['lexicon']
-            common = validate('ECWL', [word.upper() for word in words])
             results = []
-            for word in words:
-                offensive, word, entry = dictionary.check(word.upper(), self.config.channels[ctx.channel.name]['lexicon'])
-                if not offensive:
-                    msg = ('%s%s' % dictionary.decorate(word, entry, lexicon, '')) if entry else ('%s*' % word)
-                    results.append((msg + ' is common VoteYea') if common[word]['v'] else (msg + ' is not common VoteNay'))
+            entries = validate('ECWL', [word.upper() for word in words])
+            for word in entries:
+                if entries[word]['v']:
+                    results.append(word + ' is common VoteYea')
+                else:
+                    results.append(word + ' is not common VoteNay')
             msg = truncate(' ', results)
         else:
             msg = 'Common English Lexicon, Copyright (c) 2021-2022 Fj00. Used with permission.';
