@@ -75,10 +75,6 @@ class TwitchBot(commands.Bot):
         if words and len(words) > 0:
             results = []
             lexicon = self.config.channels[ctx.channel.name]['lexicon']
-            if lexicon == 'csw' or lexicon == 'csw#':
-                lexicon = 'CSW19'
-            elif lexicon == 'twl':
-                lexicon = 'NWL18'
             entries = validate(lexicon, [word.upper() for word in words])
             for word in entries:
                 if entries[word]['v']:
@@ -172,17 +168,16 @@ class TwitchBot(commands.Bot):
         if words and len(words) > 0:
             definitions = []
             lexicon = self.config.channels[ctx.channel.name]['lexicon']
-            if lexicon == 'csw' or lexicon == 'csw#':
-                lexicon = 'CSW19'
-            elif lexicon == 'twl':
-                lexicon = 'NWL18'
             entries = define(lexicon, [word.upper() for word in words])
+            twl = entries
+            if self.config.channels[ctx.channel.name]['lexicon'] == 'csw#':
+                twl = validate('twl', [word.upper() for word in words])
             for word in entries:
                 if entries[word]['v']:
+                    definition = entries[word]['d']
                     mark = ''
-                    if self.config.channels[ctx.channel.name]['lexicon'] == 'csw#':
-                        _, word, entry = dictionary.check(word.upper(), 'csw#')
-                        mark = dictionary.mark(entry, 'csw#', mark)
+                    if self.config.channels[ctx.channel.name]['lexicon'] == 'csw#' and not twl[word]['v']:
+                        mark = '#'
                     definitions.append('%s%s - %s' % (word, mark, entries[word]['d']))
                 else:
                     definitions.append(word + '* - not found')
