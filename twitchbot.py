@@ -29,7 +29,7 @@ class TwitchBot(commands.Bot):
         super().run()
 
     async def event_ready(self):
-        print(f'Wordsmith 0.31 by Danielle Barker | {self.nick}')
+        print(f'Wordsmith 0.32 by Danielle Barker | {self.nick}')
 
     async def event_message(self, ctx):
         if ctx.author and not ctx.author.name == self.nick:
@@ -179,7 +179,11 @@ class TwitchBot(commands.Bot):
             entries = define(lexicon, [word.upper() for word in words])
             for word in entries:
                 if entries[word]['v']:
-                    definitions.append('%s - %s' % (word, entries[word]['d']))
+                    mark = ''
+                    if self.config.channels[ctx.channel.name]['lexicon'] == 'csw#':
+                        _, word, entry = dictionary.check(word.upper(), 'csw#')
+                        mark = dictionary.mark(entry, 'csw#', mark)
+                    definitions.append('%s%s - %s' % (word, mark, entries[word]['d']))
                 else:
                     definitions.append(word + '* - not found')
             msg = truncate('; ', definitions)
