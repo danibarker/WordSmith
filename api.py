@@ -4,7 +4,7 @@ import requests
 def define(lexicon, words):
     if lexicon == 'csw' or lexicon == 'csw#':
         lexicon = 'CSW21'
-    elif lexicon == 'twl':
+    elif lexicon == 'twl' or lexicon == 'twl$':
         lexicon = 'NWL20'
     authorization = { 'authority': 'woogles.io', 'origin': 'https://woogles.io', 'User-Agent': 'wordsmith-bot' }
     request = { 'lexicon': lexicon, 'words': words, 'definitions': True }
@@ -19,7 +19,7 @@ def define(lexicon, words):
 def validate(lexicon, words):
     if lexicon == 'csw' or lexicon == 'csw#':
         lexicon = 'CSW21'
-    elif lexicon == 'twl':
+    elif lexicon == 'twl' or lexicon == 'twl$':
         lexicon = 'NWL20'
     authorization = { 'authority': 'woogles.io', 'origin': 'https://woogles.io', 'User-Agent': 'wordsmith-bot' }
     request = { 'lexicon': lexicon, 'words': words, 'definitions': False }
