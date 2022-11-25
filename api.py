@@ -1,13 +1,13 @@
 import requests
 
 
-def define(lexicon, words):
+def define(lexicon, words, anagrams=False):
     if lexicon == 'csw' or lexicon == 'csw#':
         lexicon = 'CSW21'
     elif lexicon == 'twl' or lexicon == 'twl$':
         lexicon = 'NWL20'
     authorization = { 'authority': 'woogles.io', 'origin': 'https://woogles.io', 'User-Agent': 'wordsmith-bot' }
-    request = { 'lexicon': lexicon, 'words': words, 'definitions': True }
+    request = { 'lexicon': lexicon, 'words': words, 'anagrams': anagrams, 'definitions': True }
     response = requests.post('https://woogles.io/twirp/word_service.WordService/DefineWords', json=request, headers=authorization)
     values = response.json()
     try:
@@ -16,13 +16,13 @@ def define(lexicon, words):
         return response.text
 
 
-def validate(lexicon, words):
+def validate(lexicon, words, anagrams=False):
     if lexicon == 'csw' or lexicon == 'csw#':
         lexicon = 'CSW21'
     elif lexicon == 'twl' or lexicon == 'twl$':
         lexicon = 'NWL20'
     authorization = { 'authority': 'woogles.io', 'origin': 'https://woogles.io', 'User-Agent': 'wordsmith-bot' }
-    request = { 'lexicon': lexicon, 'words': words, 'definitions': False }
+    request = { 'lexicon': lexicon, 'words': words, 'anagrams': anagrams, 'definitions': False }
     response = requests.post('https://woogles.io/twirp/word_service.WordService/DefineWords', json=request, headers=authorization)
     values = response.json()
     try:
