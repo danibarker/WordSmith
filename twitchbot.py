@@ -169,18 +169,18 @@ class TwitchBot(commands.Bot):
             definitions = []
             lexicon = self.config.channels[ctx.channel.name]['lexicon']
             entries = define(lexicon, [word.upper() for word in words])
-            twl = entries
+            opposite = entries
             if self.config.channels[ctx.channel.name]['lexicon'] == 'csw#':
-                twl = validate('twl', [word.upper() for word in words])
+                opposite = validate('twl', [word.upper() for word in words])
             elif self.config.channels[ctx.channel.name]['lexicon'] == 'twl$':
-                twl = validate('csw', [word.upper() for word in words])
+                opposite = validate('csw', [word.upper() for word in words])
             for word in entries:
                 if entries[word]['v']:
                     definition = entries[word]['d']
                     mark = ''
-                    if self.config.channels[ctx.channel.name]['lexicon'] == 'csw#' and not twl[word]['v']:
+                    if self.config.channels[ctx.channel.name]['lexicon'] == 'csw#' and not opposite[word]['v']:
                         mark = '#'
-                    elif self.config.channels[ctx.channel.name]['lexicon'] == 'twl$' and not twl[word]['v']:
+                    elif self.config.channels[ctx.channel.name]['lexicon'] == 'twl$' and not opposite[word]['v']:
                         mark = '$'
                     definitions.append('%s%s - %s' % (word, mark, entries[word]['d']))
                 else:
