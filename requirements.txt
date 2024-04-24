@@ -1,5 +1,5 @@
 ety~=1.4.0
-inflect~=7.2.0
+inflect~=7.2.1
 pronouncing~=0.2.0
 requests~=2.31.0
 twitchio~=2.9.1
