@@ -2,4 +2,4 @@ ety~=1.4.0
 inflect~=7.3.0
 pronouncing~=0.2.0
 requests~=2.32.3
-twitchio~=2.9.1
+twitchio~=2.10.0
